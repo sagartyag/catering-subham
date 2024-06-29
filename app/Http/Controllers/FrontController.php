@@ -9,34 +9,29 @@ class FrontController extends Controller
 
     public function index()
     {
-        return view('main.home');
+        return view('frontend.index');
+    }
+
+    public function about()
+    {
+        return view('frontend.about');
+    }
+
+    public function contact()
+    {
+        return view('frontend.contact');
+    }
+
+    public function menu()
+    {
+        return view('frontend.menu');
+    }
+
+    public function event()
+    {
+        return view('frontend.event');
     }
 
 
-    public function about_us()
-    {
-        return view('main.about');
-    }
-
-    public function services()
-    {
-        return view('main.service');
-    }
-    public function faq()
-    {
-        return view('main.faq');
-    }
-
-    public function team()
-    {
-        return view('main.team');
-    }
-
-    public function support()
-    {
-        return view('main.support');
-    }
-    
-    
 
 }
