@@ -25,7 +25,7 @@ Route::get('/clear', function() {
 
  
 Route::get('/', function () {
-    return view('main.home');
+    return view('frontend.index');
 });
 
 Auth::routes();
@@ -47,12 +47,12 @@ Route::post('/getUserName', [App\Http\Controllers\Register::class, 'getUserNameA
 Route::post('/registers', [App\Http\Controllers\Register::class, 'register'])->name('registers');
 Route::get('/register_sucess', [App\Http\Controllers\Register::class, 'index'])->name('register_sucess');
 
-Route::get('/Index', [App\Http\Controllers\FrontController::class, 'index'])->name('Index');
-Route::get('/about-us', [App\Http\Controllers\FrontController::class, 'about_us'])->name('about-us');
-Route::get('/services', [App\Http\Controllers\FrontController::class, 'services'])->name('services');
-Route::get('/faq', [App\Http\Controllers\FrontController::class, 'faq'])->name('faq');
-Route::get('/team', [App\Http\Controllers\FrontController::class, 'team'])->name('team');
-Route::get('/support', [App\Http\Controllers\FrontController::class, 'support'])->name('support');
+Route::any('/Index', [App\Http\Controllers\FrontController::class, 'index'])->name('Index');
+Route::get('/about-us', [App\Http\Controllers\FrontController::class, 'about'])->name('about-us');
+Route::get('/contact-us', [App\Http\Controllers\FrontController::class, 'contact'])->name('contact-us');
+Route::get('/menu', [App\Http\Controllers\FrontController::class, 'menu'])->name('menu');
+Route::get('/event', [App\Http\Controllers\FrontController::class, 'event'])->name('event');
+
 
 
 Route::get('/home', [App\Http\Controllers\UserPanel\Dashboard::class, 'index'])->name('home');
