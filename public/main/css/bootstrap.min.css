@@ -654,7 +654,7 @@ progress {
     content: "— ";
 }
 .img-fluid {
-    max-width: 100%;
+    max-width: 100px;
     height: auto;
 }
 .img-thumbnail {
