@@ -213,7 +213,6 @@ span.badge.badge-success {
                             </li>
 
 
-                            @if(Auth::user()->rank==1)
                             <li>
                                 <a href="javascript: void(0);" class="has-arrow waves-effect">
                                     <i class="bx bx-store"></i>
@@ -229,7 +228,6 @@ span.badge.badge-success {
                             </li>
 
                                 
-                            @endif
 
                         
                             <li>
@@ -239,11 +237,9 @@ span.badge.badge-success {
                                 </a>
                                 <ul class="sub-menu" aria-expanded="false">
 
-                                    @if(Auth::user()->rank==1)
 
                                     <li><a href="{{route('user.invest')}}" key="t-products">Billing Now</a></li>
 
-                                    @endif
 
                                    
                                     <li><a href="{{route('user.DepositHistory')}}" key="t-add-product">Billing Reports</a></li>
