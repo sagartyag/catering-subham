@@ -195,7 +195,7 @@ display: none;
                       
 
                     </li>
-                    <li><a class="has-arrow ai-icon" href="javascript:void()" aria-expanded="false">
+                    <!-- <li><a class="has-arrow ai-icon" href="javascript:void()" aria-expanded="false">
 						<i class="flaticon-050-info"></i>
 							<span class="nav-text">Activation</span>
 						</a>
@@ -204,11 +204,11 @@ display: none;
 							<li><a href="{{ route('admin.pending-user') }}">Pending User</a></li>
                             
                         </ul>
-                    </li>
+                    </li> -->
 
                    
 
-                    <li><a class="has-arrow ai-icon" href="javascript:void()" aria-expanded="false">
+                    <!-- <li><a class="has-arrow ai-icon" href="javascript:void()" aria-expanded="false">
 							<i class="flaticon-041-graph"></i>
 							<span class="nav-text">User Management</span>
 						</a>
@@ -218,7 +218,7 @@ display: none;
                             <li><a href="{{ route('admin.block-users') }}">Block User</a></li>
                           
                         </ul>
-                    </li>
+                    </li> -->
                     <li><a class="has-arrow ai-icon" href="javascript:void()" aria-expanded="false">
 							<i class="flaticon-086-star"></i>
 							<span class="nav-text">Billings </span>
@@ -270,7 +270,7 @@ display: none;
                 </li>
 
                   
-                    <li><a class="has-arrow ai-icon" href="javascript:void()" aria-expanded="false">
+                    <!-- <li><a class="has-arrow ai-icon" href="javascript:void()" aria-expanded="false">
 							<i class="flaticon-072-printer"></i>
 							<span class="nav-text">Profit Summary</span>
 						</a>
@@ -283,7 +283,7 @@ display: none;
                    
                            
                         </ul>
-                    </li>
+                    </li> -->
 
                   
 

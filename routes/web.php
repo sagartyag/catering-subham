@@ -190,6 +190,8 @@ Route::group(['middleware' => ['admin']], function ()
 
 //productController
 Route::get('add-product', [App\Http\Controllers\Admin\ProductController::class, 'index'])->name('admin.add-product');
+Route::get('category', [App\Http\Controllers\Admin\ProductController::class, 'category'])->name('admin.category');
+Route::post('categorie', [App\Http\Controllers\Admin\ProductController::class, 'categorie'])->name('admin.categorie');
 Route::get('admin-product', [App\Http\Controllers\Admin\ProductController::class, 'admin_product'])->name('admin.admin-product');
 Route::get('billing-product', [App\Http\Controllers\Admin\ProductController::class, 'billing_product'])->name('admin.billing-product');
 Route::get('deleteProduct', [App\Http\Controllers\Admin\ProductController::class, 'deleteProduct'])->name('admin.deleteProduct');

@@ -8,6 +8,7 @@ use App\Models\Product;
 use App\Models\User;
 use App\Models\Seller_product;
 use App\Models\Admin_product;
+use App\Models\Categorie;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Validator;
 use Log;
@@ -26,6 +27,12 @@ class ProductController extends Controller
         return $this->admin_dashboard(); 
     }
 
+    public function category()
+    {
+    
+       $this->data['page'] = 'admin.products.category';
+        return $this->admin_dashboard(); 
+    }
 
     public function billing_product()
     {
@@ -223,8 +230,9 @@ class ProductController extends Controller
             'productName' => 'required',
             'productPrice' => 'required|numeric',
             'productDiscountPrice' => 'required',
-            // 'ProductCoupon' => 'required',
+            'type' => 'required',
             'ProductDiscription' => 'required',
+            'icon_image'=>'max:4096|mimes:jpeg,png,jpg,svg',
 
         ]);
 
@@ -239,13 +247,19 @@ class ProductController extends Controller
         $product=Product::where('productName',$request->productName)->first();
             if (!$product)          
             {
-
+                $icon_image = $request->file('icon_image');
+                $imageName = time().'.'.$icon_image->extension();
+                $request->icon_image->move(public_path('image/'),$imageName);
+                
+                
            $data = [
                 'productName' =>$request->productName,
                 'productPrice' =>$request->productPrice,
                 'productDiscountPrice' => $request->productDiscountPrice,
+                'productName' =>$request->type,
                 'ProductCoupon' => 0,
                 'ProductDiscription' => $request->ProductDiscription,
+                 'image' => 'public/image/'.$imageName,
             ];
             $payment = Product::firstOrCreate(['productName'=>$request->name],$data);
 
@@ -270,8 +284,51 @@ class ProductController extends Controller
         }
 
 
-
         }
+
+
+
+        public function categorie(Request $request)
+        {
+            try {
+                // Validate the request data
+                $validation = Validator::make($request->all(), [
+                    'categoryname' => 'required',
+                    'status' => 'required',
+                ]);
+        
+                if ($validation->fails()) {
+                    Log::info($validation->getMessageBag()->first());
+                    return Redirect::back()->withErrors($validation->getMessageBag()->first())->withInput();
+                }
+        
+                // Check if the category already exists
+                $category = Categorie::where('categoryname', $request->categoryname)->first();
+        
+                if (!$category) {
+                    // Prepare the data for insertion
+                    $data = [
+                        'categoryname' => $request->categoryname,
+                        'status' => $request->status,
+                    ];
+        
+                    // Insert the category
+                    Categorie::create($data);
+        
+                    $notify[] = ['success', 'Category added successfully'];
+                    return redirect()->back()->withNotify($notify);
+                } else {
+                    return Redirect::back()->withErrors(['Category already exists!']);
+                }
+            } catch (\Exception $e) {
+                Log::info('error here');
+                Log::info($e->getMessage());
+                return Redirect::back()->withErrors('error', $e->getMessage())->withInput();
+            }
+        }
+
+
+
 
 
 
@@ -337,65 +394,65 @@ class ProductController extends Controller
 
 
 
-
-        public function editProduct(Request $request)
-        {
-    
-        try{
-            $validation =  Validator::make($request->all(), [
-                'productName' => 'required',
-                'productPrice' => 'required|numeric',
-                'productDiscountPrice' => 'required',
-                'ProductCoupon' => 'required',
-                'ProductDiscription' => 'required',
-                'id' => 'required',
-    
-            ]);
-    
-    
-            if($validation->fails()) {
-                Log::info($validation->getMessageBag()->first());
-    
-                return Redirect::back()->withErrors($validation->getMessageBag()->first())->withInput();
-            }
-    
-        
-            $product=Product::where('id',$request->id)->first();
-                if ($product)          
-                {
-    
-               $data = [
-                    'productName' =>$request->productName,
-                    'productPrice' =>$request->productPrice,
-                    'productDiscountPrice' => $request->productDiscountPrice,
-                    'ProductCoupon' => $request->ProductCoupon,
-                    'ProductDiscription' => $request->ProductDiscription,
-                ];
-                $payment = Product::where('id',$product->id)->update($data);
-    
-                $notify[] = ['success', ' Product Edit successfully'];
-                return redirect()->back()->withNotify($notify);
-    
-              
-                   # code...
-               }
-              else
-              {
-                return Redirect::back()->withErrors(array('Products already Exists! '));
-              }
-    
-            }
-           catch(\Exception $e){
-            Log::info('error here');
-            Log::info($e->getMessage());
-            print_r($e->getMessage());
-            die("hi");
-            return  Redirect::back()->withErrors('error', $e->getMessage())->withInput();
-            }
-    
-    
-    
-            }
+ public function editProduct(Request $request)
+ {
+     try {
+         // Validation rules
+         $validation = Validator::make($request->all(), [
+             'productName' => 'required',
+             'productPrice' => 'required|numeric',
+             'productDiscountPrice' => 'required',
+             'ProductCoupon' => 'required',
+             'ProductDiscription' => 'required',
+             'id' => 'required',
+             'image' => 'sometimes|image|mimes:jpeg,png,jpg,gif,svg|max:2048' // Add validation for the image
+         ]);
+ 
+         if ($validation->fails()) {
+             Log::info($validation->getMessageBag()->first());
+             return Redirect::back()->withErrors($validation->getMessageBag()->first())->withInput();
+         }
+ 
+         $product = Product::where('id', $request->id)->first();
+ 
+         if ($product) {
+             $data = [
+                 'productName' => $request->productName,
+                 'productPrice' => $request->productPrice,
+                 'productDiscountPrice' => $request->productDiscountPrice,
+                 'ProductCoupon' => $request->ProductCoupon,
+                 'ProductDiscription' => $request->ProductDiscription,
+             ];
+ 
+             // Check if an image file is present in the request
+             if ($request->hasFile('image')) {
+                 // Get the file from the request
+                 $image = $request->file('image');
+                 // Define the image path
+                 $imagePath = 'public/images/';
+                 // Generate a unique name for the image
+                 $imageName = time() . '_' . $image->getClientOriginalName();
+                 // Move the image to the specified path
+                 $image->move(public_path($imagePath), $imageName);
+                 // Save the image URL in the data array
+                 $data['image'] = $imagePath . $imageName;
+             }
+ 
+             // Update the product with the new data
+             Product::where('id', $product->id)->update($data);
+ 
+             $notify[] = ['success', 'Product edited successfully'];
+             return redirect()->back()->withNotify($notify);
+         } else {
+             return Redirect::back()->withErrors(['Products already exist!']);
+         }
+     } catch (\Exception $e) {
+         Log::info('error here');
+         Log::info($e->getMessage());
+         return Redirect::back()->withErrors(['error' => $e->getMessage()])->withInput();
+     }
+ }
+ 
 
             
 
