@@ -51,7 +51,7 @@
                             <div class="rac_menu_text">
                                 <div class="rac_menu_title">
                                     <h4>{{ $product->productName }}</h4>
-                                    <!-- <h2>$ {{ $product->productPrice }}</h2> -->
+                                    <h2>$ {{ $product->productPrice }}</h2>
                                 </div>
                                 <p>{{ $product->ProductDiscription }}</p>
                             </div>
