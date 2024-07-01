@@ -20,7 +20,7 @@
                             </div>
                             <div class="card-body">
                                 <div class="basic-form">
-                                    <form action="{{ route('admin.editProduct') }}" method="POST">
+                                    <form action="{{ route('admin.editProduct') }}" method="POST" enctype="multipart/form-data">
                                      {{ csrf_field() }}
 
                                      <input  type="hidden" name="id"
@@ -46,6 +46,10 @@
                                             <div class="mb-3 col-md-12">
                                                 <label class="form-label">Product Coupon</label>
                                                 <input class="form-control" id="inputEmail3" placeholder="Product Coupon" value="{{$product->ProductCoupon}}" type="text" name="ProductCoupon">
+                                            </div>
+                                             <div class="mb-3 col-md-12">
+                                                <label class="form-label">Image</label>
+                                                <input class="form-control" id="inputEmail3" placeholder="Image" value="{{$product->image}}" type="file" name="image">
                                             </div>
 
 
