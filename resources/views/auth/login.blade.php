@@ -20,7 +20,8 @@
 
 </head>
 
-<body>
+<body style="    background: #000000b8;
+">
     <div class="account-pages my-5 pt-sm-5">
         <div class="container">
             <div class="row justify-content-center">
