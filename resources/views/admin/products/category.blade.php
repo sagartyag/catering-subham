@@ -1,4 +1,5 @@
-   <!--**********************************
+
+<!--**********************************
             Content body start
         ***********************************-->
         <div class="content-body">
@@ -16,7 +17,7 @@
                     <div class="col-xl-6 col-lg-12">
                         <div class="card">
                             <div class="card-header">
-                                <h4 class="card-title">Add Categorie</h4>
+                                <h4 class="card-title">Add categorie</h4>
                             </div>
                             <div class="card-body">
                                 <div class="basic-form">
@@ -24,8 +25,8 @@
                                      {{ csrf_field() }}
                                         <div class="row">
                                             <div class="mb-3 col-md-12">
-                                                <label class="form-label">Product Name</label>
-                                                <input class="form-control" id="inputEmail3" placeholder="Product Name" type="text" name="categoryname">
+                                                <label class="form-label">Categorie Name</label>
+                                                <input class="form-control" id="inputEmail3" placeholder="Categorie Name" type="text" name="categoryname">
                                             </div>
      
                                            
