@@ -53,8 +53,8 @@
                                                 <input class="form-control" id="inputEmail3" placeholder="Product Discount Price" type="text" name="productDiscountPrice">
                                             </div>
                                             <div class="mb-3 col-md-12">
-                                                <label class="form-label">Upload Image</label>
-                                                <input class="form-control" id="inputEmail3" placeholder="Upload Image" type="file" name="icon_image">
+                                                <label class="form-label">Upload Proof</label>
+                                                <input class="form-control" id="inputEmail3" placeholder="Upload Proof" type="file" name="icon_image">
                                             </div>
 
                                             <!--<div class="mb-3 col-md-12">-->

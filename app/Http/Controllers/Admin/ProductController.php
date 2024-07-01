@@ -41,6 +41,8 @@ class ProductController extends Controller
         return $this->admin_dashboard(); 
     }
 
+ 
+
     public function billing_product()
     {
 
@@ -238,7 +240,7 @@ class ProductController extends Controller
             'productPrice' => 'required|numeric',
             'category_id' => 'required',
             'productDiscountPrice' => 'required',
-            // 'type' => 'required',
+            'type' => 'required',
             'ProductDiscription' => 'required',
             'icon_image'=>'max:4096|mimes:jpeg,png,jpg,svg',
 
@@ -265,10 +267,10 @@ class ProductController extends Controller
                 'productPrice' =>$request->productPrice,
                 'category_id' =>$request->category_id,
                 'productDiscountPrice' => $request->productDiscountPrice,
-                // 'productName' =>$request->type,
+                'productName' =>$request->type,
                 'ProductCoupon' => 0,
                 'ProductDiscription' => $request->ProductDiscription,
-                 'image' => 'image/'.$imageName,
+                 'image' => 'public/image/'.$imageName,
             ];
             $payment = Product::firstOrCreate(['productName'=>$request->name],$data);
 
@@ -303,7 +305,7 @@ class ProductController extends Controller
                 // Validate the request data
                 $validation = Validator::make($request->all(), [
                     'categoryname' => 'required',
-                    // 'status' => 'required',
+                    'status' => 'required',
                 ]);
         
                 if ($validation->fails()) {
@@ -313,12 +315,12 @@ class ProductController extends Controller
         
                 // Check if the category already exists
                 $category = Categorie::where('categoryname', $request->categoryname)->first();
-                // dd($category);
+        
                 if (!$category) {
                     // Prepare the data for insertion
                     $data = [
                         'categoryname' => $request->categoryname,
-                        // 'status' => $request->status,
+                        'status' => $request->status,
                     ];
         
                     // Insert the category
