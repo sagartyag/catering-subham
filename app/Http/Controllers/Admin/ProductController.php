@@ -243,6 +243,7 @@ class ProductController extends Controller
             'type' => 'required',
             'ProductDiscription' => 'required',
             'icon_image'=>'max:4096|mimes:jpeg,png,jpg,svg',
+            'icon_image'=>'max:4096|mimes:jpeg,png,jpg,svg',
 
         ]);
 
@@ -257,6 +258,11 @@ class ProductController extends Controller
         $product=Product::where('productName',$request->productName)->first();
             if (!$product)          
             {
+                $icon_image = $request->file('icon_image');
+                $imageName = time().'.'.$icon_image->extension();
+                $request->icon_image->move(public_path('image/'),$imageName);
+                
+                
                 $icon_image = $request->file('icon_image');
                 $imageName = time().'.'.$icon_image->extension();
                 $request->icon_image->move(public_path('image/'),$imageName);
@@ -464,6 +470,7 @@ class ProductController extends Controller
      }
  }
  
+
 
             
 
