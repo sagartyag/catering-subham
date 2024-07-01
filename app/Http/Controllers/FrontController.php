@@ -1,6 +1,9 @@
 <?php
 
 namespace App\Http\Controllers;
+use App\Models\Category;
+use App\Models\Product;
+
 
 use Illuminate\Http\Request;
 
@@ -23,9 +26,14 @@ class FrontController extends Controller
     }
 
     public function menu()
-    {
-        return view('frontend.menu');
-    }
+{
+    $categories = Category::all();
+    $names = $categories->pluck('categoryname');
+    $products = Product::all();
+
+    return view('frontend.menu', compact('categories','products'));
+}
+
 
     public function event()
     {
