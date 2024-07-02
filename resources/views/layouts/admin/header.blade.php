@@ -239,6 +239,7 @@ display: none;
 						</a>
                         <ul aria-expanded="false">
                             <li><a href="{{ route('admin.add-product') }}">Add Product</a></li>
+                            <li><a href="{{ route('admin.category') }}">Add Category</a></li>
                             <li><a href="{{route('admin.productList')}}">Product Report</a></li>
                           
                         </ul>
@@ -287,7 +288,7 @@ display: none;
 
                   
 
-                    
+<!--                     
                     <li><a class="has-arrow ai-icon" href="javascript:void()" aria-expanded="false">
 							<i class="flaticon-043-menu"></i>
 							<span class="nav-text">Withdrawal</span>
@@ -298,7 +299,7 @@ display: none;
                             <li><a href="{{route('admin.rejectedWithdrawal')}}">Rejected Withdrawal</a></li>
                             <li><a href="{{route('admin.approvedWithdrawal')}}">Approved Withdrawal</a></li>
                         </ul>
-                    </li>
+                    </li> -->
                     
 
                     <li><a href="{{route('admin.changePassword')}}" class="ai-icon" aria-expanded="false">
