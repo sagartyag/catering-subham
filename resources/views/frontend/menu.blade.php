@@ -30,609 +30,37 @@
         </div>
         <div class="col-12">
           <ul class="rac_menu_tab">
-            <li>
-              <a class="rac_btn active" data-rel="tab-1" href="javascript:void(0)">Starter</a>
-            </li>
-            <li>
-              <a class="rac_btn" data-rel="tab-2" href="javascript:void(0)">Main Course</a>
-            </li>
-            <li>
-              <a class="rac_btn" data-rel="tab-3" href="javascript:void(0)">Drinks</a>
-            </li>
-            <li>
-              <a class="rac_btn" data-rel="tab-4" href="javascript:void(0)">Offers</a>
-            </li>
-            <li>
-              <a class="rac_btn" data-rel="tab-5" href="javascript:void(0)">Our Special</a>
-            </li>
+              @foreach($categories as $category)
+                  <li>
+                      <a class="rac_btn category-tab" data-category-id="{{ $category->id }}" href="javascript:void(0)">{{ $category->categoryname }}</a>
+                  </li>
+              @endforeach
           </ul>
-        </div>
+      </div>
+      
         <div class="col-12">
           <!-- Starter Tab -->
           <div class="rac_tab_pane" id="tab-1" style="display:block;">
-            <div class="row">
-              <div class="col-sm-6 ">
-                <div class="rac_menu_box">
-                  <div class="rac_menu_img">
-                    <img src="main/images/menu1.webp" class="img-fluid">
-                  </div>
-                  <div class="rac_menu_text">
-                    <div class="rac_menu_title">
-                      <h4>Delicious Sweets</h4>
-                      <h2>$ 32</h2>
+            <div class="row" id="product-list">
+                @foreach($products as $product)
+                    <div class="col-sm-6 product-item" data-category-id="{{ $product->category_id }}">
+                        <div class="rac_menu_box">
+                            <div class="rac_menu_img">
+                                <img src="{{ asset($product->image) }}" class="img-fluid">
+                            </div>
+                            <div class="rac_menu_text">
+                                <div class="rac_menu_title">
+                                    <h4>{{ $product->productName }}</h4>
+                                    <h2>$ {{ $product->productPrice }}</h2>
+                                </div>
+                                <p>{{ $product->ProductDiscription }}</p>
+                            </div>
+                        </div>
                     </div>
-                    <p>Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Duis aute irure dolor in reprehenderit.</p>
-                  </div>
-                </div>
-              </div>
-              <div class="col-sm-6 ">
-                <div class="rac_menu_box">
-                  <div class="rac_menu_img">
-                    <img src="main/images/menu2.webp" class="img-fluid">
-                  </div>
-                  <div class="rac_menu_text">
-                    <div class="rac_menu_title">
-                      <h4>Sabudana Tikki</h4>
-                      <h2>$ 32</h2>
-                    </div>
-                    <p>Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Duis aute irure dolor in reprehenderit.</p>
-                  </div>
-                </div>
-              </div>
-              <div class="col-sm-6 ">
-                <div class="rac_menu_box">
-                  <div class="rac_menu_img">
-                    <img src="main/images/menu3.webp" class="img-fluid">
-                  </div>
-                  <div class="rac_menu_text">
-                    <div class="rac_menu_title">
-                      <h4>Chicken Tandoori</h4>
-                      <h2>$ 32</h2>
-                    </div>
-                    <p>Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Duis aute irure dolor in reprehenderit.</p>
-                  </div>
-                </div>
-              </div>
-              <div class="col-sm-6 ">
-                <div class="rac_menu_box">
-                  <div class="rac_menu_img">
-                    <img src="main/images/menu4.webp" class="img-fluid">
-                  </div>
-                  <div class="rac_menu_text">
-                    <div class="rac_menu_title">
-                      <h4>Tandoori Paneer</h4>
-                      <h2>$ 32</h2>
-                    </div>
-                    <p>Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Duis aute irure dolor in reprehenderit.</p>
-                  </div>
-                </div>
-              </div>
-              <div class="col-sm-6 ">
-                <div class="rac_menu_box">
-                  <div class="rac_menu_img">
-                    <img src="main/images/menu5.webp" class="img-fluid">
-                  </div>
-                  <div class="rac_menu_text">
-                    <div class="rac_menu_title">
-                      <h4>Tandoori Aloo Fry</h4>
-                      <h2>$ 32</h2>
-                    </div>
-                    <p>Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Duis aute irure dolor in reprehenderit.</p>
-                  </div>
-                </div>
-              </div>
-              <div class="col-sm-6 ">
-                <div class="rac_menu_box">
-                  <div class="rac_menu_img">
-                    <img src="main/images/menu6.webp" class="img-fluid">
-                  </div>
-                  <div class="rac_menu_text">
-                    <div class="rac_menu_title">
-                      <h4>Hare-Bhare Kabab</h4>
-                      <h2>$ 32</h2>
-                    </div>
-                    <p>Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Duis aute irure dolor in reprehenderit.</p>
-                  </div>
-                </div>
-              </div>
-              <div class="col-sm-6 ">
-                <div class="rac_menu_box">
-                  <div class="rac_menu_img">
-                    <img src="main/images/menu7.webp" class="img-fluid">
-                  </div>
-                  <div class="rac_menu_text">
-                    <div class="rac_menu_title">
-                      <h4>Malai Paneer Tikka</h4>
-                      <h2>$ 32</h2>
-                    </div>
-                    <p>Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Duis aute irure dolor in reprehenderit.</p>
-                  </div>
-                </div>
-              </div>
-              <div class="col-sm-6 ">
-                <div class="rac_menu_box">
-                  <div class="rac_menu_img">
-                    <img src="main/images/menu8.webp" class="img-fluid">
-                  </div>
-                  <div class="rac_menu_text">
-                    <div class="rac_menu_title">
-                      <h4>Punjabi Soya Chap</h4>
-                      <h2>$ 32</h2>
-                    </div>
-                    <p>Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Duis aute irure dolor in reprehenderit.</p>
-                  </div>
-                </div>
-              </div>
+                @endforeach
             </div>
-          </div>
-          <!-- Main Course Tab -->
-          <div class="rac_tab_pane" id="tab-2">
-            <div class="row">
-              <div class="col-sm-6 ">
-                <div class="rac_menu_box">
-                  <div class="rac_menu_img">
-                    <img src="main/images/menu1.webp" class="img-fluid">
-                  </div>
-                  <div class="rac_menu_text">
-                    <div class="rac_menu_title">
-                      <h4>Delicious Sweets</h4>
-                      <h2>$ 32</h2>
-                    </div>
-                    <p>Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Duis aute irure dolor in reprehenderit.</p>
-                  </div>
-                </div>
-              </div>
-              <div class="col-sm-6 ">
-                <div class="rac_menu_box">
-                  <div class="rac_menu_img">
-                    <img src="main/images/menu2.webp" class="img-fluid">
-                  </div>
-                  <div class="rac_menu_text">
-                    <div class="rac_menu_title">
-                      <h4>Sabudana Tikki</h4>
-                      <h2>$ 32</h2>
-                    </div>
-                    <p>Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Duis aute irure dolor in reprehenderit.</p>
-                  </div>
-                </div>
-              </div>
-              <div class="col-sm-6 ">
-                <div class="rac_menu_box">
-                  <div class="rac_menu_img">
-                    <img src="main/images/menu3.webp" class="img-fluid">
-                  </div>
-                  <div class="rac_menu_text">
-                    <div class="rac_menu_title">
-                      <h4>Chicken Tandoori</h4>
-                      <h2>$ 32</h2>
-                    </div>
-                    <p>Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Duis aute irure dolor in reprehenderit.</p>
-                  </div>
-                </div>
-              </div>
-              <div class="col-sm-6 ">
-                <div class="rac_menu_box">
-                  <div class="rac_menu_img">
-                    <img src="main/images/menu4.webp" class="img-fluid">
-                  </div>
-                  <div class="rac_menu_text">
-                    <div class="rac_menu_title">
-                      <h4>Tandoori Paneer</h4>
-                      <h2>$ 32</h2>
-                    </div>
-                    <p>Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Duis aute irure dolor in reprehenderit.</p>
-                  </div>
-                </div>
-              </div>
-              <div class="col-sm-6 ">
-                <div class="rac_menu_box">
-                  <div class="rac_menu_img">
-                    <img src="main/images/menu5.webp" class="img-fluid">
-                  </div>
-                  <div class="rac_menu_text">
-                    <div class="rac_menu_title">
-                      <h4>Tandoori Aloo Fry</h4>
-                      <h2>$ 32</h2>
-                    </div>
-                    <p>Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Duis aute irure dolor in reprehenderit.</p>
-                  </div>
-                </div>
-              </div>
-              <div class="col-sm-6 ">
-                <div class="rac_menu_box">
-                  <div class="rac_menu_img">
-                    <img src="main/images/menu6.webp" class="img-fluid">
-                  </div>
-                  <div class="rac_menu_text">
-                    <div class="rac_menu_title">
-                      <h4>Hare-Bhare Kabab</h4>
-                      <h2>$ 32</h2>
-                    </div>
-                    <p>Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Duis aute irure dolor in reprehenderit.</p>
-                  </div>
-                </div>
-              </div>
-              <div class="col-sm-6 ">
-                <div class="rac_menu_box">
-                  <div class="rac_menu_img">
-                    <img src="main/images/menu7.webp" class="img-fluid">
-                  </div>
-                  <div class="rac_menu_text">
-                    <div class="rac_menu_title">
-                      <h4>Malai Paneer Tikka</h4>
-                      <h2>$ 32</h2>
-                    </div>
-                    <p>Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Duis aute irure dolor in reprehenderit.</p>
-                  </div>
-                </div>
-              </div>
-              <div class="col-sm-6 ">
-                <div class="rac_menu_box">
-                  <div class="rac_menu_img">
-                    <img src="main/images/menu8.webp" class="img-fluid">
-                  </div>
-                  <div class="rac_menu_text">
-                    <div class="rac_menu_title">
-                      <h4>Punjabi Soya Chap</h4>
-                      <h2>$ 32</h2>
-                    </div>
-                    <p>Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Duis aute irure dolor in reprehenderit.</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <!-- Drinks Tab -->
-          <div class="rac_tab_pane" id="tab-3">
-            <div class="row">
-              <div class="col-sm-6 ">
-                <div class="rac_menu_box">
-                  <div class="rac_menu_img">
-                    <img src="main/images/menu1.webp" class="img-fluid">
-                  </div>
-                  <div class="rac_menu_text">
-                    <div class="rac_menu_title">
-                      <h4>Delicious Sweets</h4>
-                      <h2>$ 32</h2>
-                    </div>
-                    <p>Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Duis aute irure dolor in reprehenderit.</p>
-                  </div>
-                </div>
-              </div>
-              <div class="col-sm-6 ">
-                <div class="rac_menu_box">
-                  <div class="rac_menu_img">
-                    <img src="main/images/menu2.webp" class="img-fluid">
-                  </div>
-                  <div class="rac_menu_text">
-                    <div class="rac_menu_title">
-                      <h4>Sabudana Tikki</h4>
-                      <h2>$ 32</h2>
-                    </div>
-                    <p>Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Duis aute irure dolor in reprehenderit.</p>
-                  </div>
-                </div>
-              </div>
-              <div class="col-sm-6 ">
-                <div class="rac_menu_box">
-                  <div class="rac_menu_img">
-                    <img src="main/images/menu3.webp" class="img-fluid">
-                  </div>
-                  <div class="rac_menu_text">
-                    <div class="rac_menu_title">
-                      <h4>Chicken Tandoori</h4>
-                      <h2>$ 32</h2>
-                    </div>
-                    <p>Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Duis aute irure dolor in reprehenderit.</p>
-                  </div>
-                </div>
-              </div>
-              <div class="col-sm-6 ">
-                <div class="rac_menu_box">
-                  <div class="rac_menu_img">
-                    <img src="main/images/menu4.webp" class="img-fluid">
-                  </div>
-                  <div class="rac_menu_text">
-                    <div class="rac_menu_title">
-                      <h4>Tandoori Paneer</h4>
-                      <h2>$ 32</h2>
-                    </div>
-                    <p>Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Duis aute irure dolor in reprehenderit.</p>
-                  </div>
-                </div>
-              </div>
-              <div class="col-sm-6 ">
-                <div class="rac_menu_box">
-                  <div class="rac_menu_img">
-                    <img src="main/images/menu5.webp" class="img-fluid">
-                  </div>
-                  <div class="rac_menu_text">
-                    <div class="rac_menu_title">
-                      <h4>Tandoori Aloo Fry</h4>
-                      <h2>$ 32</h2>
-                    </div>
-                    <p>Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Duis aute irure dolor in reprehenderit.</p>
-                  </div>
-                </div>
-              </div>
-              <div class="col-sm-6 ">
-                <div class="rac_menu_box">
-                  <div class="rac_menu_img">
-                    <img src="main/images/menu6.webp" class="img-fluid">
-                  </div>
-                  <div class="rac_menu_text">
-                    <div class="rac_menu_title">
-                      <h4>Hare-Bhare Kabab</h4>
-                      <h2>$ 32</h2>
-                    </div>
-                    <p>Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Duis aute irure dolor in reprehenderit.</p>
-                  </div>
-                </div>
-              </div>
-              <div class="col-sm-6 ">
-                <div class="rac_menu_box">
-                  <div class="rac_menu_img">
-                    <img src="main/images/menu7.webp" class="img-fluid">
-                  </div>
-                  <div class="rac_menu_text">
-                    <div class="rac_menu_title">
-                      <h4>Malai Paneer Tikka</h4>
-                      <h2>$ 32</h2>
-                    </div>
-                    <p>Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Duis aute irure dolor in reprehenderit.</p>
-                  </div>
-                </div>
-              </div>
-              <div class="col-sm-6 ">
-                <div class="rac_menu_box">
-                  <div class="rac_menu_img">
-                    <img src="main/images/menu8.webp" class="img-fluid">
-                  </div>
-                  <div class="rac_menu_text">
-                    <div class="rac_menu_title">
-                      <h4>Punjabi Soya Chap</h4>
-                      <h2>$ 32</h2>
-                    </div>
-                    <p>Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Duis aute irure dolor in reprehenderit.</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <!-- Offers Tab -->
-          <div class="rac_tab_pane" id="tab-4">
-            <div class="row">
-              <div class="col-sm-6 ">
-                <div class="rac_menu_box">
-                  <div class="rac_menu_img">
-                    <img src="main/images/menu1.webp" class="img-fluid">
-                  </div>
-                  <div class="rac_menu_text">
-                    <div class="rac_menu_title">
-                      <h4>Delicious Sweets</h4>
-                      <h2>$ 32</h2>
-                    </div>
-                    <p>Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Duis aute irure dolor in reprehenderit.</p>
-                  </div>
-                </div>
-              </div>
-              <div class="col-sm-6 ">
-                <div class="rac_menu_box">
-                  <div class="rac_menu_img">
-                    <img src="main/images/menu2.webp" class="img-fluid">
-                  </div>
-                  <div class="rac_menu_text">
-                    <div class="rac_menu_title">
-                      <h4>Sabudana Tikki</h4>
-                      <h2>$ 32</h2>
-                    </div>
-                    <p>Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Duis aute irure dolor in reprehenderit.</p>
-                  </div>
-                </div>
-              </div>
-              <div class="col-sm-6 ">
-                <div class="rac_menu_box">
-                  <div class="rac_menu_img">
-                    <img src="main/images/menu3.webp" class="img-fluid">
-                  </div>
-                  <div class="rac_menu_text">
-                    <div class="rac_menu_title">
-                      <h4>Chicken Tandoori</h4>
-                      <h2>$ 32</h2>
-                    </div>
-                    <p>Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Duis aute irure dolor in reprehenderit.</p>
-                  </div>
-                </div>
-              </div>
-              <div class="col-sm-6 ">
-                <div class="rac_menu_box">
-                  <div class="rac_menu_img">
-                    <img src="main/images/menu4.webp" class="img-fluid">
-                  </div>
-                  <div class="rac_menu_text">
-                    <div class="rac_menu_title">
-                      <h4>Tandoori Paneer</h4>
-                      <h2>$ 32</h2>
-                    </div>
-                    <p>Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Duis aute irure dolor in reprehenderit.</p>
-                  </div>
-                </div>
-              </div>
-              <div class="col-sm-6 ">
-                <div class="rac_menu_box">
-                  <div class="rac_menu_img">
-                    <img src="main/images/menu5.webp" class="img-fluid">
-                  </div>
-                  <div class="rac_menu_text">
-                    <div class="rac_menu_title">
-                      <h4>Tandoori Aloo Fry</h4>
-                      <h2>$ 32</h2>
-                    </div>
-                    <p>Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Duis aute irure dolor in reprehenderit.</p>
-                  </div>
-                </div>
-              </div>
-              <div class="col-sm-6 ">
-                <div class="rac_menu_box">
-                  <div class="rac_menu_img">
-                    <img src="main/images/menu6.webp" class="img-fluid">
-                  </div>
-                  <div class="rac_menu_text">
-                    <div class="rac_menu_title">
-                      <h4>Hare-Bhare Kabab</h4>
-                      <h2>$ 32</h2>
-                    </div>
-                    <p>Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Duis aute irure dolor in reprehenderit.</p>
-                  </div>
-                </div>
-              </div>
-              <div class="col-sm-6 ">
-                <div class="rac_menu_box">
-                  <div class="rac_menu_img">
-                    <img src="main/images/menu7.webp" class="img-fluid">
-                  </div>
-                  <div class="rac_menu_text">
-                    <div class="rac_menu_title">
-                      <h4>Malai Paneer Tikka</h4>
-                      <h2>$ 32</h2>
-                    </div>
-                    <p>Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Duis aute irure dolor in reprehenderit.</p>
-                  </div>
-                </div>
-              </div>
-              <div class="col-sm-6 ">
-                <div class="rac_menu_box">
-                  <div class="rac_menu_img">
-                    <img src="main/images/menu8.webp" class="img-fluid">
-                  </div>
-                  <div class="rac_menu_text">
-                    <div class="rac_menu_title">
-                      <h4>Punjabi Soya Chap</h4>
-                      <h2>$ 32</h2>
-                    </div>
-                    <p>Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Duis aute irure dolor in reprehenderit.</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <!-- Our Special Tab -->
-          <div class="rac_tab_pane" id="tab-5">
-            <div class="row">
-              <div class="col-sm-6 ">
-                <div class="rac_menu_box">
-                  <div class="rac_menu_img">
-                    <img src="main/images/menu1.webp" class="img-fluid">
-                  </div>
-                  <div class="rac_menu_text">
-                    <div class="rac_menu_title">
-                      <h4>Delicious Sweets</h4>
-                      <h2>$ 32</h2>
-                    </div>
-                    <p>Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Duis aute irure dolor in reprehenderit.</p>
-                  </div>
-                </div>
-              </div>
-              <div class="col-sm-6 ">
-                <div class="rac_menu_box">
-                  <div class="rac_menu_img">
-                    <img src="main/images/menu2.webp" class="img-fluid">
-                  </div>
-                  <div class="rac_menu_text">
-                    <div class="rac_menu_title">
-                      <h4>Sabudana Tikki</h4>
-                      <h2>$ 32</h2>
-                    </div>
-                    <p>Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Duis aute irure dolor in reprehenderit.</p>
-                  </div>
-                </div>
-              </div>
-              <div class="col-sm-6 ">
-                <div class="rac_menu_box">
-                  <div class="rac_menu_img">
-                    <img src="main/images/menu3.webp" class="img-fluid">
-                  </div>
-                  <div class="rac_menu_text">
-                    <div class="rac_menu_title">
-                      <h4>Chicken Tandoori</h4>
-                      <h2>$ 32</h2>
-                    </div>
-                    <p>Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Duis aute irure dolor in reprehenderit.</p>
-                  </div>
-                </div>
-              </div>
-              <div class="col-sm-6 ">
-                <div class="rac_menu_box">
-                  <div class="rac_menu_img">
-                    <img src="main/images/menu4.webp" class="img-fluid">
-                  </div>
-                  <div class="rac_menu_text">
-                    <div class="rac_menu_title">
-                      <h4>Tandoori Paneer</h4>
-                      <h2>$ 32</h2>
-                    </div>
-                    <p>Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Duis aute irure dolor in reprehenderit.</p>
-                  </div>
-                </div>
-              </div>
-              <div class="col-sm-6 ">
-                <div class="rac_menu_box">
-                  <div class="rac_menu_img">
-                    <img src="main/images/menu5.webp" class="img-fluid">
-                  </div>
-                  <div class="rac_menu_text">
-                    <div class="rac_menu_title">
-                      <h4>Tandoori Aloo Fry</h4>
-                      <h2>$ 32</h2>
-                    </div>
-                    <p>Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Duis aute irure dolor in reprehenderit.</p>
-                  </div>
-                </div>
-              </div>
-              <div class="col-sm-6 ">
-                <div class="rac_menu_box">
-                  <div class="rac_menu_img">
-                    <img src="main/images/menu6.webp" class="img-fluid">
-                  </div>
-                  <div class="rac_menu_text">
-                    <div class="rac_menu_title">
-                      <h4>Hare-Bhare Kabab</h4>
-                      <h2>$ 32</h2>
-                    </div>
-                    <p>Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Duis aute irure dolor in reprehenderit.</p>
-                  </div>
-                </div>
-              </div>
-              <div class="col-sm-6 ">
-                <div class="rac_menu_box">
-                  <div class="rac_menu_img">
-                    <img src="main/images/menu7.webp" class="img-fluid">
-                  </div>
-                  <div class="rac_menu_text">
-                    <div class="rac_menu_title">
-                      <h4>Malai Paneer Tikka</h4>
-                      <h2>$ 32</h2>
-                    </div>
-                    <p>Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Duis aute irure dolor in reprehenderit.</p>
-                  </div>
-                </div>
-              </div>
-              <div class="col-sm-6 ">
-                <div class="rac_menu_box">
-                  <div class="rac_menu_img">
-                    <img src="main/images/menu8.webp" class="img-fluid">
-                  </div>
-                  <div class="rac_menu_text">
-                    <div class="rac_menu_title">
-                      <h4>Punjabi Soya Chap</h4>
-                      <h2>$ 32</h2>
-                    </div>
-                    <p>Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Duis aute irure dolor in reprehenderit.</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+        </div>
+         
         </div>
       </div>
     </div>
@@ -847,5 +275,34 @@
       </div>
     </div>
   </div>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function() {
+        var initialCategoryId = 1; // Set the initial category ID here
+
+        // Filter products based on initial category ID
+        $('.product-item').each(function() {
+            var productCategoryId = $(this).data('category-id');
+            if (productCategoryId != initialCategoryId) {
+                $(this).hide();
+            }
+        });
+
+        $('.category-tab').on('click', function() {
+            var categoryId = $(this).data('category-id');
+
+            // Show all products initially
+            $('.product-item').hide();
+
+            // Filter products based on category
+            $('.product-item').each(function() {
+                var productCategoryId = $(this).data('category-id');
+                if (categoryId == 'all' || productCategoryId == categoryId) {
+                    $(this).show();
+                }
+            });
+        });
+    });
+</script>
 
   @include('layouts.frontend.footer')
