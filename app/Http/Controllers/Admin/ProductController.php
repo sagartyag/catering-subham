@@ -240,7 +240,7 @@ class ProductController extends Controller
             'productDiscountPrice' => 'required',
             // 'type' => 'required',
             'ProductDiscription' => 'required',
-            'icon_image'=>'max:4096|mimes:jpeg,png,jpg,svg',
+            'icon_image'=>'max:4096|mimes:jpeg,png,jpg,svg,webp',
 
         ]);
 
