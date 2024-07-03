@@ -240,7 +240,7 @@ class ProductController extends Controller
             'productDiscountPrice' => 'required',
             // 'type' => 'required',
             'ProductDiscription' => 'required',
-            'icon_image'=>'max:4096|mimes:jpeg,png,jpg,svg',
+            'icon_image'=>'max:4096|mimes:jpeg,png,jpg,svg,webp',
 
         ]);
 
@@ -302,7 +302,7 @@ class ProductController extends Controller
             try {
                 // Validate the request data
                 $validation = Validator::make($request->all(), [
-                    'category_name' => 'required',
+                    'categoryname' => 'required',
                     // 'status' => 'required',
                 ]);
         
@@ -312,12 +312,12 @@ class ProductController extends Controller
                 }
         
                 // Check if the category already exists
-                $category = Categorie::where('category_name', $request->categoryname)->first();
-        
+                $category = Categorie::where('categoryname', $request->categoryname)->first();
+                // dd($category);
                 if (!$category) {
                     // Prepare the data for insertion
                     $data = [
-                        'category_name' => $request->categoryname,
+                        'categoryname' => $request->categoryname,
                         // 'status' => $request->status,
                     ];
         

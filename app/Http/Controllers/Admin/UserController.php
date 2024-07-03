@@ -18,6 +18,7 @@ use Validator;
 use Redirect;
 use Helper;
 use Storage;
+use Hash;
 use Carbon\Carbon;
 
 class UserController extends Controller
@@ -277,5 +278,50 @@ class UserController extends Controller
     }
 
 
+    public function add_agent()
+    {
 
+      $this->data['page'] = 'admin.users.add_agent';
+      return $this->admin_dashboard();
+
+    }
+
+
+
+    public function agent_post(Request $request)
+    {
+        // Validate the request data
+        $request->validate([
+            'name' => 'required',
+            'email' => 'required|string|email|max:255|unique:users',
+            'phone' => 'required',
+            'password' => 'required|string|min:5',
+            'role' => 'required',
+        ]);
+
+        // Check if the user already exists
+        if (User::where('email', $request->email)->exists()) {
+            return redirect()->back()->with('error', 'User already exists.');
+        }
+
+        // Create a new user
+        $user = new User();
+        $user->name = $request->name;
+        $user->email = $request->email;
+        $user->username = '0';
+        $user->sponsor = '0';
+        $user->ParentId = '0';
+        $user->jdate = date('Y-m-d');
+        $user->level = '0';
+        $user->tpassword = '0';
+        $user->phone = $request->phone;
+        $user->password = Hash::make($request->password);
+        $user->role = $request->role;
+        $user->save();
+
+        $notify[] = ['success', 'Register  successfully'];
+        return redirect()->back()->withNotify($notify);
+    }
 }
+
+

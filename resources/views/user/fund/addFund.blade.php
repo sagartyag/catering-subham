@@ -54,14 +54,18 @@
                                                     <label class="control-label">Products</label>
 
                                                     <select class="select2 form-control select2-multiple"
-                                                        multiple="multiple"  name="products[]" data-placeholder="Choose ...">
+                                                        multiple="multiple"  name="products" data-placeholder="Choose ...">
+                                                        <?php if(is_array($product) || is_object($product)){
+                                                            
+                                                         
+                                                            ?>
 
                                                         @foreach ($product as $log)
-                                                        <option value="{{$log->product->id}}">{{$log->product->productName}}</option>
+                                                        <option value="{{$log->id}}">{{$log->productName}}</option>
                                                           
                                                          @endforeach
 
-                                                       
+                                                         <?php }?>
                                                     </select>
 
                                                 </div>

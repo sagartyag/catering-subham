@@ -22,9 +22,8 @@ public function index(Request $request)
 
 $user=Auth::user();
  \DB::statement("SET SQL_MODE=''");
-$product = Admin_product::where('admin_id',Auth::guard('admin')->user()->id)->where('activeStatus',1)->orderBy('id','DESC')->groupBy('product_id')->get();
+$product = Product::orderBy('id','DESC')->get();
 $this->data['product'] = $product;
-
 $this->data['page'] = 'user.fund.addFund';
 return $this->dashboard_layout();
 
