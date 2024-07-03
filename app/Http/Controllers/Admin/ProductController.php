@@ -313,7 +313,7 @@ class ProductController extends Controller
         
                 // Check if the category already exists
                 $category = Categorie::where('category_name', $request->categoryname)->first();
-        
+                // dd($category);
                 if (!$category) {
                     // Prepare the data for insertion
                     $data = [
