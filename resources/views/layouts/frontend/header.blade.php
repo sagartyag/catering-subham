@@ -13,6 +13,12 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lightgallery/1.2.21/css/lightgallery.min.css" />
     <link rel="stylesheet" href="main/css/style.css" />
     <link rel="stylesheet" href="main/css/responsive.css" />
+    <!-- Slick Slider CSS -->
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.css"/>
+
+<!-- Slick Slider JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js"></script>
+
     <!--=== custom css ===-->
     <title>Restaurant and Catering HTML Template</title>
   </head>
