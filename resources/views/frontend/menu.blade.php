@@ -284,7 +284,7 @@
         $('.product-item').each(function() {
             var productCategoryId = $(this).data('category-id');
             if (productCategoryId != initialCategoryId) {
-                $(this).hide();
+                $(this).show();
             }
         });
 
