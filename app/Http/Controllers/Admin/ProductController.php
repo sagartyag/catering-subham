@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Validator;
 use Log;
 use Redirect;
 use Auth;
+use DB;
 
 class ProductController extends Controller
 {
@@ -21,11 +22,17 @@ class ProductController extends Controller
 
 
     public function index()
-    {
-    
-       $this->data['page'] = 'admin.products.add-products';
-        return $this->admin_dashboard(); 
-    }
+{
+    // Query to fetch data from categories table
+    $categories = DB::table('categories')->get();
+
+    // dd($categories);
+    // Pass the data to the view
+    $this->data['categories'] = $categories;
+    $this->data['page'] = 'admin.products.add-products';
+
+    return $this->admin_dashboard(); 
+}
 
     public function category()
     {
@@ -229,8 +236,9 @@ class ProductController extends Controller
         $validation =  Validator::make($request->all(), [
             'productName' => 'required',
             'productPrice' => 'required|numeric',
+            'category_id' => 'required',
             'productDiscountPrice' => 'required',
-            'type' => 'required',
+            // 'type' => 'required',
             'ProductDiscription' => 'required',
             'icon_image'=>'max:4096|mimes:jpeg,png,jpg,svg',
 
@@ -255,11 +263,12 @@ class ProductController extends Controller
            $data = [
                 'productName' =>$request->productName,
                 'productPrice' =>$request->productPrice,
+                'category_id' =>$request->category_id,
                 'productDiscountPrice' => $request->productDiscountPrice,
-                'productName' =>$request->type,
+                // 'productName' =>$request->type,
                 'ProductCoupon' => 0,
                 'ProductDiscription' => $request->ProductDiscription,
-                 'image' => 'public/image/'.$imageName,
+                 'image' => 'image/'.$imageName,
             ];
             $payment = Product::firstOrCreate(['productName'=>$request->name],$data);
 
@@ -294,7 +303,7 @@ class ProductController extends Controller
                 // Validate the request data
                 $validation = Validator::make($request->all(), [
                     'categoryname' => 'required',
-                    'status' => 'required',
+                    // 'status' => 'required',
                 ]);
         
                 if ($validation->fails()) {
@@ -304,12 +313,12 @@ class ProductController extends Controller
         
                 // Check if the category already exists
                 $category = Categorie::where('categoryname', $request->categoryname)->first();
-        
+                // dd($category);
                 if (!$category) {
                     // Prepare the data for insertion
                     $data = [
                         'categoryname' => $request->categoryname,
-                        'status' => $request->status,
+                        // 'status' => $request->status,
                     ];
         
                     // Insert the category

@@ -34,12 +34,27 @@
                                                 <input class="form-control" id="inputEmail3" placeholder="Product Price" type="number" name="productPrice">
                                             </div>
                                             <div class="mb-3 col-md-12">
+                                                <label class="form-label"> Category Id</label>
+                                              
+                                                <select name="category_id" id="inputEmail3" name="category_id" class="form-control">
+                                                @foreach($categories as $value)
+                                                
+                                                <option value="{{$value->id}}">{{$value->categoryname}}</option>
+                                               
+                                               
+                                               
+                                                @endforeach
+                                              
+                
+                                                  </select>
+                                            </div>
+                                            <div class="mb-3 col-md-12">
                                                 <label class="form-label">Product Discount Price</label>
                                                 <input class="form-control" id="inputEmail3" placeholder="Product Discount Price" type="text" name="productDiscountPrice">
                                             </div>
                                             <div class="mb-3 col-md-12">
-                                                <label class="form-label">Upload Proof</label>
-                                                <input class="form-control" id="inputEmail3" placeholder="Upload Proof" type="file" name="icon_image">
+                                                <label class="form-label">Upload Image</label>
+                                                <input class="form-control" id="inputEmail3" placeholder="Upload Image" type="file" name="icon_image">
                                             </div>
 
                                             <!--<div class="mb-3 col-md-12">-->

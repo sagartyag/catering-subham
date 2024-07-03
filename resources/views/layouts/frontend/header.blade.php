@@ -74,7 +74,7 @@
                         </a>
                       </li>
                       <li>
-                        <a href="javascript:void(0);" class="rac_btn">Sign Up</a>
+                        <a href="{{route('login')}}" class="rac_btn">Sign In</a>
                       </li>
                     </ul>
                     <a href="javascript:void(0);" class="rac_toggle_btn">
