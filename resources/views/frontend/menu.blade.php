@@ -46,7 +46,7 @@
                     <div class="col-sm-6 product-item" data-category-id="{{ $product->category_id }}">
                         <div class="rac_menu_box">
                             <div class="rac_menu_img">
-                                <img src="{{ asset($product->image) }}" class="img-fluid">
+                                <img src="{{ asset($product->image) }}" class="img-fluid" style="width:100px;;">
                             </div>
                             <div class="rac_menu_text">
                                 <div class="rac_menu_title">
