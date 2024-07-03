@@ -11,7 +11,7 @@ class categorie extends Model
 
 
     protected $fillable = [
-        'status','category_name',	
+        'status','categoryname',	
     ];
 
 

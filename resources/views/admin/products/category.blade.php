@@ -27,7 +27,7 @@
                                         <div class="row">
                                             <div class="mb-3 col-md-12">
                                                 <label class="form-label">Categories Name</label>
-                                                <input class="form-control" id="inputEmail3" placeholder="Category Name" type="text" name="category_name">
+                                                <input class="form-control" id="inputEmail3" placeholder="Category Name" type="text" name="categoryname">
                                                 </div>
      
                                            

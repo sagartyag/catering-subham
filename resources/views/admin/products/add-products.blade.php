@@ -39,7 +39,7 @@
                                                 <select name="category_id" id="inputEmail3" name="category_id" class="form-control">
                                                 @foreach($categories as $value)
                                                 
-                                                <option value="{{$value->id}}">{{$value->category_name}}</option>
+                                                <option value="{{$value->id}}">{{$value->categoryname}}</option>
                                                
                                                
                                                
