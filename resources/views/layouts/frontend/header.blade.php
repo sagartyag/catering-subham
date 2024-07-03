@@ -14,7 +14,7 @@
     <link rel="stylesheet" href="main/css/style.css" />
     <link rel="stylesheet" href="main/css/responsive.css" />
     <!--=== custom css ===-->
-    <title>Restaurant and Catering HTML Template</title>
+    <title>Lalji Caterers</title>
   </head>
   <body>
     <div class="rac_main_wrapper">
@@ -40,14 +40,16 @@
               <div class="rac_navbar">
                 <div class="rac_logo">
                   <a href="{{ route('Index') }}">
-                    <img src="main/images/logo.png" class="img-fluid">
+                    <img src="main/images/laalji-logo.png" style="    width: 86px;
+                    margin: 10px;" class="img-fluid">
                   </a>
                 </div>
                 <div class="rac_nav_item">
                   <ul>
                     <div class="rac_res_logo">
                       <a href="{{ route('Index') }}">
-                        <img src="main/images/logo.png" class="img-fluid">
+                        <img src="main/images/laalji-logo.png" style="    width: 86px;
+                        margin: 10px;" class="img-fluid">
                       </a>
                     </div>
                     <li>

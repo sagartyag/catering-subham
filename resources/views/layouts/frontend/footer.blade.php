@@ -158,7 +158,7 @@
       <div class="row">
         <div class="col-12">
           <div class="rac_copyright_text">
-            <p>Copyright © <span id="copyYear"></span> Catering by Kamleshyadav. All Rights Reserved.</p>
+            <p>Copyright © <span id="copyYear"></span> Catering by Lalji Caterers. All Rights Reserved.</p>
           </div>
         </div>
       </div>
