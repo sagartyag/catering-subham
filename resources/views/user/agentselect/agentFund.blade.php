@@ -50,7 +50,7 @@
                                             <div class="col-sm-12">
                                                 <div class="mb-3">
                                                     <label for="productname">Name</label>
-                                                    <input id="productname" readonly name="name" type="text"
+                                                    <input id="productname" name="name" type="text"
                                                         class="form-control"  placeholder="Name">
                                                 </div>
                                              
@@ -58,7 +58,7 @@
                                             <div class="col-sm-12">
                                                 <div class="mb-3">
                                                     <label for="productname">Email</label>
-                                                    <input id="productname" readonly name="Email" type="email"
+                                                    <input id="productname" name="Email" type="email"
                                                         class="form-control"  placeholder="Email">
                                                 </div>
                                              
@@ -66,7 +66,7 @@
                                             <div class="col-sm-12">
                                                 <div class="mb-3">
                                                     <label for="productname">Address</label>
-                                                    <input id="productname" readonly name="address" type="text"
+                                                    <input id="productname" name="address" type="text"
                                                         class="form-control"  placeholder="Address">
                                                 </div>
                                              
