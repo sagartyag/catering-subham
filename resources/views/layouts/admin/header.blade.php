@@ -244,6 +244,17 @@ display: none;
                           
                         </ul>
                     </li>
+                    <li><a class="has-arrow ai-icon" href="javascript:void()" aria-expanded="false">
+							<i class="flaticon-045-heart"></i>
+							<span class="nav-text">Add Agent</span>
+						</a>
+                        <ul aria-expanded="false">
+                            <li><a href="{{ route('admin.add_agent') }}">Add Product</a></li>
+                            <li><a href=""> Agent Report</a></li>
+                            <li><a href=""> Vendor Report</a></li>
+                          
+                        </ul>
+                    </li>
 
                         <li><a class="has-arrow ai-icon" href="javascript:void()" aria-expanded="false">
 							<i class="flaticon-045-heart"></i>

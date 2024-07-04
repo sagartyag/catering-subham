@@ -153,6 +153,9 @@ Route::group(['middleware' => ['admin']], function ()
 
  // usercontroller
  Route::get('/totalusers', [App\Http\Controllers\Admin\UserController::class, 'alluserlist'])->name('admin.totalusers');
+ Route::get('/add_agent', [App\Http\Controllers\Admin\UserController::class, 'add_agent'])->name('admin.add_agent');
+ Route::post('/agent_post', [App\Http\Controllers\Admin\UserController::class, 'agent_post'])->name('admin.agent_post');
+
  Route::get('/active-users', [App\Http\Controllers\Admin\UserController::class, 'active_users'])->name('admin.active-users');
  Route::get('/pending-user', [App\Http\Controllers\Admin\UserController::class, 'pending_users'])->name('admin.pending-user');
  Route::get('/edit-users', [App\Http\Controllers\Admin\UserController::class, 'edit_users'])->name('admin.edit-users');
