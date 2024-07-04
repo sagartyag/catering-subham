@@ -157,6 +157,13 @@ Route::group(['middleware' => ['admin']], function ()
  Route::get('/totalusers', [App\Http\Controllers\Admin\UserController::class, 'alluserlist'])->name('admin.totalusers');
  Route::get('/add_agent', [App\Http\Controllers\Admin\UserController::class, 'add_agent'])->name('admin.add_agent');
  Route::post('/agent_post', [App\Http\Controllers\Admin\UserController::class, 'agent_post'])->name('admin.agent_post');
+ Route::get('/agent_history', [App\Http\Controllers\Admin\UserController::class, 'agent_history'])->name('admin.agent_history');
+ Route::get('/vendor_history', [App\Http\Controllers\Admin\UserController::class, 'vendor_history'])->name('admin.vendor_history');
+ Route::get('/edit_member/{id}', [App\Http\Controllers\Admin\UserController::class, 'edit_member'])->name('admin.edit_member');
+ Route::post('/edit_member_post', [App\Http\Controllers\Admin\UserController::class, 'edit_member_post'])->name('admin.edit_member_post');
+ Route::Post('/edit_vendor_post', [App\Http\Controllers\Admin\UserController::class, 'edit_vendor_post'])->name('admin.edit_vendor_post');
+ Route::get('/edit_vendor/{id}', [App\Http\Controllers\Admin\UserController::class, 'edit_vendor'])->name('admin.edit_vendor');
+
 
  Route::get('/active-users', [App\Http\Controllers\Admin\UserController::class, 'active_users'])->name('admin.active-users');
  Route::get('/pending-user', [App\Http\Controllers\Admin\UserController::class, 'pending_users'])->name('admin.pending-user');
@@ -194,8 +201,16 @@ Route::group(['middleware' => ['admin']], function ()
 
 
 //productController
+Route::post('a_product', [App\Http\Controllers\Admin\ProductController::class, 'a_product'])->name('admin.a_product');
+Route::get('agent_product', [App\Http\Controllers\Admin\ProductController::class, 'agent_product'])->name('admin.agent_product');
+Route::get('v_product', [App\Http\Controllers\Admin\ProductController::class, 'v_product'])->name('admin.v_product');
+Route::post('vendor_product', [App\Http\Controllers\Admin\ProductController::class, 'vendor_product'])->name('admin.vendor_product');
 Route::get('add-product', [App\Http\Controllers\Admin\ProductController::class, 'index'])->name('admin.add-product');
 Route::get('category', [App\Http\Controllers\Admin\ProductController::class, 'category'])->name('admin.category');
+Route::post('/toggle-status', [App\Http\Controllers\Admin\ProductController::class, 'toggleStatus'])->name('toggle.status');
+Route::post('editcategory', [App\Http\Controllers\Admin\ProductController::class, 'editcategory'])->name('admin.editcategory');
+Route::get('edit_category/{id}', [App\Http\Controllers\Admin\ProductController::class, 'edit_category'])->name('admin.edit_category');
+Route::get('Categorylist', [App\Http\Controllers\Admin\ProductController::class, 'Categorylist'])->name('admin.Categorylist');
 Route::post('categorie', [App\Http\Controllers\Admin\ProductController::class, 'categorie'])->name('admin.categorie');
 Route::get('admin-product', [App\Http\Controllers\Admin\ProductController::class, 'admin_product'])->name('admin.admin-product');
 Route::get('billing-product', [App\Http\Controllers\Admin\ProductController::class, 'billing_product'])->name('admin.billing-product');

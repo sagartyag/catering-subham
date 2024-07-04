@@ -5,8 +5,8 @@
             <div class="container-fluid">
                 <div class="row page-titles">
                     <ol class="breadcrumb">
-                        <li class="breadcrumb-item active"><a href="javascript:void(0)"> Add Member</a></li>
-                        <li class="breadcrumb-item"><a href="javascript:void(0)">Add Member</a></li>
+                        <li class="breadcrumb-item active"><a href="javascript:void(0)">Product</a></li>
+                        <li class="breadcrumb-item"><a href="javascript:void(0)">Add Agent Product</a></li>
                     </ol>
                 </div>
                 <!-- row -->
@@ -16,45 +16,42 @@
                     <div class="col-xl-6 col-lg-12">
                         <div class="card">
                             <div class="card-header">
-                                <h4 class="card-title">Add Member</h4>
+                                <h4 class="card-title">Add Agent Product</h4>
                             </div>
                             <div class="card-body">
                                 <div class="basic-form">
-                                    <form action="{{route('admin.agent_post')}}" method="POST">
+                                    <form action="{{ route('admin.a_product') }}" method="POST" enctype="multipart/form-data">
                                      {{ csrf_field() }}
                                         <div class="row">
                                             <div class="mb-3 col-md-12">
-                                                <label class="form-label"> Name</label>
-                                                <input class="form-control" id="inputEmail3" placeholder="Enter Name" type="text" name="name">
+                                                <label class="form-label">Product Name</label>
+                                                <input class="form-control" id="inputEmail3" placeholder="Product Name" type="text" name="productName">
                                             </div>
      
                                            
                                             <div class="mb-3 col-md-12">
-                                                <label class="form-label">Email</label>
-                                                <input class="form-control" id="inputEmail3" placeholder="Enter Email" type="email" name="email">
+                                                <label class="form-label">Product Price</label>
+                                                <input class="form-control" id="inputEmail3" placeholder="Product Price" type="number" name="productPrice">
                                             </div>
+                                          
+                                            <div class="mb-3 col-md-12">
+                                                <label class="form-label">Product Discount Price</label>
+                                                <input class="form-control" id="inputEmail3" placeholder="Product Discount Price" type="text" name="productDiscountPrice">
+                                            </div>
+                                            <div class="mb-3 col-md-12">
+                                                <label class="form-label">Upload Image</label>
+                                                <input class="form-control" id="inputEmail3" placeholder="Upload Image" type="file" name="icon_image">
+                                            </div>
+
                                            
+
+
                                             <div class="mb-3 col-md-12">
-                                                <label class="form-label">Select Member</label>
+                                                <label class="form-label">Product Discription</label>
                                               
-                                                <select   name="role" class="form-control" id="inputEmail3"> 
-  <option value="Agent">Agent</option>
-  <option value="Vendor">Vendor</option>
- 
-</select>
-                                            </div>
-                                            <div class="mb-3 col-md-12">
-                                                <label class="form-label">Mobile No</label>
-                                                <input class="form-control" id="inputEmail3" placeholder="Enter Mobile NO" type="" name="phone">
-                                            </div>
-
-                                          
-                                            <div class="mb-3 col-md-12">
-                                                <label class="form-label">Password</label>
-                                                <input class="form-control" id="inputEmail3" placeholder="Enter Password" type="" name="password">
-                                            </div>
-
-                                          
+                                                <textarea name="ProductDiscription" class="form-control" ></textarea>
+                                            </div>               
+                                        </div>
      
                                         <div class="mb-3">
                                             <div class="form-check">
