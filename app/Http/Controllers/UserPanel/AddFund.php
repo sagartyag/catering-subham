@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Crypt;
 use App\Models\Product;
+use App\Models\Vproduct;
 use App\Models\Seller_product;
 use App\Models\Admin_product;
 use App\Models\Seller_invoice;
@@ -16,18 +17,19 @@ use Log;
 use Redirect;
 class AddFund extends Controller
 {
+    public function index(Request $request)
+    {
+    
+    $user=Auth::user();
+     \DB::statement("SET SQL_MODE=''");
+    // $product = Vproduct::orderBy('id','DESC')->get();
+    $product = Product::orderBy('id','DESC')->get();
 
-public function index(Request $request)
-{
-
-$user=Auth::user();
- \DB::statement("SET SQL_MODE=''");
-$product = Product::orderBy('id','DESC')->get();
-$this->data['product'] = $product;
-$this->data['page'] = 'user.fund.addFund';
-return $this->dashboard_layout();
-
-}
+    $this->data['product'] = $product;
+    $this->data['page'] = 'user.fund.addFund';
+    return $this->dashboard_layout();
+    
+    }
 
 
 public function fundHistory(Request $request)
@@ -158,6 +160,51 @@ public function SubmitBuyFund(Request $request)
     }
 
 }
+
+
+public function ecommerce_cart(Request $request)
+    {
+    
+      try{
+            $validation =  Validator::make($request->all(), [
+                'products' => 'required',
+                'user_id' => 'required|exists:users,username',
+                
+            ]);
+    
+            if($validation->fails()) {
+                Log::info($validation->getMessageBag()->first());
+    
+                return redirect()->route('user.AddFund')->withErrors($validation->getMessageBag()->first())->withInput();
+            }
+    
+            $user=Auth::user();
+
+            if (empty($request->products))
+                {
+                  return Redirect::back()->withErrors(array('Something went wrong'));
+                }
+            
+
+            $product = Product::whereIn('id',$request->products)->get();
+       
+            $this->data['product'] = $product;
+            $this->data['user_id'] = $request->user_id;
+            $this->data['page'] = 'user.fund.ecommerce_cart';
+            return $this->dashboard_layout();
+
+
+        
+          }
+           catch(\Exception $e){
+            Log::info('error here');
+            Log::info($e->getMessage());
+            print_r($e->getMessage());
+            die("hi");
+            return  redirect()->route('user.AddFund')->withErrors('error', $e->getMessage())->withInput();
+        }
+    
+    }
 
     public function ViewSellerInvoice($id)
     {

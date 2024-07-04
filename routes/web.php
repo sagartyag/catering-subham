@@ -82,6 +82,7 @@ Route::any('/SubmitBuyFund', [App\Http\Controllers\UserPanel\AddFund::class, 'Su
 Route::any('/add-cart', [App\Http\Controllers\UserPanel\AddFund::class, 'add_cart'])->name('user.add-cart');
 Route::get('/sellerInvoice', [App\Http\Controllers\UserPanel\AddFund::class, 'sellerInvoice'])->name('user.sellerInvoice');
 Route::get('ViewSellerInvoice/{id}', [App\Http\Controllers\UserPanel\AddFund::class, 'ViewSellerInvoice'])->name('user.ViewSellerInvoice');
+Route::any('/ecommerceCart', [App\Http\Controllers\UserPanel\AddFund::class, 'ecommerce_cart'])->name('user.ecommerceCart');
 
 // end add fund
 

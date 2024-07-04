@@ -34,52 +34,40 @@
                                     <h4 class="card-title">Add Product</h4>
                                     <p class="card-title-desc">Fill all information below</p>
 
-                                    <form action="{{ route('user.SubmitBuyFund') }}" method="POST" enctype="multipart/form-data">
+                                    <form action="{{ route('user.ecommerceCart') }}" method="POST" enctype="multipart/form-data">
 
                                         {{ csrf_field() }}
-
+                                    
                                         <div class="row">
                                             <div class="col-sm-12">
                                                 <div class="mb-3">
-                                                    <label for="productname">Seller ID</label>
+                                                    <label for="productname">Vendor ID</label>
                                                     <input id="productname" readonly name="user_id" type="text"
-                                                        class="form-control" value="{{Auth::user()->username}}" placeholder="Customer ID">
+                                                        class="form-control" value="{{ Auth::user()->username }}" placeholder="Vendor ID">
                                                 </div>
-                                             
                                             </div>
-
+                                    
                                             <div class="col-sm-12">
-                                             
                                                 <div class="mb-3">
                                                     <label class="control-label">Products</label>
-
                                                     <select class="select2 form-control select2-multiple"
-                                                        multiple="multiple"  name="products" data-placeholder="Choose ...">
-                                                        <?php if(is_array($product) || is_object($product)){
-                                                            
-                                                         
-                                                            ?>
-
-                                                        @foreach ($product as $log)
-                                                        <option value="{{$log->id}}">{{$log->productName}}</option>
-                                                          
-                                                         @endforeach
-
-                                                         <?php }?>
+                                                        multiple="multiple" name="products[]" data-placeholder="Choose ...">
+                                                        @if(is_array($product) || is_object($product))
+                                                            @foreach ($product as $log)
+                                                                <option value="{{ $log->id }}">{{ $log->productName }}</option>
+                                                            @endforeach
+                                                        @endif
                                                     </select>
-
                                                 </div>
-                                             
-
                                             </div>
                                         </div>
-
+                                    
                                         <div class="d-flex flex-wrap gap-2">
                                             <button type="submit" class="btn btn-primary waves-effect waves-light">Submit</button>
-                                            <button type="button"
-                                                class="btn btn-secondary waves-effect waves-light">Cancel</button>
+                                            <button type="button" class="btn btn-secondary waves-effect waves-light">Cancel</button>
                                         </div>
                                     </form>
+                                    
 
                                 </div>
                             </div>
