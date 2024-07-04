@@ -158,6 +158,7 @@
 
         // Update item quantity
         function updateQuantity(product, quantity) {
+            console.log('Updating quantity for:', product, 'to:', quantity);
             var item = cart.find(function(element) {
                 return element.product === product;
             });
@@ -195,7 +196,7 @@
                 row.append('<td>&#8377; ' + item.price + '</td>');
                 row.append('<td>&#8377; ' + item.DiscountPrice + '</td>');
                 row.append('<td>&#8377; ' + item.coupen + '</td>');
-                row.append('<td><div class="me-3" style="width: 120px;"><input type="number" min="1" max="' + item.maxQuantity + '" value="' + item.quantity + '" data-product="' + item.product + '" class="form-control" name="quantity[]"></div></td>');
+                row.append('<td><div class="me-3" style="width: 120px;"><input type="number" min="1" value="' + item.quantity + '" data-product="' + item.product + '" class="form-control" name="quantity[]"></div></td>');
                 row.append('<td>&#8377;' + totalPrice.toFixed(2) + '</td>');
                 row.append('<td><a href="javascript:void(0);" class="action-icon text-danger remove" data-product="' + item.product + '"> <i class="mdi mdi-trash-can font-size-18"></i></a> </td>');
 
@@ -215,6 +216,7 @@
         $('#cart').on('change', 'input[type="number"]', function() {
             var product = $(this).data('product');
             var quantity = parseInt($(this).val());
+            console.log('Quantity change detected for product:', product, 'New quantity:', quantity);
 
             if (quantity > 0) {
                 updateQuantity(product, quantity);
@@ -226,6 +228,7 @@
 
         $('#cart').on('click', '.remove', function() {
             var product = $(this).data('product');
+            console.log('Removing product:', product);
 
             removeFromCart(product);
         });
@@ -240,3 +243,4 @@
         @endforeach
     });
 </script>
+

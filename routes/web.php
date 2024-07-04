@@ -83,12 +83,13 @@ Route::any('/add-cart', [App\Http\Controllers\UserPanel\AddFund::class, 'add_car
 Route::get('/sellerInvoice', [App\Http\Controllers\UserPanel\AddFund::class, 'sellerInvoice'])->name('user.sellerInvoice');
 Route::get('ViewSellerInvoice/{id}', [App\Http\Controllers\UserPanel\AddFund::class, 'ViewSellerInvoice'])->name('user.ViewSellerInvoice');
 Route::any('/ecommerceCart', [App\Http\Controllers\UserPanel\AddFund::class, 'ecommerce_cart'])->name('user.ecommerceCart');
+Route::post('/fund_activation', [App\Http\Controllers\UserPanel\AddFund::class, 'fundActivation'])->name('user.fundActivation');
 
 // end add fund
 
 // invest
 Route::get('/invest', [App\Http\Controllers\UserPanel\Invest::class, 'index'])->name('user.invest');
-Route::post('/fundActivation', [App\Http\Controllers\UserPanel\Invest::class, 'fundActivation'])->name('user.fundActivation');
+Route::post('/fundActivation', [App\Http\Controllers\UserPanel\Invest::class, 'fundActivation'])->name('user.fund_activation');
 Route::get('/DepositHistory', [App\Http\Controllers\UserPanel\Invest::class, 'invest_list'])->name('user.DepositHistory');
 Route::any('/ecommerce_cart', [App\Http\Controllers\UserPanel\Invest::class, 'ecommerce_cart'])->name('user.ecommerce_cart');
 Route::get('view-invoice/{id}', [App\Http\Controllers\UserPanel\Invest::class, 'view_invoice'])->name('user.view-invoice');
