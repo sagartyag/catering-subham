@@ -310,4 +310,170 @@ class Invest extends Controller
 
         }
 
+
+        public function agentActivation(Request $request)
+        {
+    
+      try{
+          $validation =  Validator::make($request->all(), [
+              // 'products' => 'required',
+              // 'quantity' => 'required',
+              // 'cartTotal' => 'required',
+              // 'grandTotal' => 'required',
+              // 'DiscountTotal' => 'required',
+              // 'CouponTotal' => 'required',
+              // 'user_id' => 'required|exists:users,username',
+          ]);
+    
+    
+        if($validation->fails()) {
+            Log::info($validation->getMessageBag()->first());
+    
+            return redirect()->route('user.invest')->withErrors($validation->getMessageBag()->first())->withInput();
+        }
+    
+           $user=Auth::user();
+           $user_detail=User::where('username',$request->user_id)->orderBy('id','desc')->limit(1)->first();
+           $invest_check=Investment::where('user_id',$user_detail->id)->where('status','!=','Decline')->orderBy('id','desc')->limit(1)->first();
+         
+           if (!$invest_check) 
+           {      
+            if ($request->cartTotal<1000) 
+            {
+              return redirect()->route('user.invest')->withErrors(array('your minimum billing is &#8377; 1000'));
+            }
+           }
+    
+    
+           $products = $request->products;
+           $quantity = $request->quantity;
+           
+           if (empty($products)) 
+           {
+            return redirect()->route('user.invest')->withErrors(array('cart is empty'));
+           }
+           $invoice = substr(str_shuffle("0123456789"), 0, 7);
+            $data = [
+              'plan' =>$invoice,
+              'transaction_id' =>md5(uniqid(rand(), true)),
+              'user_id' => $user_detail->id,
+              'user_id_fk' => $user_detail->username,
+              'amount' => $request->cartTotal,
+              'payment_mode' => 'INR',
+              'status' => 'Active',
+              'sdate' => Date("Y-m-d"),
+              'active_from' => $user->username,
+              'grandTotal'=>$request->grandTotal,
+              'discount'=>$request->DiscountTotal,
+              'coupon'=>$request->CouponTotal,
+            ];
+            $paymentId =  Investment::insertGetId($data);
+            
+                foreach ($products as $key => $value) 
+                {       
+                  $Totalquantity= $quantity[$key];
+                  $productReport= Product::where('id',$value)->first();
+                  $insertProduct['user_id']=$user_detail->id;
+                  $insertProduct['product_id']=$value;
+                  $insertProduct['productName']=$productReport->productName;
+                  $insertProduct['productPrice']=$productReport->productPrice;
+                  $insertProduct['productDiscountPrice']=$productReport->productDiscountPrice;
+                  $insertProduct['ProductCoupon']=$productReport->ProductCoupon;
+                  $insertProduct['ProductDiscription']=$productReport->ProductDiscription;
+                  $insertProduct['quantity']=$Totalquantity;
+                  $insertProduct['invest_id']=$paymentId;
+                  $insertProduct['active_from']=$user->username;
+                  User_product::create($insertProduct);
+                }
+              
+    
+                if ($user_detail->active_status=="Pending")
+                {
+          
+                  $userID= $user_detail->id;
+                  $userName=  $user_detail->username;
+                  $generatedUsername =substr(time(),-2).substr(rand(),-3).substr(mt_rand(),-2);
+                  $check_user=\DB::table('club_as')->where('username',$generatedUsername)->count();           
+                  if($check_user<=0)
+                  {          
+                    $Report= getTreeChildId('extras_matrix');
+                    $pos =$Report['position'];
+                    if($pos=="1")
+                    {
+                        $pos = "Left";
+                        $colunmUpdate= "paid_left";
+                    }
+                    elseif($pos=="2")
+                    {
+                        $pos = "Left1";
+                        $colunmUpdate= "paid_left1";
+                    }
+                    elseif($pos=="3")
+                    {
+                        $pos = "Right";
+                        $colunmUpdate= "paid_right";
+                    }
+                    else
+                    {
+                        $pos = "Right1";
+                        $colunmUpdate= "paid_right1";
+                    }
+                    $sponsor = $Report['parentId'];
+                    $sponsor= ($sponsor)?$sponsor:0;
+                    $userLevel = \DB::table('club_as')->where('username',$sponsor)->first();               
+                    $mxLevel= (!empty($userLevel)?$userLevel->level+1:0);      
+              
+                    $data = [
+                          'ParentId' =>$sponsor,
+                          'level' => $mxLevel,
+                          'user_id' => $userID,
+                          'username' => $generatedUsername,
+                          'name' => $user_detail->name,
+                          'position' => $pos,
+                          
+                      ];
+                    Club_a::firstOrCreate(['username'=>$generatedUsername,'status'=>'Active'],$data);
+                    $extra_round='extras_matrix';
+                    if ($colunmUpdate=="paid_right1") 
+                    {
+                     $status=1;
+                    }
+                    else
+                    {
+                      $status=0;
+                    }
+                    \DB::table($extra_round)->where('user_id_fk',$sponsor)->update([$colunmUpdate=>1,'status'=>$status]);
+                   \DB::table($extra_round)->insert(['user_id_fk' =>$generatedUsername,'user_id'=>$userID]);
+    
+                  } 
+                  $user_update=array('active_status'=>'Active','adate'=>Date("Y-m-d H:i:s"),'package'=>$request->cartTotal);
+                  User::where('id',$user_detail->id)->update($user_update);       
+                }
+                else
+                { 
+                  $total= $user_detail->package+$request->cartTotal;
+                  $user_update=array('active_status'=>'Active','package'=>$total);
+                  User::where('id',$user_detail->id)->update($user_update);
+                }
+    
+                $notify[] = ['success', $user_detail->username.' Billing  successfully'];
+                return redirect()->route('user.invest')->withNotify($notify);
+    
+              
+    
+    
+    
+      }
+       catch(\Exception $e){
+        Log::info('error here');
+        Log::info($e->getMessage());
+        print_r($e->getMessage());
+        die("hi");
+        return  redirect()->route('user.invest')->withErrors('error', $e->getMessage())->withInput();
+          }
+    
+    
+    
+            }
+
 }

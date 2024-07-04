@@ -84,6 +84,9 @@ Route::get('/sellerInvoice', [App\Http\Controllers\UserPanel\AddFund::class, 'se
 Route::get('ViewSellerInvoice/{id}', [App\Http\Controllers\UserPanel\AddFund::class, 'ViewSellerInvoice'])->name('user.ViewSellerInvoice');
 
 // end add fund
+//add vandor
+Route::get('/addagent', [App\Http\Controllers\UserPanel\AddFund::class, 'agentindex'])->name('user.Addagent');
+Route::post('/agentActivation', [App\Http\Controllers\UserPanel\Invest::class, 'agentActivation'])->name('user.agentActivation');
 
 // invest
 Route::get('/invest', [App\Http\Controllers\UserPanel\Invest::class, 'index'])->name('user.invest');

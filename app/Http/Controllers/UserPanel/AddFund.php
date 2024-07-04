@@ -12,22 +12,23 @@ use App\Models\Product;
 use App\Models\Seller_product;
 use App\Models\Admin_product;
 use App\Models\Seller_invoice;
+use App\Models\User_product;
 use Log;
 use Redirect;
 class AddFund extends Controller
 {
 
-public function index(Request $request)
-{
-
-$user=Auth::user();
- \DB::statement("SET SQL_MODE=''");
-$product = Product::orderBy('id','DESC')->get();
-$this->data['product'] = $product;
-$this->data['page'] = 'user.fund.addFund';
-return $this->dashboard_layout();
-
-}
+    public function index(Request $request)
+    {
+    
+    $user=Auth::user();
+     \DB::statement("SET SQL_MODE=''");
+    $product = Product::orderBy('id','DESC')->get();
+    $this->data['product'] = $product;
+    $this->data['page'] = 'user.fund.addFund';
+    return $this->dashboard_layout();
+    
+    }
 
 
 public function fundHistory(Request $request)
@@ -207,6 +208,18 @@ public function sellerInvoice(Request $request){
 
 
         }
+
+        public function agentindex(Request $request)
+    {
+    
+    $user=Auth::user();
+     \DB::statement("SET SQL_MODE=''");
+    $product = User_product::orderBy('id','DESC')->get();
+    $this->data['product'] = $product;
+    $this->data['page'] = 'user.agentselect.agentFund';
+    return $this->dashboard_layout();
+    
+    }
 
 
 }
