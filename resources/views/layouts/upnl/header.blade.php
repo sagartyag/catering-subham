@@ -32,6 +32,9 @@
         <link href="{{ asset('') }}assets/css/icons.min.css" rel="stylesheet" type="text/css" />
         <!-- App Css-->
         <link href="{{ asset('') }}assets/css/app.min.css" id="app-style" rel="stylesheet" type="text/css" />
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
 
     </head>
 
@@ -239,6 +242,21 @@ span.badge.badge-success {
 
 
                                     <li><a href="{{route('user.invest')}}" key="t-products">Billing Now</a></li>
+
+
+                                   
+                                    <li><a href="{{route('user.DepositHistory')}}" key="t-add-product">Billing Reports</a></li>
+                                </ul>
+                            </li>
+                            <li>
+                                <a href="javascript: void(0);" class="has-arrow waves-effect">
+                                    <i class="bx bx-store"></i>
+                                    <span key="t-ecommerce">Vandor Product</span>
+                                </a>
+                                <ul class="sub-menu" aria-expanded="false">
+
+
+                                    <li><a href="/user/addagent" key="t-products">vandor</a></li>
 
 
                                    

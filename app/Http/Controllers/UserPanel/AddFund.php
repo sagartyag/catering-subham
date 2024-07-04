@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Crypt;
 use App\Models\Product;
+use App\Models\Category;
 use App\Models\Seller_product;
 use App\Models\Admin_product;
 use App\Models\Seller_invoice;
@@ -214,12 +215,55 @@ public function sellerInvoice(Request $request){
     
     $user=Auth::user();
      \DB::statement("SET SQL_MODE=''");
-    $product = User_product::orderBy('id','DESC')->get();
-    $this->data['product'] = $product;
+    //  by category
+    $categoryname = Category::orderBy('id','DESC')->get();
+    $this->data['categoryname'] = $categoryname;
+    // by product
+    // $product = product::orderBy('category_id','DESC')->get();
+    // $this->data['product'] = $product; 
+
     $this->data['page'] = 'user.agentselect.agentFund';
-    return $this->dashboard_layout();
+    return $this->dashboard_layout();   
     
     }
+    public function getProductsByCategory(Request $request)
+{
+    $categoryIds = $request->input('categoryIds');
+    $categoryIdsArray = explode(',', $categoryIds);
+    $products = Product::whereIn('category_id', $categoryIdsArray)->get();
+
+    return response()->json($products);
+}
+
+    public function agentActivation(Request $request)
+{
+    $request->validate([
+        'name' => 'required',
+        'email' => 'required',
+        'address' => 'required',
+    ]);
+
+    $user_id = Auth::id();
+    $name = $request->input('name');
+    $email = $request->input('email');
+    $address = $request->input('address');
+
+    
+        Seller_Invoice::create([
+            'user_id' => $user_id,
+            'activeStatus' => 0, // Default to pending
+            'name' => $name,
+            'email' => $email,
+            'address' => $address,
+            'product_id' =>$request->product_id,
+            'category_id' =>$request->category_id, 
+        ]);
+    
+
+    return redirect()->route('user.invest')->with('success', 'Order placed successfully.');
+}
+    
+    
 
 
 }
