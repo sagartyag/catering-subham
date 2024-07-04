@@ -287,28 +287,32 @@ class UserController extends Controller
     }
 
 
-
     public function agent_post(Request $request)
     {
         // Validate the request data
         $request->validate([
             'name' => 'required',
-            'email' => 'required|string|email|max:255|unique:users',
+            'email' => 'required',
             'phone' => 'required',
             'password' => 'required|string|min:5',
             'role' => 'required',
         ]);
-
+    
         // Check if the user already exists
         if (User::where('email', $request->email)->exists()) {
             return redirect()->back()->with('error', 'User already exists.');
         }
-
+    
+        // Generate a unique username
+        do {
+            $username = '000' . rand(1000, 9999);
+        } while (User::where('username', $username)->exists());
+    
         // Create a new user
         $user = new User();
         $user->name = $request->name;
         $user->email = $request->email;
-        $user->username = '0';
+        $user->username = $username; // Assign the generated username
         $user->sponsor = '0';
         $user->ParentId = '0';
         $user->jdate = date('Y-m-d');
@@ -318,10 +322,11 @@ class UserController extends Controller
         $user->password = Hash::make($request->password);
         $user->role = $request->role;
         $user->save();
-
-        $notify[] = ['success', 'Register  successfully'];
+    
+        $notify[] = ['success', 'Register successfully'];
         return redirect()->back()->withNotify($notify);
     }
+    
 }
 
 

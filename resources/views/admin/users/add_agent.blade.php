@@ -5,8 +5,8 @@
             <div class="container-fluid">
                 <div class="row page-titles">
                     <ol class="breadcrumb">
-                        <li class="breadcrumb-item active"><a href="javascript:void(0)"> Add Agent</a></li>
-                        <li class="breadcrumb-item"><a href="javascript:void(0)">Add Agent</a></li>
+                        <li class="breadcrumb-item active"><a href="javascript:void(0)"> Add Member</a></li>
+                        <li class="breadcrumb-item"><a href="javascript:void(0)">Add Member</a></li>
                     </ol>
                 </div>
                 <!-- row -->
@@ -16,7 +16,7 @@
                     <div class="col-xl-6 col-lg-12">
                         <div class="card">
                             <div class="card-header">
-                                <h4 class="card-title">Add Agent</h4>
+                                <h4 class="card-title">Add Member</h4>
                             </div>
                             <div class="card-body">
                                 <div class="basic-form">
