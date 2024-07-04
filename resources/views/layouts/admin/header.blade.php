@@ -250,8 +250,8 @@ display: none;
 						</a>
                         <ul aria-expanded="false">
                             <li><a href="{{ route('admin.add_agent') }}">Add Member </a></li>
-                            <li><a href=""> Agent Report</a></li>
-                            <li><a href=""> Vendor Report</a></li>
+                            <li><a href="{{route('admin.agent_history')}}"> Agent Report</a></li>
+                            <li><a href="{{route('admin.vendor_history')}}"> Vendor Report</a></li>
                           
                         </ul>
                     </li>

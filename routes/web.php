@@ -155,6 +155,13 @@ Route::group(['middleware' => ['admin']], function ()
  Route::get('/totalusers', [App\Http\Controllers\Admin\UserController::class, 'alluserlist'])->name('admin.totalusers');
  Route::get('/add_agent', [App\Http\Controllers\Admin\UserController::class, 'add_agent'])->name('admin.add_agent');
  Route::post('/agent_post', [App\Http\Controllers\Admin\UserController::class, 'agent_post'])->name('admin.agent_post');
+ Route::get('/agent_history', [App\Http\Controllers\Admin\UserController::class, 'agent_history'])->name('admin.agent_history');
+ Route::get('/vendor_history', [App\Http\Controllers\Admin\UserController::class, 'vendor_history'])->name('admin.vendor_history');
+ Route::get('/edit_member/{id}', [App\Http\Controllers\Admin\UserController::class, 'edit_member'])->name('admin.edit_member');
+ Route::post('/edit_member_post', [App\Http\Controllers\Admin\UserController::class, 'edit_member_post'])->name('admin.edit_member_post');
+ Route::Post('/edit_vendor_post', [App\Http\Controllers\Admin\UserController::class, 'edit_vendor_post'])->name('admin.edit_vendor_post');
+ Route::get('/edit_vendor/{id}', [App\Http\Controllers\Admin\UserController::class, 'edit_vendor'])->name('admin.edit_vendor');
+
 
  Route::get('/active-users', [App\Http\Controllers\Admin\UserController::class, 'active_users'])->name('admin.active-users');
  Route::get('/pending-user', [App\Http\Controllers\Admin\UserController::class, 'pending_users'])->name('admin.pending-user');
