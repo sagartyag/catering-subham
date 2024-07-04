@@ -107,7 +107,7 @@
 
     if (selectedCategories && selectedCategories.length > 0) {
         $.ajax({
-            url: '/user/addagent', // Correct URL for the endpoint
+            url: 'user/addproductsname', // Correct URL for the endpoint
             type: 'POST', // Use POST method
             data: { categoryIds: selectedCategories.join(',') },
             dataType: 'json',
