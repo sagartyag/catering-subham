@@ -239,13 +239,25 @@ display: none;
 						</a>
                         <ul aria-expanded="false">
                             <li><a href="{{ route('admin.add-product') }}">Add Product</a></li>
-                            <li><a href="{{ route('admin.category') }}">Add Category</a></li>
+                           
                             <li><a href="{{route('admin.productList')}}">Product Report</a></li>
                             <li><a href="{{route('admin.v_product')}}">Add Vendor Product</a></li>
                             <li><a href="{{route('admin.agent_product')}}">Add Agent Product</a></li>
                           
                         </ul>
                     </li>
+
+                    <li><a class="has-arrow ai-icon" href="javascript:void()" aria-expanded="false">
+							<i class="flaticon-045-heart"></i>
+							<span class="nav-text">Category</span>
+						</a>
+                        <ul aria-expanded="false">
+                            <li><a href="{{ route('admin.category') }}">Add Category</a></li>
+                            <li><a href="{{route('admin.Categorylist')}}">Category Report</a></li>
+                          
+                        </ul>
+                    </li>
+
                     <li><a class="has-arrow ai-icon" href="javascript:void()" aria-expanded="false">
 							<i class="flaticon-045-heart"></i>
 							<span class="nav-text">Add Member</span>

@@ -206,6 +206,10 @@ Route::get('v_product', [App\Http\Controllers\Admin\ProductController::class, 'v
 Route::post('vendor_product', [App\Http\Controllers\Admin\ProductController::class, 'vendor_product'])->name('admin.vendor_product');
 Route::get('add-product', [App\Http\Controllers\Admin\ProductController::class, 'index'])->name('admin.add-product');
 Route::get('category', [App\Http\Controllers\Admin\ProductController::class, 'category'])->name('admin.category');
+Route::post('/toggle-status', [App\Http\Controllers\Admin\ProductController::class, 'toggleStatus'])->name('toggle.status');
+Route::post('editcategory', [App\Http\Controllers\Admin\ProductController::class, 'editcategory'])->name('admin.editcategory');
+Route::get('edit_category/{id}', [App\Http\Controllers\Admin\ProductController::class, 'edit_category'])->name('admin.edit_category');
+Route::get('Categorylist', [App\Http\Controllers\Admin\ProductController::class, 'Categorylist'])->name('admin.Categorylist');
 Route::post('categorie', [App\Http\Controllers\Admin\ProductController::class, 'categorie'])->name('admin.categorie');
 Route::get('admin-product', [App\Http\Controllers\Admin\ProductController::class, 'admin_product'])->name('admin.admin-product');
 Route::get('billing-product', [App\Http\Controllers\Admin\ProductController::class, 'billing_product'])->name('admin.billing-product');

@@ -893,4 +893,127 @@ class ProductController extends Controller
             return $this->admin_dashboard(); 
         }
 
-}
+
+        public function Categorylist(Request $request)
+        {
+    
+            $limit = $request->limit ? $request->limit : 100000000000;
+            $status = $request->status ? $request->status : null;
+            $search = $request->search ? $request->search : null;
+            $notes = Categorie::orderBy('id', 'DESC');
+    
+            if($search <> null && $request->reset!="Reset")
+            {
+            $notes = $notes->where(function($q) use($search){
+                $q->Where('id ', 'LIKE', '%' . $search . '%')          
+                ->orWhere('categoryname', 'LIKE', '%' . $search . '%')
+                ->orWhere('status', 'LIKE', '%' . $search . '%')
+                ->orWhere('created_at', 'LIKE', '%' . $search . '%')         
+                ->orWhere('	updated_at', 'LIKE', '%' . $search . '%');
+              });
+              }
+            $notes = $notes->paginate($limit)
+                ->appends([
+                    'limit' => $limit
+                ]);
+    
+            $this->data['product_list'] =  $notes;
+            $this->data['search'] = $search;
+           $this->data['page'] = 'admin.products.admin.Categorylist';
+            return $this->admin_dashboard(); 
+        }
+
+
+
+        public function deletecategory(Request $request)
+        {
+    
+           $id= $request->id ; // or any params
+ 
+      
+           $product = Categorie::where('id',$id)->delete();
+           $notify[] = ['success', 'Product Edit successfully'];
+         return redirect()->back()->withNotify($notify);
+         
+       
+       
+         
+    
+       }
+
+
+       public function editcategory(Request $request)
+       {
+           try {
+               // Validation rules
+               $validation = Validator::make($request->all(), [
+                   'id' => 'required|exists:categories,id',
+                   'status' => 'required|in:0,1', // Ensures that status is either 0 or 1
+               ]);
+       
+               if ($validation->fails()) {
+                   Log::info($validation->getMessageBag()->first());
+                   return Redirect::back()->withErrors($validation->getMessageBag()->first())->withInput();
+               }
+       
+               $product = Categorie::find($request->id);
+       
+               if ($product) {
+                   $data = [
+                       'status' => $request->status,
+                   ];
+       
+                   $product->update($data);
+       
+                   $notify[] = ['success', 'Category status updated successfully'];
+                   return redirect()->back()->withNotify($notify);
+               } else {
+                   return Redirect::back()->withErrors(['Category does not exist!']);
+               }
+           } catch (\Exception $e) {
+               Log::info('Error occurred');
+               Log::info($e->getMessage());
+               return Redirect::back()->withErrors(['error' => $e->getMessage()])->withInput();
+           }
+       }
+       
+      
+
+
+
+
+
+      
+
+
+    public function edit_category($id)
+        {
+    
+        try {
+            $id = Crypt::decrypt($id);
+            } catch (\Illuminate\Contracts\Encryption\DecryptException $e) {
+            return back()->withErrors(array('Invalid User!'));
+        }
+    
+        $product = Categorie::where('id',$id)->first();
+    
+        $this->data['product'] =  $product;
+        $this->data['page'] = 'admin.products.admin.categoryedit';
+        return $this->admin_dashboard();
+    
+       }
+
+
+
+       public function toggleStatus(Request $request)
+       {
+           $category = Category::find($request->id);
+           $category->status= $category->status == 0 ? 1 : 0;
+           $category->save();
+       
+           return response()->json(['success' => true, 'status' => $category->status]);
+       }
+
+    }
+      
+
