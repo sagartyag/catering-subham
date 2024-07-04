@@ -58,7 +58,7 @@
                                                         multiple="multiple" name="products[]" data-placeholder="Choose ...">
 
                                                         @foreach ($product as $log)
-                                                        <option value="{{$log->product_id}}">{{$log->product->productName}}</option>
+                                                        <option value="{{$log->product_id}}">{{$log->product?$log->product->productName:"No Products Found"}}</option>
                                                           
                                                          @endforeach
 
