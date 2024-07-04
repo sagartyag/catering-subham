@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Product;
 use App\Models\User;
+use App\Models\Vproduct;
 use App\Models\Seller_product;
 use App\Models\Admin_product;
 use App\Models\Categorie;
@@ -680,7 +681,68 @@ class ProductController extends Controller
 
 
  }
+ public function vendor_product(Request $request)
+ {
 
+ try{
+     $validation =  Validator::make($request->all(), [
+         'productName' => 'required',
+         'productPrice' => 'required|numeric',
+        //  'category_id' => 'required',
+         'productDiscountPrice' => 'required',
+         // 'type' => 'required',
+         'ProductDiscription' => 'required',
+        //  'icon_image'=>'max:4096|mimes:jpeg,png,jpg,svg,webp',
+
+     ]);
+
+
+     if($validation->fails()) {
+         Log::info($validation->getMessageBag()->first());
+
+         return Redirect::back()->withErrors($validation->getMessageBag()->first())->withInput();
+     }
+
+ 
+     $product=Vproduct::where('productName',$request->productName)->first();
+         if (!$product)          
+         {
+          
+             
+        $data = [
+             'productName' =>$request->productName,
+             'productPrice' =>$request->productPrice,
+            //  'category_id' =>$request->category_id,
+             'productDiscountPrice' => $request->productDiscountPrice,
+             // 'productName' =>$request->type,
+             'ProductCoupon' => 0,
+             'ProductDiscription' => $request->ProductDiscription,
+             
+         ];
+         $payment = Vproduct::firstOrCreate(['productName'=>$request->name],$data);
+
+         $notify[] = ['success', ' Product Added successfully'];
+         return redirect()->back()->withNotify($notify);
+
+       
+            # code...
+        }
+       else
+       {
+         return Redirect::back()->withErrors(array('Products already Exists! '));
+       }
+
+     }
+    catch(\Exception $e){
+     Log::info('error here');
+     Log::info($e->getMessage());
+     print_r($e->getMessage());
+     die("hi");
+     return  Redirect::back()->withErrors('error', $e->getMessage())->withInput();
+     }
+
+
+     }
 
 
 
@@ -746,9 +808,89 @@ class ProductController extends Controller
 
 
  }
+ public function V_product()
+ {
+
+ 
+    $this->data['page'] = 'admin.products.admin.vendor_product';
+     return $this->admin_dashboard(); 
+ }
+
+        
+    public function a_Product(Request $request)
+    {
+
+    try{
+        $validation =  Validator::make($request->all(), [
+            'productName' => 'required',
+            'productPrice' => 'required|numeric',
+          
+            'productDiscountPrice' => 'required',
+           
+            'ProductDiscription' => 'required',
+            'icon_image'=>'max:4096|mimes:jpeg,png,jpg,svg,webp',
+
+        ]);
+
+
+        if($validation->fails()) {
+            Log::info($validation->getMessageBag()->first());
+
+            return Redirect::back()->withErrors($validation->getMessageBag()->first())->withInput();
+        }
+
+    
+        $product=Vproduct::where('productName',$request->productName)->first();
+            if (!$product)          
+            {
+                $icon_image = $request->file('icon_image');
+                $imageName = time().'.'.$icon_image->extension();
+                $request->icon_image->move(public_path('image/'),$imageName);
+                
+                
+           $data = [
+                'productName' =>$request->productName,
+                'productPrice' =>$request->productPrice,
+              
+                'productDiscountPrice' => $request->productDiscountPrice,
+                // 'productName' =>$request->type,
+                'ProductCoupon' => 0,
+                'ProductDiscription' => $request->ProductDiscription,
+                 'image' => 'image/'.$imageName,
+            ];
+            $payment = Vproduct::firstOrCreate(['productName'=>$request->name],$data);
+
+            $notify[] = ['success', ' Product Added successfully'];
+            return redirect()->back()->withNotify($notify);
+
+          
+               # code...
+           }
+          else
+          {
+            return Redirect::back()->withErrors(array('Products already Exists! '));
+          }
+
+        }
+       catch(\Exception $e){
+        Log::info('error here');
+        Log::info($e->getMessage());
+        print_r($e->getMessage());
+        die("hi");
+        return  Redirect::back()->withErrors('error', $e->getMessage())->withInput();
+        }
+
+
+        }
 
 
 
-
+        public function agent_product()
+        {
+       
+        
+           $this->data['page'] = 'admin.products.admin.agent_product';
+            return $this->admin_dashboard(); 
+        }
 
 }

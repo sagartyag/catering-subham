@@ -241,6 +241,8 @@ display: none;
                             <li><a href="{{ route('admin.add-product') }}">Add Product</a></li>
                             <li><a href="{{ route('admin.category') }}">Add Category</a></li>
                             <li><a href="{{route('admin.productList')}}">Product Report</a></li>
+                            <li><a href="{{route('admin.v_product')}}">Add Vendor Product</a></li>
+                            <li><a href="{{route('admin.agent_product')}}">Add Agent Product</a></li>
                           
                         </ul>
                     </li>

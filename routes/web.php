@@ -200,6 +200,10 @@ Route::group(['middleware' => ['admin']], function ()
 
 
 //productController
+Route::post('a_product', [App\Http\Controllers\Admin\ProductController::class, 'a_product'])->name('admin.a_product');
+Route::get('agent_product', [App\Http\Controllers\Admin\ProductController::class, 'agent_product'])->name('admin.agent_product');
+Route::get('v_product', [App\Http\Controllers\Admin\ProductController::class, 'v_product'])->name('admin.v_product');
+Route::post('vendor_product', [App\Http\Controllers\Admin\ProductController::class, 'vendor_product'])->name('admin.vendor_product');
 Route::get('add-product', [App\Http\Controllers\Admin\ProductController::class, 'index'])->name('admin.add-product');
 Route::get('category', [App\Http\Controllers\Admin\ProductController::class, 'category'])->name('admin.category');
 Route::post('categorie', [App\Http\Controllers\Admin\ProductController::class, 'categorie'])->name('admin.categorie');
