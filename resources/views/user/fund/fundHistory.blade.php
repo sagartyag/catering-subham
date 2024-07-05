@@ -14,11 +14,12 @@
                                 <h4 class="mb-sm-0 font-size-18">Product Reports</h4>
 
                                 <div class="page-title-right">
-                                    <ol class="breadcrumb m-0">
+                                    <!-- <ol class="breadcrumb m-0">
                                         <li class="breadcrumb-item"><a href="javascript: void(0);">Buy Product</a></li>
                                         <li class="breadcrumb-item active">Product Reports</li>
-                                    </ol>
+                                    </ol> -->
                                 </div>
+                               
 
                             </div>
                         </div>
@@ -36,14 +37,15 @@
                                         <thead>
                                             <tr>
                                                 <th>Sr No</th>
-                                                <th>Product Name</th>
-                                                <th>Price</th>
-                                                <th>Discount Price </th>
-                                                <th>Coupon </th>
-                                                <th>Discription </th>
-                                                <th>Quantity </th>
+                                                <th>Username</th>
+                                                <th>Amount</th>
+                                                <th>Payment Mode </th>
+                                                <th>Total Amount </th>
+                                              
                                                 <th>Added Date </th>
                                                 <th>Status</th>
+                                                <th>action</th>
+
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -57,20 +59,23 @@
                                                     </td>
             
             
-                                                    <td> {{($value->product)?$value->product->productName:''}}</td>
-                                                    <td> {{currency()}} {{($value->product)?$value->product->productPrice:''}}</td>
-                                                    <td> {{currency()}} {{($value->product)?$value->product->productDiscountPrice:''}}</td>
-                                                    <td> {{currency()}} {{($value->product)?$value->product->ProductCoupon:''}}</td>
-                                                    <td>  {{($value->product)?$value->product->ProductDiscription:''}}</td>
-                                                    <td>  {{$value->quantity}}</td>
+                                                    <td> {{$value->user_id_fk}}</td>
+                                                    <td> {{$value->amount}}</td>
+                                                    <td> {{$value->payment_mode}}</td>
+                                                    <td> {{$value->grandTotal}}</td>
+                                                   
                                                     
                                            
                                                     <td>{{date("D, d M Y h:i:s a", strtotime($value->created_at));}} </td>
                                                     
                                                     <td class="btn-success btn-sm"><span
-                                                            class="badge badge-{{($value->activeStatus==1)?'success':'danger'}}">{{($value->activeStatus)?"Approved":"Pending"}}</span>
+                                                            class="badge badge-{{($value->status==1)?'danger':'success'}}">{{($value->status)?"Approved":"Pending"}}</span>
                                                     </td>
-            
+                                                    
+                                                    <td>  <div class="d-flex flex-wrap gap-2">
+                                            <a href="{{route('user.invoices_details', ['id' => $value->id])}}">view</a>
+                                          
+                                        </div></td>
             
                                                 </tr>
                                                 @endforeach

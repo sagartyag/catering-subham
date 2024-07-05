@@ -43,7 +43,7 @@ public function fundHistory(Request $request)
     $limit = $request->limit ? $request->limit : paginationLimit();
     $status = $request->status ? $request->status : null;
     $search = $request->search ? $request->search : null;
-    $notes = Seller_product::where('user_id',$user->id);
+    $notes = Investment::where('user_id',$user->id);
     if($search <> null && $request->reset!="Reset"){
     $notes = $notes->where(function($q) use($search){
         $q->Where('product_id', 'LIKE', '%' . $search . '%')
@@ -151,7 +151,7 @@ public function fundActivation(Request $request)
             'user_id_fk' => $user_detail->username,
             'amount' => $cartTotal,
             'payment_mode' => 'INR',
-            'status' => 'Active',
+            'status' => 'Pending',
             'sdate' => date("Y-m-d"),
             'active_from' => $user_detail->username,
             'grandTotal' => $grandTotal,
@@ -391,6 +391,34 @@ public function sellerInvoice(Request $request){
 }
     
     
+   
+public function invoices_details($id)
+{
+
+try {
+    
+    $investment = Investment::where('id',$id)->first();
+    $invest_id=$investment->id;
+
+    $products=Vendor_product::where('invest_id',$invest_id)->get();
+
+
+$this->data['investment'] =  $investment;
+$this->data['products'] =  $products;
+// $this->data['vproduct'] =  $vproduct;
+
+$this->data['page'] = 'user.fund.invoices_details';
+return $this->dashboard_layout();
+
+
+
+    } catch (\Illuminate\Contracts\Encryption\DecryptException $e) {
+    return back()->withErrors(array('Invalid User!'));
+}
+
+ 
+
+}
 
 
 }

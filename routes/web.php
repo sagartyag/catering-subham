@@ -77,6 +77,7 @@ Route::post('/change-trxpasswword', [App\Http\Controllers\UserPanel\Profile::cla
 // add fund
 
 Route::get('/AddFund', [App\Http\Controllers\UserPanel\AddFund::class, 'index'])->name('user.AddFund');
+Route::get('invoices_details/{id}', [App\Http\Controllers\UserPanel\AddFund::class, 'invoices_details'])->name('user.invoices_details');
 Route::get('/fundHistory', [App\Http\Controllers\UserPanel\AddFund::class, 'fundHistory'])->name('user.fundHistory');
 Route::any('/SubmitBuyFund', [App\Http\Controllers\UserPanel\AddFund::class, 'SubmitBuyFund'])->name('user.SubmitBuyFund');
 Route::any('/add-cart', [App\Http\Controllers\UserPanel\AddFund::class, 'add_cart'])->name('user.add-cart');
