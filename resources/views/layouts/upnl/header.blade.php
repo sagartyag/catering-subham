@@ -75,10 +75,10 @@ span.badge.badge-success {
 
                             <a href="index.html" class="logo logo-light">
                                 <span class="logo-sm">
-                                    <img src="{{asset('')}}main/img/logo-white.png" alt="" height="30">
+                                    <img src="{{asset('')}}main/images/logo.png" alt="" height="30">
                                 </span>
                                 <span class="logo-lg">
-                                    <img src="{{asset('')}}main/img/logo-white.png" alt="" style="    width: 180px;">
+                                    <img src="{{asset('')}}main/images/logo.png" alt="" style="    width: 64px;">
                                 </span>
                             </a>
                         </div>
@@ -230,7 +230,7 @@ span.badge.badge-success {
                                     
                                 </ul>
                             </li>
-                        @endif
+                       
                                 
 
                         
@@ -249,6 +249,9 @@ span.badge.badge-success {
                                     <li><a href="{{route('user.DepositHistory')}}" key="t-add-product">Billing Reports</a></li>
                                 </ul>
                             </li>
+
+                            @endif
+
                             @if(Auth::user()->role=="Agent")
                             <li>
                                 <a href="javascript: void(0);" class="has-arrow waves-effect">
