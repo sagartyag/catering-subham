@@ -9,7 +9,7 @@
             <div class="row">
                 <div class="col-12">
                     <div class="page-title-box d-sm-flex align-items-center justify-content-between">
-                        <h4 class="mb-sm-0 font-size-18">Add Vendor Product</h4>
+                        <h4 class="mb-sm-0 font-size-18">Billing Details</h4>
 
                         <div class="page-title-right">
                             <ol class="breadcrumb m-0">
@@ -34,17 +34,18 @@
                                 @csrf
 
                                 <div class="row">
+                                    
                                     <div class="col-sm-12">
                                         <div class="mb-3">
-                                            <label for="seller_id">Seller ID</label>
-                                            <input id="seller_id" readonly name="user_id" type="text"
-                                                class="form-control" value="{{ Auth::user()->username }}" placeholder="Customer ID">
+                                            <label for="name">Customer Name</label>
+                                            <input id="name" name="name" type="text" class="form-control" placeholder="Name">
                                         </div>
                                     </div>
                                     <div class="col-sm-12">
                                         <div class="mb-3">
-                                            <label for="name">Name</label>
-                                            <input id="name" name="name" type="text" class="form-control" placeholder="Name">
+                                            <label for="seller_id">Phone</label>
+                                            <input id="seller_id"  name="phone" type="number"
+                                                class="form-control"  placeholder="Phone">
                                         </div>
                                     </div>
                                     <div class="col-sm-12">
@@ -70,16 +71,16 @@
                                             </select>
                                         </div>
                                     </div>
-
+                                    
                                     <div class="col-sm-12">
                                         <div class="mb-3">
                                             <label for="product_id" class="control-label">Product</label>
                                             <select id="product_id" class="select2 form-control select2-multiple" name="products[]"
                                                 multiple="multiple" data-placeholder="Choose ...">
-                                                
                                             </select>
                                         </div>
                                     </div>
+                                    
                                 </div>
 
                                 <div class="d-flex flex-wrap gap-2">
@@ -99,33 +100,41 @@
     <!-- End Page-content -->
 </div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
+    $(document).ready(function() {
+        // Initially hide the product select box
+        $('#product_id').parent().hide();
+    });
+
     function fetchProducts() {
-    var selectedCategories = $('#category_id').val();
+        var selectedCategories = $('#category_id').val();
+        
+        if (selectedCategories.length > 0) {
+            // Show the product select box
+            $('#product_id').parent().show();
 
-    if (selectedCategories && selectedCategories.length > 0) {
-        $.ajax({
-            url: 'user/addproductsname', // Correct URL for the endpoint
-            type: 'POST', // Use POST method
-            data: { categoryIds: selectedCategories.join(',') },
-            dataType: 'json',
-            success: function(data) {
-                let productsSelect = $('#product_id');
-                productsSelect.empty(); 
-                $.each(data, function(index, product) {
-                    productsSelect.append('<option value="' + product.id + '">' + product.productName + '</option>');
-                });
-                productsSelect.trigger('change');
-            },
-            error: function(xhr, status, error) {
-                console.error(xhr.responseText);
-            }
-        });
-    } else {
-        $('#product_id').empty(); // Clear products dropdown if no category selected
+            $.ajax({
+                url: '{{ route("fetch.products") }}', // Update with your route
+                type: 'POST',
+                data: {
+                    _token: '{{ csrf_token() }}',
+                    categories: selectedCategories
+                },
+                success: function(response) {
+                    $('#product_id').empty(); // Clear previous options
+                    $.each(response.products, function(index, product) {
+                        $('#product_id').append('<option value="' + product.id + '">' + product.name + '</option>');
+                    });
+                },
+                error: function(xhr) {
+                    console.log('Error:', xhr);
+                }
+            });
+        } else {
+            // Hide the product select box if no categories are selected
+            $('#product_id').parent().hide();
+            $('#product_id').empty(); // Clear previous options
+        }
     }
-}
-
 </script>
