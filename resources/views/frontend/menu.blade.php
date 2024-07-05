@@ -28,14 +28,17 @@
             <h3>Most Popular Food In The World</h3>
           </div>
         </div>
-        <div class="col-12">
-          <ul class="rac_menu_tab">
-              @foreach($categories as $category)
-                  <li>
-                      <a class="rac_btn category-tab" data-category-id="{{ $category->id }}" href="javascript:void(0)">{{ $category->categoryname }}</a>
-                  </li>
-              @endforeach
-          </ul>
+       
+      <div class="col-12">
+      <ul class="rac_menu_tab slider">
+                    @foreach($categories as $index => $category)
+                        @if($index >= 6)
+                            <li>
+                                <a class="rac_btn category-tab" data-category-id="{{ $category->id }}" href="javascript:void(0)">{{ $category->categoryname }}</a>
+                            </li>
+                        @endif
+                    @endforeach
+                </ul>
       </div>
       
         <div class="col-12">
@@ -46,12 +49,12 @@
                     <div class="col-sm-6 product-item" data-category-id="{{ $product->category_id }}">
                         <div class="rac_menu_box">
                             <div class="rac_menu_img">
-                                <img src="{{ asset($product->image) }}" class="img-fluid">
+                                <img src="{{ asset($product->image) }}" class="img-fluid" style="width:100px;;">
                             </div>
                             <div class="rac_menu_text">
                                 <div class="rac_menu_title">
                                     <h4>{{ $product->productName }}</h4>
-                                    <h2>$ {{ $product->productPrice }}</h2>
+                                    <!-- <h2>$ {{ $product->productPrice }}</h2> -->
                                 </div>
                                 <p>{{ $product->ProductDiscription }}</p>
                             </div>
@@ -284,7 +287,7 @@
         $('.product-item').each(function() {
             var productCategoryId = $(this).data('category-id');
             if (productCategoryId != initialCategoryId) {
-                $(this).hide();
+                $(this).show();
             }
         });
 
@@ -301,6 +304,54 @@
                     $(this).show();
                 }
             });
+        });
+    });
+</script>
+<!-- Include Slick Slider -->
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.css"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js"></script>
+
+
+<script>
+    $(document).ready(function() {
+        // Initialize Slick Slider
+        $('.slider').slick({
+            dots: false,
+            infinite: true,
+            speed: 300,
+            slidesToShow: 3,
+            slidesToScroll: 1,
+            autoplay: true,
+            autoplaySpeed: 2000,
+            responsive: [
+                {
+                    breakpoint: 1024,
+                    settings: {
+                        slidesToShow: 2,
+                        slidesToScroll: 1,
+                        infinite: true,
+                        dots: false
+                    }
+                },
+                {
+                    breakpoint: 600,
+                    settings: {
+                        slidesToShow: 1,
+                        slidesToScroll: 1
+                    }
+                }
+            ]
+        });
+
+        // Filter products based on category tab click
+        $('.category-tab').on('click', function() {
+            var categoryId = $(this).data('category-id');
+
+            // Hide all products initially
+            $('.product-item').hide();
+
+            // Show products based on category
+            $('.product-item[data-category-id="' + categoryId + '"]').show();
         });
     });
 </script>

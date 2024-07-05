@@ -11,6 +11,7 @@ use App\Models\Investment;
 use App\Models\Bank;
 use App\Models\Withdraw;
 use App\Models\BuyFund;
+
 use Auth;
 use DB;
 use Log;
@@ -18,6 +19,7 @@ use Validator;
 use Redirect;
 use Helper;
 use Storage;
+use Hash;
 use Carbon\Carbon;
 
 class UserController extends Controller
@@ -277,5 +279,250 @@ class UserController extends Controller
     }
 
 
+    public function add_agent()
+    {
+
+      $this->data['page'] = 'admin.users.add_agent';
+      return $this->admin_dashboard();
+
+    }
+
+
+    public function agent_post(Request $request)
+    {
+        // Validate the request data
+        $request->validate([
+            'name' => 'required',
+            'email' => 'required',
+            'phone' => 'required',
+            'password' => 'required|string|min:5',
+            'role' => 'required',
+        ]);
+    
+        // Check if the user already exists
+        if (User::where('email', $request->email)->exists()) {
+            return redirect()->back()->with('error', 'User already exists.');
+        }
+    
+        // Generate a unique username
+        do {
+            $username = '000' . rand(1000, 9999);
+        } while (User::where('username', $username)->exists());
+    
+        // Create a new user
+        $user = new User();
+        $user->name = $request->name;
+        $user->email = $request->email;
+        $user->username = $username; // Assign the generated username
+        $user->sponsor = '0';
+        $user->ParentId = '0';
+        $user->jdate = date('Y-m-d');
+        $user->level = '0';
+        $user->tpassword = '0';
+        $user->phone = $request->phone;
+        $user->password = Hash::make($request->password);
+        $user->role = $request->role;
+        $user->save();
+    
+        $notify[] = ['success', 'Register successfully'];
+        return redirect()->back()->withNotify($notify);
+    }
+    
+               
+    public function agent_history(Request $request)
+    {
+
+        $limit = $request->limit ? $request->limit : 100000000000;
+        $status = $request->status ? $request->status : null;
+        $search = $request->search ? $request->search : null;
+        $notes = User::where('role','Agent')->orderBy('id', 'ASC');
+
+        if($search <> null && $request->reset!="Reset")
+        {
+        $notes = $notes->where(function($q) use($search){
+            $q->Where('username', 'LIKE', '%' . $search . '%')          
+            ->orWhere('name', 'LIKE', '%' . $search . '%')
+            ->orWhere('email', 'LIKE', '%' . $search . '%')
+            ->orWhere('phone', 'LIKE', '%' . $search . '%')  
+            ->orWhere('PSR', 'LIKE', '%' . $search . '%')                
+            ->orWhere('role', 'LIKE', '%' . $search . '%');
+          });
+          }
+        $notes = $notes->paginate($limit)
+            ->appends([
+                'limit' => $limit
+            ]);
+
+        $this->data['product_list'] =  $notes;
+        $this->data['search'] = $search;
+       $this->data['page'] = 'admin.users.agent_history';
+        return $this->admin_dashboard(); 
+    }
+
+    public function vendor_history(Request $request)
+    {
+
+        $limit = $request->limit ? $request->limit : 100000000000;
+        $status = $request->status ? $request->status : null;
+        $search = $request->search ? $request->search : null;
+        $notes = User::where('role','Vendor')->orderBy('id', 'ASC');
+
+        if($search <> null && $request->reset!="Reset")
+        {
+        $notes = $notes->where(function($q) use($search){
+            $q->Where('username', 'LIKE', '%' . $search . '%')          
+            ->orWhere('name', 'LIKE', '%' . $search . '%')
+            ->orWhere('email', 'LIKE', '%' . $search . '%')
+            ->orWhere('phone', 'LIKE', '%' . $search . '%') 
+            ->orWhere('PSR', 'LIKE', '%' . $search . '%')                 
+            ->orWhere('role', 'LIKE', '%' . $search . '%');
+          });
+          }
+        $notes = $notes->paginate($limit)
+            ->appends([
+                'limit' => $limit
+            ]);
+
+        $this->data['product_list'] =  $notes;
+        $this->data['search'] = $search;
+       $this->data['page'] = 'admin.users.vendor_history';
+        return $this->admin_dashboard(); 
+    }
+       
+
+
+    public function edit_member_post(Request $request)
+    {
+        try {
+            // Validation rules
+            $validation = Validator::make($request->all(), [
+                'username' => 'required',
+                'name' => 'required',
+                'phone' => 'required',
+                'email' => 'required',
+                // 'role' => 'required',
+                'id' => 'required',
+            ]);
+    
+            if ($validation->fails()) {
+                Log::info($validation->getMessageBag()->first());
+                return Redirect::back()->withErrors($validation->getMessageBag()->first())->withInput();
+            }
+    
+            $user = User::where('id', $request->id)->first();
+    
+            if ($user) {
+                $data = [
+                    'username' => $request->username,
+                    'name' => $request->name,
+                    'phone' => $request->phone,
+                    'email' => $request->email,
+                    // 'role' => $request->role,
+                ];
+    
+    
+                // Update the product with the new data
+                User::where('id', $user->id)->update($data);
+    
+                $notify[] = ['success', 'User edited successfully'];
+                return redirect()->back()->withNotify($notify);
+            } else {
+                return Redirect::back()->withErrors(['Meber User exist!']);
+            }
+        } catch (\Exception $e) {
+            Log::info('error here');
+            Log::info($e->getMessage());
+            return Redirect::back()->withErrors(['error' => $e->getMessage()])->withInput();
+        }
+    }
+
+      
+      
+    public function edit_member($id)
+    {
+
+    try {
+        $id = Crypt::decrypt($id);
+        } catch (\Illuminate\Contracts\Encryption\DecryptException $e) {
+        return back()->withErrors(array('Invalid User!'));
+    }
+
+    $product = User::where('id',$id)->first();
+
+    $this->data['product'] =  $product;
+    $this->data['page'] = 'admin.users.edit_member';
+    return $this->admin_dashboard();
+
+   }
+
+
+
+   public function edit_vendor_post(Request $request)
+   {
+       try {
+           // Validation rules
+           $validation = Validator::make($request->all(), [
+               'username' => 'required',
+               'name' => 'required',
+               'phone' => 'required',
+               'email' => 'required',
+              //  'role' => 'required',
+               'id' => 'required',
+           ]);
+   
+           if ($validation->fails()) {
+               Log::info($validation->getMessageBag()->first());
+               return Redirect::back()->withErrors($validation->getMessageBag()->first())->withInput();
+           }
+   
+           $user = User::where('id', $request->id)->first();
+   
+           if ($user) {
+               $data = [
+                   'username' => $request->username,
+                   'name' => $request->name,
+                   'phone' => $request->phone,
+                   'email' => $request->email,
+                  //  'role' => $request->role,
+               ];
+   
+   
+               // Update the product with the new data
+               User::where('id', $user->id)->update($data);
+   
+               $notify[] = ['success', 'User edited successfully'];
+               return redirect()->back()->withNotify($notify);
+           } else {
+               return Redirect::back()->withErrors(['Meber User exist!']);
+           }
+       } catch (\Exception $e) {
+           Log::info('error here');
+           Log::info($e->getMessage());
+           return Redirect::back()->withErrors(['error' => $e->getMessage()])->withInput();
+       }
+   }
+
+
+
+   public function edit_vendor($id)
+   {
+
+   try {
+       $id = Crypt::decrypt($id);
+       } catch (\Illuminate\Contracts\Encryption\DecryptException $e) {
+       return back()->withErrors(array('Invalid User!'));
+   }
+
+   $product = User::where('id',$id)->first();
+
+   $this->data['product'] =  $product;
+   $this->data['page'] = 'admin.users.edit_vendor';
+   return $this->admin_dashboard();
+
+  }
+
+
 
 }
+
+

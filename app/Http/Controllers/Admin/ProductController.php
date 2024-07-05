@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Product;
 use App\Models\User;
+use App\Models\Vproduct;
 use App\Models\Seller_product;
 use App\Models\Admin_product;
 use App\Models\Categorie;
@@ -240,7 +241,7 @@ class ProductController extends Controller
             'productDiscountPrice' => 'required',
             // 'type' => 'required',
             'ProductDiscription' => 'required',
-            'icon_image'=>'max:4096|mimes:jpeg,png,jpg,svg',
+            'icon_image'=>'max:4096|mimes:jpeg,png,jpg,svg,webp',
 
         ]);
 
@@ -680,7 +681,68 @@ class ProductController extends Controller
 
 
  }
+ public function vendor_product(Request $request)
+ {
 
+ try{
+     $validation =  Validator::make($request->all(), [
+         'productName' => 'required',
+         'productPrice' => 'required|numeric',
+        //  'category_id' => 'required',
+         'productDiscountPrice' => 'required',
+         // 'type' => 'required',
+         'ProductDiscription' => 'required',
+        //  'icon_image'=>'max:4096|mimes:jpeg,png,jpg,svg,webp',
+
+     ]);
+
+
+     if($validation->fails()) {
+         Log::info($validation->getMessageBag()->first());
+
+         return Redirect::back()->withErrors($validation->getMessageBag()->first())->withInput();
+     }
+
+ 
+     $product=Vproduct::where('productName',$request->productName)->first();
+         if (!$product)          
+         {
+          
+             
+        $data = [
+             'productName' =>$request->productName,
+             'productPrice' =>$request->productPrice,
+            //  'category_id' =>$request->category_id,
+             'productDiscountPrice' => $request->productDiscountPrice,
+             // 'productName' =>$request->type,
+             'ProductCoupon' => 0,
+             'ProductDiscription' => $request->ProductDiscription,
+             
+         ];
+         $payment = Vproduct::firstOrCreate(['productName'=>$request->name],$data);
+
+         $notify[] = ['success', ' Product Added successfully'];
+         return redirect()->back()->withNotify($notify);
+
+       
+            # code...
+        }
+       else
+       {
+         return Redirect::back()->withErrors(array('Products already Exists! '));
+       }
+
+     }
+    catch(\Exception $e){
+     Log::info('error here');
+     Log::info($e->getMessage());
+     print_r($e->getMessage());
+     die("hi");
+     return  Redirect::back()->withErrors('error', $e->getMessage())->withInput();
+     }
+
+
+     }
 
 
 
@@ -746,9 +808,212 @@ class ProductController extends Controller
 
 
  }
+ public function V_product()
+ {
+
+ 
+    $this->data['page'] = 'admin.products.admin.vendor_product';
+     return $this->admin_dashboard(); 
+ }
+
+        
+    public function a_Product(Request $request)
+    {
+
+    try{
+        $validation =  Validator::make($request->all(), [
+            'productName' => 'required',
+            'productPrice' => 'required|numeric',
+          
+            'productDiscountPrice' => 'required',
+           
+            'ProductDiscription' => 'required',
+            'icon_image'=>'max:4096|mimes:jpeg,png,jpg,svg,webp',
+
+        ]);
+
+
+        if($validation->fails()) {
+            Log::info($validation->getMessageBag()->first());
+
+            return Redirect::back()->withErrors($validation->getMessageBag()->first())->withInput();
+        }
+
+    
+        $product=Vproduct::where('productName',$request->productName)->first();
+            if (!$product)          
+            {
+                $icon_image = $request->file('icon_image');
+                $imageName = time().'.'.$icon_image->extension();
+                $request->icon_image->move(public_path('image/'),$imageName);
+                
+                
+           $data = [
+                'productName' =>$request->productName,
+                'productPrice' =>$request->productPrice,
+              
+                'productDiscountPrice' => $request->productDiscountPrice,
+                // 'productName' =>$request->type,
+                'ProductCoupon' => 0,
+                'ProductDiscription' => $request->ProductDiscription,
+                 'image' => 'image/'.$imageName,
+            ];
+            $payment = Vproduct::firstOrCreate(['productName'=>$request->name],$data);
+
+            $notify[] = ['success', ' Product Added successfully'];
+            return redirect()->back()->withNotify($notify);
+
+          
+               # code...
+           }
+          else
+          {
+            return Redirect::back()->withErrors(array('Products already Exists! '));
+          }
+
+        }
+       catch(\Exception $e){
+        Log::info('error here');
+        Log::info($e->getMessage());
+        print_r($e->getMessage());
+        die("hi");
+        return  Redirect::back()->withErrors('error', $e->getMessage())->withInput();
+        }
+
+
+        }
+
+
+
+        public function agent_product()
+        {
+       
+        
+           $this->data['page'] = 'admin.products.admin.agent_product';
+            return $this->admin_dashboard(); 
+        }
+
+
+        public function Categorylist(Request $request)
+        {
+    
+            $limit = $request->limit ? $request->limit : 100000000000;
+            $status = $request->status ? $request->status : null;
+            $search = $request->search ? $request->search : null;
+            $notes = Categorie::orderBy('id', 'DESC');
+    
+            if($search <> null && $request->reset!="Reset")
+            {
+            $notes = $notes->where(function($q) use($search){
+                $q->Where('id ', 'LIKE', '%' . $search . '%')          
+                ->orWhere('categoryname', 'LIKE', '%' . $search . '%')
+                ->orWhere('status', 'LIKE', '%' . $search . '%')
+                ->orWhere('created_at', 'LIKE', '%' . $search . '%')         
+                ->orWhere('	updated_at', 'LIKE', '%' . $search . '%');
+              });
+              }
+            $notes = $notes->paginate($limit)
+                ->appends([
+                    'limit' => $limit
+                ]);
+    
+            $this->data['product_list'] =  $notes;
+            $this->data['search'] = $search;
+           $this->data['page'] = 'admin.products.admin.Categorylist';
+            return $this->admin_dashboard(); 
+        }
+
+
+
+        public function deletecategory(Request $request)
+        {
+    
+           $id= $request->id ; // or any params
+ 
+      
+           $product = Categorie::where('id',$id)->delete();
+           $notify[] = ['success', 'Product Edit successfully'];
+         return redirect()->back()->withNotify($notify);
+         
+       
+       
+         
+    
+       }
+
+
+       public function editcategory(Request $request)
+       {
+           try {
+               // Validation rules
+               $validation = Validator::make($request->all(), [
+                   'id' => 'required|exists:categories,id',
+                   'status' => 'required|in:0,1', // Ensures that status is either 0 or 1
+               ]);
+       
+               if ($validation->fails()) {
+                   Log::info($validation->getMessageBag()->first());
+                   return Redirect::back()->withErrors($validation->getMessageBag()->first())->withInput();
+               }
+       
+               $product = Categorie::find($request->id);
+       
+               if ($product) {
+                   $data = [
+                       'status' => $request->status,
+                   ];
+       
+                   $product->update($data);
+       
+                   $notify[] = ['success', 'Category status updated successfully'];
+                   return redirect()->back()->withNotify($notify);
+               } else {
+                   return Redirect::back()->withErrors(['Category does not exist!']);
+               }
+           } catch (\Exception $e) {
+               Log::info('Error occurred');
+               Log::info($e->getMessage());
+               return Redirect::back()->withErrors(['error' => $e->getMessage()])->withInput();
+           }
+       }
+       
+      
 
 
 
 
 
-}
+      
+
+
+    public function edit_category($id)
+        {
+    
+        try {
+            $id = Crypt::decrypt($id);
+            } catch (\Illuminate\Contracts\Encryption\DecryptException $e) {
+            return back()->withErrors(array('Invalid User!'));
+        }
+    
+        $product = Categorie::where('id',$id)->first();
+    
+        $this->data['product'] =  $product;
+        $this->data['page'] = 'admin.products.admin.categoryedit';
+        return $this->admin_dashboard();
+    
+       }
+
+
+
+       public function toggleStatus(Request $request)
+       {
+           $category = Category::find($request->id);
+           $category->status= $category->status == 0 ? 1 : 0;
+           $category->save();
+       
+           return response()->json(['success' => true, 'status' => $category->status]);
+       }
+
+    }
+      
+
