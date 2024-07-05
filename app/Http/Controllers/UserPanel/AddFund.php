@@ -13,7 +13,7 @@ use App\Models\Vproduct;
 use App\Models\Category;
 use App\Models\Seller_product;
 use App\Models\Vendor_product;
-
+use App\Models\Investment;
 use App\Models\Admin_product;
 use App\Models\Seller_invoice;
 use App\Models\User_product;
@@ -28,18 +28,6 @@ class AddFund extends Controller
      \DB::statement("SET SQL_MODE=''");
     $product = Vproduct::orderBy('id','DESC')->get();
 
-    $this->data['product'] = $product;
-    $this->data['page'] = 'user.fund.addFund';
-    return $this->dashboard_layout();
-    
-    }
-
-    public function index(Request $request)
-    {
-    
-    $user=Auth::user();
-     \DB::statement("SET SQL_MODE=''");
-    $product = Product::orderBy('id','DESC')->get();
     $this->data['product'] = $product;
     $this->data['page'] = 'user.fund.addFund';
     return $this->dashboard_layout();
@@ -124,66 +112,84 @@ public function add_cart(Request $request)
 
 }
 
-
 public function fundActivation(Request $request)
-    {
-        try {
-            // Validate request
-            $validation = Validator::make($request->all(), [
-                'products' => 'required|array',
-                'quantity' => 'required|array',
-                'cartTotal' => 'required|numeric',
-                'grandTotal' => 'required|numeric',
-                'DiscountTotal' => 'required|numeric',
-                'CouponTotal' => 'required|numeric',
-            ]);
+{
+    try {
+        // Validate request
+        $validation = Validator::make($request->all(), [
+            'products' => 'required|array',
+            'quantity' => 'required|array',
+            'cartTotal' => 'required|numeric',
+            'grandTotal' => 'required|numeric',
+            'DiscountTotal' => 'required|numeric',
+            'CouponTotal' => 'required|numeric',
+        ]);
 
-            if ($validation->fails()) {
-                Log::info($validation->getMessageBag()->first());
-                return redirect()->route('user.AddFund')->withErrors($validation->getMessageBag()->first())->withInput();
-            }
-
-            $user_detail = Auth::user();
-            $products = $request->products;
-            $quantities = $request->input('quantity', []);
-            $cartTotal = $request->input('cartTotal');
-            $grandTotal = $request->input('grandTotal');
-            $DiscountTotal = $request->input('DiscountTotal');
-            $CouponTotal = $request->input('CouponTotal');
-
-            if (empty($products)) {
-                return redirect()->route('user.AddFund')->withErrors(['cart is empty']);
-            }
-
-            foreach ($products as $key => $productId) {
-                $productReport = Vproduct::where('id', $productId)->first();
-
-                $insertProduct = [
-                    'user_id' => $user_detail->id,
-                    'product_id' => $productId,
-                    'quantity' => $quantities[$key] ?? 1, // Default to 1 if not provided
-                    'productPrice' => $productReport->productPrice, // Default to 1 if not provided
-                    'grandTotal' => ($productReport->productPrice*$quantities[$key]), // Default to 1 if not provided
-                    'discount' => ($productReport->productPrice*$quantities[$key])-($productReport->productDiscountPrice*$quantities[$key]), // Default to 1 if not provided
-                    'netAmount' => ($productReport->productDiscountPrice*$quantities[$key]), // Default to 1 if not provided
-                    'activeStatus' => 0,
-                    'created_at' => now(),
-                    'updated_at' => now(),
-                ];
-
-                Vendor_product::create($insertProduct);
-            }
-
-            // You can save the totals if needed or use them for further processing
-
-            $notify[] = ['success', 'Product Request Submitted successfully'];
-            return redirect()->route('user.AddFund')->withNotify($notify);
-        } catch (\Exception $e) {
-            Log::info('error here');
-            Log::info($e->getMessage());
-            return redirect()->route('user.AddFund')->withErrors(['error' => $e->getMessage()])->withInput();
+        if ($validation->fails()) {
+            Log::info($validation->getMessageBag()->first());
+            return redirect()->route('user.AddFund')->withErrors($validation->getMessageBag()->first())->withInput();
         }
+
+        $user_detail = Auth::user();
+        $products = $request->products;
+        $quantities = $request->input('quantity', []);
+        $cartTotal = $request->input('cartTotal');
+        $grandTotal = $request->input('grandTotal');
+        $DiscountTotal = $request->input('DiscountTotal');
+        $CouponTotal = $request->input('CouponTotal');
+
+        if (empty($products)) {
+            return redirect()->route('user.AddFund')->withErrors(['cart is empty']);
+        }
+
+        // Insert investment data
+        $invoice = substr(str_shuffle("0123456789"), 0, 7);
+        $investmentData = [
+            'plan' => $invoice,
+            'transaction_id' => md5(uniqid(rand(), true)),
+            'user_id' => $user_detail->id,
+            'user_id_fk' => $user_detail->username,
+            'amount' => $cartTotal,
+            'payment_mode' => 'INR',
+            'status' => 'Active',
+            'sdate' => date("Y-m-d"),
+            'active_from' => $user_detail->username,
+            'grandTotal' => $grandTotal,
+            'discount' => $DiscountTotal,
+            'coupon' => $CouponTotal,
+        ];
+        $paymentId = Investment::insertGetId($investmentData);
+
+        // Insert product data
+        foreach ($products as $key => $productId) {
+            $productReport = Vproduct::where('id', $productId)->first();
+            $quantity = $quantities[$key] ?? 1;
+
+            $insertProduct = [
+                'user_id' => $user_detail->id,
+                'product_id' => $productId,
+                'quantity' => $quantity,
+                'productPrice' => $productReport->productPrice,
+                'grandTotal' => $productReport->productPrice * $quantity,
+                'discount' => ($productReport->productPrice * $quantity) - ($productReport->productDiscountPrice * $quantity),
+                'netAmount' => $productReport->productDiscountPrice * $quantity,
+                'activeStatus' => 0,
+                'invest_id' => $paymentId,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+
+            Vendor_product::create($insertProduct);
+        }
+
+        $notify[] = ['success', 'Product Request Submitted successfully'];
+        return redirect()->route('user.AddFund')->withNotify($notify);
+    } catch (\Exception $e) {
+        Log::info('error here');
+        Log::info($e->getMessage());
+        return redirect()->route('user.AddFund')->withErrors(['error' => $e->getMessage()])->withInput();
     }
+}
 
 
 
