@@ -26,7 +26,7 @@
                     <div class="card">
                         <div class="card-body">
 
-                            <form action="{{route('user.fundActivation')}}" method="POST">
+                            <form action="{{route('user.SubmitBuyFund')}}" method="POST">
 
                                 {{ csrf_field() }}
 
@@ -136,7 +136,7 @@
         var cart = [];
       
         // Add item to cart
-        function addToCart(product,productDiscription,price,DiscountPrice,coupen,product_id,balanceQuan) {
+        function addToCart(product,productDiscription,price,DiscountPrice,coupen,product_id) {
           var item = {
             product: product,
             productDiscription: productDiscription,
@@ -144,7 +144,6 @@
             DiscountPrice: DiscountPrice,
             coupen: coupen,
             product_id:product_id,
-            maxQuantity:balanceQuan,
             quantity: 1
           };
       
@@ -211,7 +210,7 @@
             row.append('<td>&#8377; ' + item.DiscountPrice + '</td>');
             row.append('<td>&#8377; ' + item.coupen + '</td>');
           
-            row.append('<td><div class="me-3" style="width: 120px;"><input type="number" max="' +item.maxQuantity + '" min="1" value="' + item.quantity + '" data-product="' + item.product + '" class="form-control" name="quantity[]"></div></td>');
+            row.append('<td><div class="me-3" style="width: 120px;"><input type="number" min="1" value="' + item.quantity + '" data-product="' + item.product + '" class="form-control" name="quantity[]"></div></td>');
             row.append('<td>&#8377;' + totalPrice.toFixed(2) + '</td>');
             row.append('<td><a href="javascript:void(0);" class="action-icon text-danger remove" data-product="' + item.product + '"> <i class="mdi mdi-trash-can font-size-18"></i></a> </td>');
       
@@ -242,12 +241,7 @@
           removeFromCart(product);
         });
             @foreach($product as $product )
-            @php
-             $maxQuanity = \DB::table('seller_products')->where('user_id',Auth::user()->id)->where('product_id',$product->id)->sum('quantity');
-             $useQuantity = \DB::table('user_products')->where('active_from',Auth::user()->username)->where('product_id',$product->id)->sum('quantity');
-             $balanceQuan= $maxQuanity-$useQuantity;
-            @endphp
-            addToCart('{{ $product->productName }}','{{ $product->ProductDiscription }}',{{ $product->productPrice }},{{ $product->productDiscountPrice }},{{ $product->ProductCoupon }},{{ $product->id }},{{$balanceQuan}});  
+            addToCart('{{ $product->productName }}','{{ $product->ProductDiscription }}',{{ $product->productPrice }},{{ $product->productDiscountPrice }},{{ $product->ProductCoupon }},{{ $product->id }});  
             @endforeach
 
 

@@ -46,7 +46,8 @@
                                                         class="form-control" value="{{ Auth::user()->username }}" placeholder="Vendor ID">
                                                 </div>
                                             </div>
-                                    
+                                            
+
                                             <div class="col-sm-12">
                                                 <div class="mb-3">
                                                     <label class="control-label">Products</label>
