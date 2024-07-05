@@ -84,13 +84,16 @@ Route::get('/sellerInvoice', [App\Http\Controllers\UserPanel\AddFund::class, 'se
 Route::get('ViewSellerInvoice/{id}', [App\Http\Controllers\UserPanel\AddFund::class, 'ViewSellerInvoice'])->name('user.ViewSellerInvoice');
 Route::any('/ecommerceCart', [App\Http\Controllers\UserPanel\AddFund::class, 'ecommerce_cart'])->name('user.ecommerceCart');
 Route::post('/fund_activation', [App\Http\Controllers\UserPanel\AddFund::class, 'fundActivation'])->name('user.fundActivation');
+Route::post('/seller_billing', [App\Http\Controllers\UserPanel\AddFund::class, 'sellerBilling'])->name('user.sellerBilling');
 
 // end add fund
 
 //add vandor
 Route::get('/addagent', [App\Http\Controllers\UserPanel\AddFund::class, 'agentindex'])->name('user.Addagent');
-Route::post('/agentActivation', [App\Http\Controllers\UserPanel\AddFund::class, 'agentActivation'])->name('user.agentActivation');
+Route::post('/agentActivation', [App\Http\Controllers\UserPanel\AddFund::class, 'seller_cart'])->name('user.agentActivation');
 Route::post('/addproductsname', [App\Http\Controllers\UserPanel\AddFund::class, 'getProductsByCategory'])->name('user.addproductsname');
+Route::post('/fetch-products', [App\Http\Controllers\UserPanel\AddFund::class, 'fetchProducts'])->name('fetch.products');
+
 // invest
 Route::get('/invest', [App\Http\Controllers\UserPanel\Invest::class, 'index'])->name('user.invest');
 Route::post('/fundActivation', [App\Http\Controllers\UserPanel\Invest::class, 'fundActivation'])->name('user.fund_activation');

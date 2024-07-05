@@ -192,6 +192,83 @@ public function fundActivation(Request $request)
 }
 
 
+public function sellerBilling(Request $request)
+{
+    try {
+        // Validate request
+        $validation = Validator::make($request->all(), [
+            'products' => 'required|array',
+            'quantity' => 'required|array',
+            'name' => 'required|string',
+            'email' => 'required|string',
+            'phone' => 'required|string',
+            'address' => 'required|string',
+        ]);
+
+        if ($validation->fails()) {
+            Log::info($validation->getMessageBag()->first());
+            return redirect()->route('user.Addagent')->withErrors($validation->getMessageBag()->first())->withInput();
+        }
+
+        $user_detail = Auth::user();
+        $products = $request->products;
+        $quantities = $request->input('quantity', []);
+        $name = $request->input('name');
+        $email = $request->input('email');
+        $phone = $request->input('phone');
+        $address = $request->input('address');
+
+        if (empty($products)) {
+            return redirect()->route('user.Addagent')->withErrors(['cart is empty']);
+        }
+
+        // Calculate total quantity
+        $totalQuantity = array_sum($quantities);
+
+        // Insert invoice data
+        $invoiceNumber = substr(str_shuffle("0123456789"), 0, 7);
+        $invoiceData = [
+            'plan' => $invoiceNumber,
+            'transaction_id' => md5(uniqid(rand(), true)),
+            'user_id' => $user_detail->id,
+            'user_id_fk' => $user_detail->username,
+            'name' => $name,
+            'email' => $email,
+            'phone' => $phone,
+            'address' => $address,
+            'grandTotal' => $totalQuantity,
+            'status' => 'Pending',
+            'created_at' => now(),
+            'updated_at' => now(),
+        ];
+        $invoiceId = Seller_invoice::insertGetId($invoiceData);
+
+        // Insert product data
+        foreach ($products as $key => $productId) {
+            $quantity = $quantities[$key] ?? 1;
+
+            $insertProduct = [
+                'user_id' => $user_detail->id,
+                'product_id' => $productId,
+                'quantity' => $quantity,
+                'active_status' => 0,
+                'invest_id' => $invoiceId,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+
+            Seller_product::create($insertProduct);
+        }
+
+        $notify[] = ['success', 'Product Request Submitted successfully'];
+        return redirect()->route('user.Addagent')->withNotify($notify);
+    } catch (\Exception $e) {
+        Log::info('error here');
+        Log::info($e->getMessage());
+        return redirect()->route('user.Addagent')->withErrors(['error' => $e->getMessage()])->withInput();
+    }
+}
+
 
 
 public function SubmitBuyFund(Request $request)
@@ -287,6 +364,53 @@ public function ecommerce_cart(Request $request)
         }
     
     }
+
+
+
+    public function seller_cart(Request $request)
+    {
+    
+        try {
+            // Validate request
+            $validation = Validator::make($request->all(), [
+                'name' => 'required|string|max:255',
+                'phone' => 'required|numeric',
+                'email' => 'required|email|max:255',
+                'address' => 'required|string|max:255',
+                'categories' => 'required|array',
+                'products' => 'required|array',
+            ]);
+    
+            if ($validation->fails()) {
+                return redirect()->route('user.Addagent')->withErrors($validation->getMessageBag()->first())->withInput();
+            }
+    
+            $user = Auth::user();
+    
+            if (empty($request->products)) {
+                return redirect()->back()->withErrors(['Something went wrong']);
+            }
+    
+            $products = Product::whereIn('id', $request->products)->get();
+    
+            $this->data['products'] = $products;
+            $this->data['name'] = $request->name;
+            $this->data['phone'] = $request->phone;
+            $this->data['email'] = $request->email;
+            $this->data['address'] = $request->address;
+            $this->data['categories'] = $request->categories;
+            $this->data['user_id'] = $request->user_id;
+            $this->data['page'] = 'user.fund.sellercart';
+            return $this->dashboard_layout();
+            
+        } catch (\Exception $e) {
+            Log::error('Error in agent activation: ' . $e->getMessage());
+            return redirect()->route('user.Addagent')->withErrors(['error' => $e->getMessage()])->withInput();
+        }
+    
+    
+    }
+
 
     public function ViewSellerInvoice($id)
     {
@@ -390,7 +514,15 @@ public function sellerInvoice(Request $request){
     return redirect()->route('user.invest')->with('success', 'Order placed successfully.');
 }
     
+
+public function fetchProducts(Request $request)
+{
+    $categories = $request->categories;
     
+    $products = Product::whereIn('category_id', $categories)->get(['id', 'productName as name']); // Adjust column names as per your table structure
+
+    return response()->json(['products' => $products]);
+}
 
 
 }

@@ -215,6 +215,7 @@ span.badge.badge-success {
                                 </ul>
                             </li>
 
+                            @if(Auth::user()->role=="Vendor")
 
                             <li>
                                 <a href="javascript: void(0);" class="has-arrow waves-effect">
@@ -229,7 +230,7 @@ span.badge.badge-success {
                                     
                                 </ul>
                             </li>
-
+                        @endif
                                 
 
                         
@@ -248,22 +249,18 @@ span.badge.badge-success {
                                     <li><a href="{{route('user.DepositHistory')}}" key="t-add-product">Billing Reports</a></li>
                                 </ul>
                             </li>
+                            @if(Auth::user()->role=="Agent")
                             <li>
                                 <a href="javascript: void(0);" class="has-arrow waves-effect">
                                     <i class="bx bx-store"></i>
-                                    <span key="t-ecommerce">Vandor Product</span>
+                                    <span key="t-ecommerce">Add Agent Product</span>
                                 </a>
                                 <ul class="sub-menu" aria-expanded="false">
-
-
-                                    <li><a href="/user/addagent" key="t-products">vandor</a></li>
-
-
-                                   
+                                    <li><a href="/user/addagent" key="t-products">Agent Billing</a></li> 
                                     <li><a href="{{route('user.DepositHistory')}}" key="t-add-product">Billing Reports</a></li>
                                 </ul>
                             </li>
-
+                            @endif
 
                             <li>
                                 <a href="javascript: void(0);" class="has-arrow waves-effect">
