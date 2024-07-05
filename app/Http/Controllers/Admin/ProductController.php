@@ -1007,12 +1007,12 @@ class ProductController extends Controller
 
        public function toggleStatus(Request $request)
        {
-           $category = Category::find($request->id);
+           $category = Categorie::find($request->cid);
            $category->status= $category->status == 0 ? 1 : 0;
            $category->save();
        
-           return response()->json(['success' => true, 'status' => $category->status]);
-       }
+           $notify[] = ['success', 'Category status updated successfully'];
+           return redirect()->back()->withNotify($notify);       }
 
     }
       

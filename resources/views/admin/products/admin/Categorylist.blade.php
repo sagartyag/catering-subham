@@ -67,10 +67,15 @@
                                                 <td>{{ $value->categoryname }}</td>
                                                 <td>{{ $value->created_at }}</td>
                                                 <td>
-                                                    <a href="javascript:void(0)" class="btn btn-primary toggle-status" data-id="{{ $value->id }}" data-status="{{ $value->status }}">
+                                                <form  method="POST"
+                action="{{ route('toggle.status') }}">
+                {{ csrf_field() }}
+                                                <input type="hidden" value="{{$value->id}}" name="cid">
+                                                    <button type="submit" class="btn btn-primary toggle-status" data-id="{{ $value->id }}" data-status="{{ $value->status }}">
                                                         <i class="fas fa-toggle-{{ $value->status == 0 ? 'on' : 'off' }}"></i>
-                                                    </a>
+                                                    </button>
                                                 </td>
+                                    </form>
                                             </tr>
                                         @endforeach
                                     <?php } ?>
@@ -106,7 +111,7 @@ $(document).ready(function() {
                 if(response.success) {
                     var newStatus = response.status;
                     var icon = newStatus == 0 ? 'fa-toggle-on' : 'fa-toggle-off';
-                    $('a[data-id="' + categoryId + '"]').data('status', newStatus).find('i').attr('class', 'fas ' + icon);
+                    $('button[data-id="' + categoryId + '"]').data('status', newStatus).find('i').attr('class', 'fas ' + icon);
                 }
             }
         });
