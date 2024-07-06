@@ -157,10 +157,7 @@ class DepositController extends Controller
           $total = $users->package+$user->amount;
             $user_update=array('package'=>$total,'active_status'=>'Active',);
           User::where('id',$user->user_id)->update($user_update); 
-         }
-
-         add_level_income($user->user_id,$user->amount);
-         add_leadership_income($user->user_id,$user->amount);
+         };
 
         $notify[] = ['success', 'Deposit request Approved successfully'];
         return redirect()->back()->withNotify($notify);

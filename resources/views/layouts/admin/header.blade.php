@@ -285,13 +285,13 @@ display: none;
 
                     <li><a class="has-arrow ai-icon" href="javascript:void()" aria-expanded="false">
                         <i class="flaticon-045-heart"></i>
-                        <span class="nav-text">Seller Products</span>
+                        <span class="nav-text">Vender Member</span>
                     </a>
                     <ul aria-expanded="false">
-                        <li><a href="{{ route('admin.product-request') }}">Product Request</a></li>
-                        <li><a href="{{route('admin.sellerProduct')}}">Sellers Product</a></li>
+                        <li><a href="{{ route('admin.product-request') }}">Vender Request</a></li>
+                        <li><a href="{{route('admin.sellerProduct')}}">Vender Product</a></li>
                         <li><a href="{{route('admin.billing-product')}}">Billing Manual</a></li>
-                        <li><a href="{{route('admin.agent_report')}}">Agent Report</a></li>
+                        <!-- <li><a href="{{route('admin.agent_report')}}">Agent Report</a></li> -->
                         
                       
                     </ul>
