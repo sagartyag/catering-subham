@@ -9,6 +9,7 @@ use App\Models\User;
 use App\Models\Vproduct;
 use App\Models\Seller_product;
 use App\Models\Admin_product;
+use App\Models\Seller_invoice;
 use App\Models\Categorie;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Validator;
@@ -1013,6 +1014,40 @@ class ProductController extends Controller
        
            $notify[] = ['success', 'Category status updated successfully'];
            return redirect()->back()->withNotify($notify);       }
+
+
+
+
+           public function agent_report(Request $request)
+           {
+       
+               $limit = $request->limit ? $request->limit : 100000000000;
+               $status = $request->status ? $request->status : null;
+               $search = $request->search ? $request->search : null;
+               $notes = Seller_invoice::orderBy('id', 'DESC');
+       
+               if($search <> null && $request->reset!="Reset")
+               {
+               $notes = $notes->where(function($q) use($search){
+                   $q->Where('user_id_fk', 'LIKE', '%' . $search . '%')          
+                   ->orWhere('transaction_id', 'LIKE', '%' . $search . '%')
+                   ->orWhere('created_at ', 'LIKE', '%' . $search . '%')
+                   ->orWhere('name', 'LIKE', '%' . $search . '%')         
+                   ->orWhere('email', 'LIKE', '%' . $search . '%');
+                 });
+                 }
+               $notes = $notes->paginate($limit)
+                   ->appends([
+                       'limit' => $limit
+                   ]);
+       
+               $this->data['product_list'] =  $notes;
+               $this->data['search'] = $search;
+              $this->data['page'] = 'admin.products.agent_report';
+               return $this->admin_dashboard(); 
+           }
+       
+
 
     }
       
