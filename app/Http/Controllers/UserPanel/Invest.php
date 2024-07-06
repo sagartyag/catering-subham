@@ -8,6 +8,7 @@ use App\Models\User;
 use App\Models\Investment;
 use App\Models\Income;
 use App\Models\Seller_product;
+use App\Models\Seller_invoice;
 use App\Models\Product;
 use App\Models\User_product;
 use App\Models\Club_a;
@@ -97,7 +98,7 @@ class Invest extends Controller
         return back()->withErrors(array('Invalid User!'));
     }
 
-     $investment = Investment::where('id',$id)->first();
+     $investment = Seller_invoice::where('id',$id)->first();
 
     $this->data['investment'] =  $investment;
     $this->data['page'] = 'user.invest.invoice';

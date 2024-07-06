@@ -43,7 +43,7 @@
                                                     <strong>Billed To:</strong><br>
                                                     John Smith<br>
                                                     1234 Main<br>
-                                                    Apt. 4B<br>
+                                                    Apt. 4B<br> 
                                                     Springfield, ST 54321
                                                 </address>
                                             </div>
