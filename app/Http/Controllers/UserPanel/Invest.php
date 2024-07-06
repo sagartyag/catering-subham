@@ -9,6 +9,7 @@ use App\Models\Investment;
 use App\Models\Income;
 use App\Models\Seller_product;
 use App\Models\Product;
+use App\Models\Seller_invoice;
 use App\Models\User_product;
 use App\Models\Club_a;
 use Illuminate\Support\Facades\Crypt;
@@ -105,7 +106,6 @@ class Invest extends Controller
 
    }
 
-    
 
     public function fundActivation(Request $request)
     {
@@ -283,11 +283,7 @@ class Invest extends Controller
       $limit = $request->limit ? $request->limit : paginationLimit();
         $status = $request->status ? $request->status : null;
         $search = $request->search ? $request->search : null;
-        $notes = Investment::where('user_id',$user->id);
-        if (Auth::user()->rank==1) 
-        {
-          $notes = Investment::where('user_id',$user->id)->orWhere('active_from',Auth::user()->username);
-        }
+        $notes = Seller_invoice::where('user_id',$user->id);
       
       if($search <> null && $request->reset!="Reset"){
         $notes = $notes->where(function($q) use($search){
@@ -308,7 +304,13 @@ class Invest extends Controller
       return $this->dashboard_layout();
 
 
+
+
         }
+
+
+
+
 
 
 }

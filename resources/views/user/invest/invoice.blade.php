@@ -40,21 +40,25 @@
                                         <div class="row">
                                             <div class="col-sm-6">
                                                 <address>
+                                               
                                                     <strong>Billed To:</strong><br>
-                                                    John Smith<br>
-                                                    1234 Main<br>
+                                                    <br>
+                                                    @foreach ($sellerProducts as $value)
+                                                    {{$value->name}}<br>
                                                     Apt. 4B<br>
                                                     Springfield, ST 54321
+                                                    @endforeach
                                                 </address>
                                             </div>
                                             <div class="col-sm-6 text-sm-end">
                                                 <address class="mt-2 mt-sm-0">
                                                     <strong>Shipped To:</strong><br>
+                                                   
                                                     {{$investment->user->name}}<br>
                                                     {{$investment->user->address}}<br>
                                                     {{$investment->user->email}}<br>
                                                     {{$investment->user->phone}}<br>
-                                                  
+                                                 
                                                 </address>
                                             </div>
                                         </div>
