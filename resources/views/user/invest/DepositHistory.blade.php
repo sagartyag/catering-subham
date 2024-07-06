@@ -39,7 +39,6 @@
                                                 <th>User ID</th>
                                                 <th>Transection Date</th>
                                                 <th>Transection ID</th>
-                                                <th>Status</th>
                                                 <th>Details</th>
                                             </tr>
                                         </thead>
@@ -54,8 +53,7 @@
     
                                                         <td>{{ $value->created_at }}</td>
                                                         <td>{{ $value->transaction_id }}</td>
-                                                        <td><span
-                                                            class="badge badge-{{ ($value->status=='Active')?'success':'danger' }}">{{ $value->status }}</span></td>
+                                                        
 
                                                             <td><a href="{{ route('user.view-invoice', ['id'=> Crypt::encrypt($value->id)]) }}" class="btn btn-primary btn-sm btn-rounded" >
                                                                 View Details
