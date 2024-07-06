@@ -56,7 +56,7 @@
 
                                                     <div class="row">
                                                         <div class="col-12">
-                                                            <h5 class="font-size-15">{{(Auth::user()->rank)?"SELLER":"CUSTOMER"}} ID</h5>
+                                                            <h5 class="font-size-15">{{(Auth::user()->role=="Agent")?"AGENT":"VENDOR"}} ID</h5>
                                                             <p class="text-muted mb-0">{{Auth::user()->username}}</p>
                                                         </div>
                                                        
@@ -69,27 +69,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="card">
-                                    <div class="card-body">
-                                        <div class="widget-stat card">
-                                            <div class="card-body p-4">
-                                                <div class="media ai-icon">
-                                                    <h3 class="mb-1" >Referral Link</h3>
-                                                    <div class="media-body">
-                                                       
-                                                        <input type="text" value="{{ asset('') }}register?ref={{ Auth::user()->username }}" id="myInput"
-                                                        hidden>
-                                                        <h4 class="mb-0">{{ asset('') }}register?ref={{ Auth::user()->username }}</h4>
-                                                        <br> <br>
-                
-                                                        <button type="button" onclick="myFunction()" class="btn btn-warning"> <i class="fa fa-copy" style="font-size:18px"></i> Copy </button>
-                                                       
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                              
                             </div>
                             <div class="col-xl-8">
                                 <div class="row">
@@ -225,28 +205,7 @@
                                 </div>
                                 <!-- end row -->
 
-                                <div class="card">
-                                    <div class="card-body">
-                                        <div class="d-sm-flex flex-wrap">
-                                            <h4 class="card-title mb-4">Email Sent</h4>
-                                            <div class="ms-auto">
-                                                <ul class="nav nav-pills">
-                                                    <li class="nav-item">
-                                                        <a class="nav-link" href="#">Week</a>
-                                                    </li>
-                                                    <li class="nav-item">
-                                                        <a class="nav-link" href="#">Month</a>
-                                                    </li>
-                                                    <li class="nav-item">
-                                                        <a class="nav-link active" href="#">Year</a>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                        
-                                        <div id="stacked-column-chart" class="apex-charts" data-colors='["--bs-primary", "--bs-warning", "--bs-success"]' dir="ltr"></div>
-                                    </div>
-                                </div>
+                               
                             </div>
                         </div>
                         <!-- end row -->
