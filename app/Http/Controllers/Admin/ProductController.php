@@ -10,6 +10,8 @@ use App\Models\Vproduct;
 use App\Models\Seller_product;
 use App\Models\Admin_product;
 use App\Models\Seller_invoice;
+use App\Models\Investment;
+use App\Models\GeneralSetting;
 use App\Models\Categorie;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Validator;
@@ -105,16 +107,17 @@ class ProductController extends Controller
         $limit = $request->limit ? $request->limit : 100000000000;
         $status = $request->status ? $request->status : null;
         $search = $request->search ? $request->search : null;
-        $notes = Seller_product::where('activeStatus',0)->orderBy('id', 'DESC');
+        $notes = Investment::where('status','Pending')->orderBy('id', 'DESC');
 
         if($search <> null && $request->reset!="Reset")
         {
         $notes = $notes->where(function($q) use($search){
-            $q->Where('productName', 'LIKE', '%' . $search . '%')          
-            ->orWhere('productPrice', 'LIKE', '%' . $search . '%')
-            ->orWhere('productDiscountPrice', 'LIKE', '%' . $search . '%')
-            ->orWhere('ProductCoupon', 'LIKE', '%' . $search . '%')         
-            ->orWhere('ProducDiscription', 'LIKE', '%' . $search . '%');
+            $q->Where('user_id_fk', 'LIKE', '%' . $search . '%')          
+            ->orWhere('amount', 'LIKE', '%' . $search . '%')
+            ->orWhere('discount', 'LIKE', '%' . $search . '%')
+            ->orWhere('status', 'LIKE', '%' . $search . '%')    
+            ->orWhere('	payment_mode', 'LIKE', '%' . $search . '%')              
+            ->orWhere('transaction_id', 'LIKE', '%' . $search . '%');
           });
           }
         $notes = $notes->paginate($limit)
@@ -1046,6 +1049,28 @@ class ProductController extends Controller
               $this->data['page'] = 'admin.products.agent_report';
                return $this->admin_dashboard(); 
            }
+
+
+
+           public function view_invoices($id)
+           {
+       
+           try {
+               $id = Crypt::decrypt($id);
+               } catch (\Illuminate\Contracts\Encryption\DecryptException $e) {
+               return back()->withErrors(array('Invalid User!'));
+           }
+       
+            $investment = Seller_invoice::where('id',$id)->first();
+            $admin=GeneralSetting::first();
+       
+           $this->data['investment'] =  $investment;
+           $this->data['admin'] =  $admin;
+       
+           $this->data['page'] = 'admin.products.Invoices';
+           return $this->dashboard_layout();
+       
+          }
        
 
 

@@ -211,6 +211,7 @@ Route::group(['middleware' => ['admin']], function ()
 
 //productController
 Route::post('a_product', [App\Http\Controllers\Admin\ProductController::class, 'a_product'])->name('admin.a_product');
+Route::get('view_invoices/{id}', [App\Http\Controllers\Admin\ProductController::class, 'view_invoices'])->name('admin.view_invoices');
 Route::get('agent_report', [App\Http\Controllers\Admin\ProductController::class, 'agent_report'])->name('admin.agent_report');
 Route::get('agent_product', [App\Http\Controllers\Admin\ProductController::class, 'agent_product'])->name('admin.agent_product');
 Route::get('v_product', [App\Http\Controllers\Admin\ProductController::class, 'v_product'])->name('admin.v_product');
