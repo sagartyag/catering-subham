@@ -36,10 +36,12 @@
                                         <thead>
                                             <tr>
                                                 <th>#</th>
-                                                <th>User ID</th>
-                                                <th>Transection Date</th>
-                                                <th>Transection ID</th>
-                                                <th>Details</th>
+                                                <th>Customer Name</th>
+                                                <th>Phone</th>
+                                                <th>Email</th>
+                                                <th>Address</th>
+                                                <th>Payment Mode</th>
+                                                <th>Billing Date</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -49,10 +51,14 @@
                                                 @foreach($deposit_list as $value)
                                                     <tr>
                                                         <td><?= $cnt += 1?></td>
-                                                        <td>{{ $value->user_id_fk }}</td>
+                                                        <td>{{ $value->name }}</td>
+                                                        <td>{{ $value->phone }}</td>
     
-                                                        <td>{{ $value->created_at }}</td>
-                                                        <td>{{ $value->transaction_id }}</td>
+                                                        <td>{{ $value->email }}</td>
+                                                        <td>{{ $value->address }}</td>
+                                                        <td>{{ $value->mode?$value->mode:"Cash" }}</td>
+
+                                                        <td>{{ $value->sdate }}</td>
                                                         
 
                                                             <td><a href="{{ route('user.view-invoice', ['id'=> Crypt::encrypt($value->id)]) }}" class="btn btn-primary btn-sm btn-rounded" >
