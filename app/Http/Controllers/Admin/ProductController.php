@@ -12,6 +12,7 @@ use App\Models\Admin_product;
 use App\Models\Seller_invoice;
 use App\Models\Investment;
 use App\Models\GeneralSetting;
+use App\Models\Vendor_product;
 use App\Models\Categorie;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Validator;

@@ -31,14 +31,13 @@
                                     <tr><th>
                                         Sr No
                                         </th>
-                                        <th>Seller ID</th>
+                                        <th>User ID</th>
 
-                                        <th>Name</th>
+                                        
                                         <th>Price</th>
                                         <th>Discount Price</th>
-                                        <th>Coupon</th>
-                                        <th>Discription</th>
-                                        <th>Quantity</th>
+                                        <th>Transaction Id</th>
+                                        <th>payment_mode</th>
                                         <th>Request Date</th>
                                      
                                         <th>Success</th>
@@ -59,19 +58,12 @@
                                               <?= $cnt += 1?>
                                             </td>
 
-                                            <td> {{ $value->user->username }}</td>
-
-
-                                            <td> {{ $value->product ? $value->product->productName : '' }}</td>
-                                            <td> {{ currency() }}
-                                                {{ $value->product ? $value->product->productPrice : '' }}</td>
-                                            <td> {{ currency() }}
-                                                {{ $value->product ? $value->product->productDiscountPrice : '' }}</td>
-                                            <td> {{ currency() }}
-                                                {{ $value->product ? $value->product->ProductCoupon : '' }}</td>
-                                            <td> {{ $value->product ? $value->product->ProductDiscription : '' }}</td>
-                                            <td> {{ $value->quantity }}</td>
-
+                                            <td> {{$value->user_id_fk }}</td>
+                                            <td> {{$value->amount}}</td>
+                                            <td> {{$value->discount}}</td>
+                                              <td>  {{$value->transaction_id}}</td>
+                                            <td> {{$value->payment_mode}}
+                                                
                                             <td>{{ date('D, d M Y h:i:s a', strtotime($value->created_at)) }} </td>
                                            
                                               <td >
