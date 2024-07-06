@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\Crypt;
 use App\Models\Investment;
 use App\Models\Seller_invoice;
 
+use App\Models\GeneralSetting;
+
 use App\Models\User;
 
 class DepositController extends Controller
@@ -76,15 +78,15 @@ class DepositController extends Controller
         $limit = $request->limit ? $request->limit : paginationLimit();
         $status = $request->status ? $request->status : null;
         $search = $request->search ? $request->search : null;
-        $notes = Investment::where('status','Active')->orderBy('id', 'DESC');
+        $notes = Seller_invoice::orderBy('id', 'DESC');
 
         if($search <> null && $request->reset!="Reset"){
             $notes = $notes->where(function($q) use($search){
-              $q->Where('amount', 'LIKE', '%' . $search . '%')
-              ->orWhere('user_id_fk', 'LIKE', '%' . $search . '%')
-              ->orWhere('sdate', 'LIKE', '%' . $search . '%')
-              ->orWhere('status', 'LIKE', '%' . $search . '%')
-              ->orWhere('transaction_id', 'LIKE', '%' . $search . '%');
+                $q->Where('user_id_fk', 'LIKE', '%' . $search . '%')          
+                ->orWhere('transaction_id', 'LIKE', '%' . $search . '%')
+                ->orWhere('created_at ', 'LIKE', '%' . $search . '%')
+                ->orWhere('name', 'LIKE', '%' . $search . '%')         
+                ->orWhere('email', 'LIKE', '%' . $search . '%');
             });
 
           }
@@ -93,7 +95,7 @@ class DepositController extends Controller
             'limit' => $limit
         ]);
 
-        $this->data['deposit_list'] =  $notes;
+        $this->data['product_list'] =  $notes;
         $this->data['search'] = $search;
         $this->data['page'] = 'admin.deposit.deposit-list';
         return $this->admin_dashboard();

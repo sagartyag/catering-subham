@@ -35,7 +35,7 @@
                                                 <th>Email</th>
                                                 <!--<th>Coupon</th>-->
                                                 <th>Mobile Number</th>
-                                                <th>transaction Id</th>
+                                                <!-- <th>transaction Id</th> -->
                                                 <th>join Date</th>
                                                 
                                             </tr>
@@ -54,10 +54,12 @@
                                                         <td> {{$value->email}}</td>
                                                         <!--<td> {{currency()}}  {{$value->ProductCoupon}}</td>-->
                                                         <td>  {{$value->phone}}</td>
-                                                        <td>  {{$value->transaction_id}}</td>
+                                                        <!-- <td>  {{$value->transaction_id}}</td> -->
                                                         <td>  {{$value->created_at}}</td>
                                                       
-                    
+                                                        <td><a href="{{ route('admin.view_invoices', ['id'=> Crypt::encrypt($value->id)]) }}" class="btn btn-primary btn-sm btn-rounded" >
+                                                                View Details
+                                                            </a></td>
                                                     
                                                        
                                                     </tr>

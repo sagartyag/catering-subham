@@ -221,7 +221,7 @@ display: none;
                     </li> -->
                     <li><a class="has-arrow ai-icon" href="javascript:void()" aria-expanded="false">
 							<i class="flaticon-086-star"></i>
-							<span class="nav-text">Billings </span>
+							<span class="nav-text">Agent Billings </span>
 						</a>
                         <ul aria-expanded="false">
                             {{-- <li><a href="{{ route('admin.deposit-request') }}">Pending Deposit</a></li>
@@ -233,6 +233,7 @@ display: none;
 
                         </ul>
                     </li>
+
                     <li><a class="has-arrow ai-icon" href="javascript:void()" aria-expanded="false">
 							<i class="flaticon-045-heart"></i>
 							<span class="nav-text">Products</span>
