@@ -191,7 +191,7 @@ class DepositController extends Controller
        return back()->withErrors(array('Invalid User!'));
    }
 
-    $investment = Investment::where('id',$id)->first();
+   $investment = Seller_invoice::where('id',$id)->first();
 
    $this->data['investment'] =  $investment;
    $this->data['page'] = 'admin.deposit.invoice';
