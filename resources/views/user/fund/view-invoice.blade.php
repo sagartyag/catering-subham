@@ -33,7 +33,7 @@
                                         <div class="invoice-title">
                                             <h4 class="float-end font-size-16">Order  #{{($investment)?$investment->plan:0}}</h4>
                                             <div class="mb-4">
-                                                <img src="{{asset('')}}main/img/logo.png" alt="logo" height="80"/>
+                                                <img src="{{asset('')}}main/images/logo.png" alt="logo" height="80"/>
                                             </div>
                                         </div>
                                         <hr>
