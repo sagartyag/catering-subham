@@ -75,6 +75,7 @@
                         <div class="card-body">
                             <h4 class="card-title mb-3">Order Summary</h4>
                             <input type="hidden" name="user_id" value="{{ @$user_id }}">
+                            <input type="hidden" name="payment_mode" value="{{ $payment_mode }}">
                             <div class="table-responsive">
                                 <table class="table mb-0">
                                     <tbody>

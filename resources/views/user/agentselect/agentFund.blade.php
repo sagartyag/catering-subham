@@ -50,6 +50,15 @@
                                     </div>
                                     <div class="col-sm-12">
                                         <div class="mb-3">
+                                            <label for="payment_mode" class="control-label">Payment Mode</label>
+                                            <select id="payment_mode" class="form-control" name="payment_mode">
+                                                <option value="cash">Cash</option>
+                                                <option value="online">Online</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-12">
+                                        <div class="mb-3">
                                             <label for="email">Email</label>
                                             <input id="email" name="email" type="email" class="form-control" placeholder="Email">
                                         </div>

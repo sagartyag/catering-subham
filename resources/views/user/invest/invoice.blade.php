@@ -66,7 +66,7 @@
                                             <div class="col-sm-6 mt-3">
                                                 <address>
                                                     <strong>Payment Method:</strong><br>
-                                                    Cash<br>
+                                                    {{$investment->mode?$investment->mode:"Cash"}}<br>
                                                     {{$investment->email}}
                                                 </address>
                                             </div>

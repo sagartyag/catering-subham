@@ -28,7 +28,7 @@ class Seller_invoice extends Model
         'name', 
         'email', 
         'address',
-        'product_id',	
+        'product_id','mode'	
     ];
 
     use HasFactory;
