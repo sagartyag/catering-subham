@@ -290,6 +290,7 @@ display: none;
                         <li><a href="{{ route('admin.product-request') }}">Product Request</a></li>
                         <li><a href="{{route('admin.sellerProduct')}}">Sellers Product</a></li>
                         <li><a href="{{route('admin.billing-product')}}">Billing Manual</a></li>
+                        <li><a href="{{route('admin.agent_report')}}">Agent Report</a></li>
                         
                       
                     </ul>

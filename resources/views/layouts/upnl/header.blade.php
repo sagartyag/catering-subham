@@ -265,7 +265,7 @@ span.badge.badge-success {
                             </li>
                             @endif
 
-                            <li>
+                            <!-- <li>
                                 <a href="javascript: void(0);" class="has-arrow waves-effect">
                                     <i class="bx bx-receipt"></i>
                                     <span key="t-invoices">My Team</span>
@@ -286,11 +286,11 @@ span.badge.badge-success {
                                     <li><a href="{{route('user.roi-bonus')}}" key="t-invoice-list">Pool Profit</a></li>
                                     <li><a href="{{route('user.level-income')}}" key="t-invoice-detail">Royal Bonus</a></li>
                                 </ul>
-                            </li>
+                            </li> -->
 
 
 
-                            <li>
+                            <!-- <li>
                                 <a href="javascript: void(0);" class="has-arrow waves-effect">
                                     <i class="bx bx-detail"></i>
                                     <span key="t-crypto">Withdrawal </span>
@@ -300,7 +300,7 @@ span.badge.badge-success {
                                     <li><a href="{{route('user.Withdraw-History')}}" key="t-buy">Withdrawal Reports</a></li>
                                 
                                 </ul>
-                            </li>
+                            </li> -->
 
                             <li>
                                 <a href="javascript: void(0);" class="has-arrow waves-effect">
