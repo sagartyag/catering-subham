@@ -17,6 +17,7 @@ use App\Models\Investment;
 use App\Models\Admin_product;
 use App\Models\Seller_invoice;
 use App\Models\User_product;
+use App\Models\GeneralSetting;
 use Log;
 use Redirect;
 class AddFund extends Controller
@@ -123,6 +124,7 @@ public function fundActivation(Request $request)
             'grandTotal' => 'required|numeric',
             'DiscountTotal' => 'required|numeric',
             'CouponTotal' => 'required|numeric',
+            'payment_mode' => 'required|string', // Add validation for payment_mode
         ]);
 
         if ($validation->fails()) {
@@ -137,6 +139,7 @@ public function fundActivation(Request $request)
         $grandTotal = $request->input('grandTotal');
         $DiscountTotal = $request->input('DiscountTotal');
         $CouponTotal = $request->input('CouponTotal');
+        $payment_mode = $request->input('payment_mode'); // Retrieve payment_mode from request
 
         if (empty($products)) {
             return redirect()->route('user.AddFund')->withErrors(['cart is empty']);
@@ -150,7 +153,7 @@ public function fundActivation(Request $request)
             'user_id' => $user_detail->id,
             'user_id_fk' => $user_detail->username,
             'amount' => $cartTotal,
-            'payment_mode' => 'INR',
+            'payment_mode' => $payment_mode, // Include payment_mode here
             'status' => 'Pending',
             'sdate' => date("Y-m-d"),
             'active_from' => $user_detail->username,
@@ -190,6 +193,7 @@ public function fundActivation(Request $request)
         return redirect()->route('user.AddFund')->withErrors(['error' => $e->getMessage()])->withInput();
     }
 }
+
 
 
 public function sellerBilling(Request $request)
@@ -323,50 +327,44 @@ public function SubmitBuyFund(Request $request)
 
 }
 
-
 public function ecommerce_cart(Request $request)
-    {
-    
-      try{
-            $validation =  Validator::make($request->all(), [
-                'products' => 'required',
-                'user_id' => 'required|exists:users,username',
-                
-            ]);
-    
-            if($validation->fails()) {
-                Log::info($validation->getMessageBag()->first());
-    
-                return redirect()->route('user.AddFund')->withErrors($validation->getMessageBag()->first())->withInput();
-            }
-    
-            $user=Auth::user();
+{
+    try {
+        $validation = Validator::make($request->all(), [
+            'products' => 'required|array',
+            'products.*' => 'exists:vproducts,id',
+            'user_id' => 'required|exists:users,username',
+            'payment_mode' => 'required|string'
+        ]);
 
-            if (empty($request->products))
-                {
-                  return Redirect::back()->withErrors(array('Something went wrong'));
-                }
-            
+        if ($validation->fails()) {
+            Log::info($validation->getMessageBag()->first());
 
-            $product = Vproduct::whereIn('id',$request->products)->get();
-       
-            $this->data['product'] = $product;
-            $this->data['user_id'] = $request->user_id;
-            $this->data['page'] = 'user.fund.ecommerce_cart';
-            return $this->dashboard_layout();
-
-
-        
-          }
-           catch(\Exception $e){
-            Log::info('error here');
-            Log::info($e->getMessage());
-            print_r($e->getMessage());
-            die("hi");
-            return  redirect()->route('user.AddFund')->withErrors('error', $e->getMessage())->withInput();
+            return redirect()->route('user.AddFund')->withErrors($validation->getMessageBag()->first())->withInput();
         }
-    
+
+        $user = Auth::user();
+
+        if (empty($request->products)) {
+            return Redirect::back()->withErrors(array('Something went wrong'));
+        }
+
+        $product = Vproduct::whereIn('id', $request->products)->get();
+
+        $this->data['product'] = $product;
+        $this->data['user_id'] = $request->user_id;
+        $this->data['payment_mode'] = $request->payment_mode;
+        $this->data['page'] = 'user.fund.ecommerce_cart';
+        return $this->dashboard_layout();
+
+    } catch (\Exception $e) {
+        Log::info('error here');
+        Log::info($e->getMessage());
+        print_r($e->getMessage());
+        die("hi");
+        return redirect()->route('user.AddFund')->withErrors('error', $e->getMessage())->withInput();
     }
+}
 
 
 
@@ -538,8 +536,10 @@ try {
 
     $products=Vendor_product::where('invest_id',$invest_id)->get();
 
+    $admin=GeneralSetting::first();
 
-$this->data['investment'] =  $investment;
+    $this->data['investment'] =  $investment;
+    $this->data['admin'] =  $admin;
 $this->data['products'] =  $products;
 // $this->data['vproduct'] =  $vproduct;
 

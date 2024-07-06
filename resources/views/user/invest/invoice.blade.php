@@ -40,13 +40,14 @@
                                         <div class="row">
                                             <div class="col-sm-6">
                                                 <address>
+                                                    <strong>Customer's Detail:</strong><br>
+                                                    {{$investment->email}}<br>
+                                                    {{$investment->phone}}<br>
                                                
                                                     <strong>Billed To:</strong><br>
                                                    
                                                     {{$investment->name}}<br>
-                                                    {{$investment->address}}<br>
-                                                    {{$investment->email}}<br>
-                                                    {{$investment->phone}}<br>
+                                                    {{$investment->address}}
                                                 </address>
                                             </div>
                                             <div class="col-sm-6 text-sm-end">

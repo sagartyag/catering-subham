@@ -32,28 +32,30 @@
                                     <div class="card-body">
                                         <div class="invoice-title">
                                             <h4 class="float-end font-size-16">Order  #{{($investment)?$investment->plan:0}}</h4>
-                                            <!-- <div class="mb-4">
+                                             <div class="mb-4">
                                                 <img src="{{asset('')}}main/images/logo.png" alt="logo" height="80"/>
-                                            </div> -->
+                                            </div> 
                                         </div>
                                         <hr>
                                         <div class="row">
                                             <div class="col-sm-6">
                                                 <address>
+                                                    <strong>Customer's Detail:</strong><br>
+                                                    {{$investment->user->email}}<br>
+                                                    {{$investment->user->phone}}<br>
                                                     <strong>Billed To:</strong><br>
-                                                    John Smith<br>
-                                                    1234 Main<br>
-                                                    Apt. 4B<br>
-                                                    Springfield, ST 54321
+                                                    {{$investment->user->name}}<br>
+                                                    {{$investment->user->address}}
                                                 </address>
                                             </div>
                                             <div class="col-sm-6 text-sm-end">
                                                 <address class="mt-2 mt-sm-0">
-                                                    <strong>Shipped To:</strong><br>
-                                                    {{$investment->user->name}}<br>
-                                                    {{$investment->user->address}}<br>
-                                                    {{$investment->user->email}}<br>
-                                                    {{$investment->user->phone}}<br>
+                                                    <strong>Shipped To:</strong>
+
+                                                    <br>
+                                                    {{$admin->name}}<br>
+                                                    {{$admin->address}}<br>
+                                                    {{$admin->phone}}<br>
                                                   
                                                 </address>
                                             </div>
