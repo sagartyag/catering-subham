@@ -37,7 +37,6 @@
                                             <tr>
                                                 <th>#</th>
                                                 <th>User ID</th>
-                                                <th>Amount</th>
                                                 <th>Transection Date</th>
                                                 <th>Transection ID</th>
                                                 <th>Status</th>
@@ -53,7 +52,6 @@
                                                         <td><?= $cnt += 1?></td>
                                                         <td>{{ $value->user_id_fk }}</td>
     
-                                                        <td>{{currency()}} {{ $value->amount }}</td>
                                                         <td>{{ $value->created_at }}</td>
                                                         <td>{{ $value->transaction_id }}</td>
                                                         <td><span
