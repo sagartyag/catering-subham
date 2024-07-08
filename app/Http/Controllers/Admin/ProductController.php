@@ -371,7 +371,7 @@ class ProductController extends Controller
             return redirect()->route('admin.product-request')->withErrors($validation->getMessageBag()->first())->withInput();
         }
     
-        $product=Seller_product::where('id',$request->product_id)->first();
+        $product=Vproduct::where('id',$request->product_id)->first();
             if ($product)          
             {
 
@@ -666,7 +666,9 @@ class ProductController extends Controller
             ];
             $payment = Seller_product::create($data);
             $notify[] = ['success', ' Product Added successfully'];
-            return redirect()->route('admin.billing-product')->withNotify($notify);
+            return redirect()->route('admin.billing-product
+            
+            ')->withNotify($notify);
                # code...
            }
           else

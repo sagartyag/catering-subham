@@ -51,7 +51,7 @@ class Invest extends Controller
       try{
             $validation =  Validator::make($request->all(), [
                 'products' => 'required',
-                // 'user_id' => 'required|exists:users,username',
+                'user_id' => 'required|exists:users,username',
                 
             ]);
     
@@ -72,7 +72,7 @@ class Invest extends Controller
             $product = Product::whereIn('id',$request->products)->get();
        
             $this->data['product'] = $product;
-            // $this->data['user_id'] = $request->user_id;
+            $this->data['user_id'] = $request->user_id;
             $this->data['page'] = 'user.invest.ecommerce_cart';
             return $this->dashboard_layout();
 

@@ -39,13 +39,6 @@
                                        </thead>
                                        <tbody>
 
-
-
-
-
-
-
-
                                        </tbody>
                                    </table>
                                </div>
@@ -212,7 +205,7 @@
                    row.append('<td>&#8377; ' + item.coupen + '</td>');
 
                    row.append(
-                       '<td><div class="me-3" style="width: 120px;"><input type="number" min="1" max="'+item.balanceQuantity+'" value="' +
+                       '<td><div class="me-3" style="width: 120px;"><input type="number" min="1" max="" value="' +
                        item.quantity + '" data-product="' + item.product +
                        '" class="form-control" name="quantity"></div></td>');
                    row.append('<td>&#8377;' + totalPrice.toFixed(2) + '</td>');
