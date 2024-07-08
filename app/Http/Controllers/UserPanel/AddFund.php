@@ -16,6 +16,7 @@ use App\Models\Vendor_product;
 use App\Models\Investment;
 use App\Models\Admin_product;
 use App\Models\Seller_invoice;
+use App\Models\VendorBilling;
 use App\Models\User_product;
 use App\Models\GeneralSetting;
 use Log;
@@ -265,6 +266,86 @@ public function sellerBilling(Request $request)
             ];
 
             Seller_product::create($insertProduct);
+        }
+
+        $notify[] = ['success', 'Product Request Submitted successfully'];
+        return redirect()->route('user.Addagent')->withNotify($notify);
+    } catch (\Exception $e) {
+        Log::info('error here');
+        Log::info($e->getMessage());
+        return redirect()->route('user.Addagent')->withErrors(['error' => $e->getMessage()])->withInput();
+    }
+}
+
+public function vendorBilling(Request $request)
+{
+    try {
+        // Validate request
+        $validation = Validator::make($request->all(), [
+            'products' => 'required|array',
+            'quantity' => 'required|array',
+            'name' => 'required|string',
+            'email' => 'required|string',
+            'phone' => 'required|string',
+            'address' => 'required|string',
+            'payment_mode' => 'required|string', // Added validation for payment_mode
+        ]);
+
+        if ($validation->fails()) {
+            Log::info($validation->getMessageBag()->first());
+            return redirect()->route('user.Addagent')->withErrors($validation->getMessageBag()->first())->withInput();
+        }
+
+        $user_detail = Auth::user();
+        $products = $request->products;
+        $quantities = $request->input('quantity', []);
+        $name = $request->input('name');
+        $email = $request->input('email');
+        $phone = $request->input('phone');
+        $address = $request->input('address');
+        $payment_mode = $request->input('payment_mode'); // Retrieve payment_mode from request
+
+        if (empty($products)) {
+            return redirect()->route('user.Addagent')->withErrors(['cart is empty']);
+        }
+
+        // Calculate total quantity
+        $totalQuantity = array_sum($quantities);
+
+        // Insert invoice data
+        $invoiceNumber = substr(str_shuffle("0123456789"), 0, 7);
+        $invoiceData = [
+            'plan' => $invoiceNumber,
+            'transaction_id' => md5(uniqid(rand(), true)),
+            'user_id' => $user_detail->id,
+            'user_id_fk' => $user_detail->username,
+            'name' => $name,
+            'email' => $email,
+            'phone' => $phone,
+            'address' => $address,
+            'grandTotal' => $totalQuantity,
+            'status' => 'Pending',
+            'created_at' => now(),
+            'updated_at' => now(),
+            'mode' => $payment_mode, // Add payment_mode to invoice data
+        ];
+        $invoiceId = VendorBilling::insertGetId($invoiceData);
+
+        // Insert product data
+        foreach ($products as $key => $productId) {
+            $quantity = $quantities[$key] ?? 1;
+
+            $insertProduct = [
+                'user_id' => $user_detail->id,
+                'product_id' => $productId,
+                'quantity' => $quantity,
+                'active_status' => 0,
+                'invest_id' => $invoiceId,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+
+            User_product::create($insertProduct);
         }
 
         $notify[] = ['success', 'Product Request Submitted successfully'];

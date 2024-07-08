@@ -33,23 +33,44 @@ class Invest extends Controller
 
  
   public function index()
-  {
-      $user = Auth::user();
-      
-      $vendorProducts = Vendor_product::where('user_id', $user->id)
-                                       ->where('activeStatus', 1)
-                                       ->get();
-  
-      $ids = $vendorProducts->pluck('product_id')->unique()->toArray();
-  
-      $products = Vproduct::whereIn('id', $ids)->get();
-    
-      $this->data['products'] = $products;
-      $this->data['page'] = 'user.invest.Deposit';
-  
-      return $this->dashboard_layout();
-  }
-  
+{
+    $user = Auth::user();
+
+    // Fetch vendor products for the user
+    $vendorProducts = Vendor_product::where('user_id', $user->id)
+                                    ->where('activeStatus', 1)
+                                    ->get();
+
+    // Extract unique product IDs
+    $ids = $vendorProducts->pluck('product_id')->unique()->toArray();
+
+    // Fetch products based on the IDs
+    $products = Vproduct::whereIn('id', $ids)->get();
+
+    // Filter products based on balance quantity
+    $filteredProducts = $products->filter(function ($product) use ($user) {
+        $maxQuantity = \DB::table('vendor_products')
+                          ->where('user_id', $user->id)
+                          ->where('product_id', $product->id)
+                          ->where('activeStatus', 1)
+                          ->sum('quantity');
+
+        $usedQuantity = \DB::table('user_products')
+                           ->where('user_id', $user->id)
+                           ->where('product_id', $product->id)
+                           ->sum('quantity');
+
+        $balanceQuantity = $maxQuantity - $usedQuantity;
+
+        return $balanceQuantity > 0;  // Only include products with balance quantity greater than 0
+    });
+
+    $this->data['products'] = $filteredProducts;
+    $this->data['page'] = 'user.invest.Deposit';
+
+    return $this->dashboard_layout();
+}
+
 
     public function ecommerce_cart(Request $request)
     {
@@ -333,7 +354,7 @@ class Invest extends Controller
         ]);
 
         if ($validation->fails()) {
-            return redirect()->route('user.vendor_card')->withErrors($validation->getMessageBag()->first())->withInput();
+            return redirect()->route('user.invest')->withErrors($validation->getMessageBag()->first())->withInput();
         }
 
         $user = Auth::user();
@@ -355,7 +376,7 @@ class Invest extends Controller
         
     } catch (\Exception $e) {
         Log::error('Error in vendor cart processing: ' . $e->getMessage());
-        return redirect()->route('user.vendor_card')->withErrors(['error' => $e->getMessage()])->withInput();
+        return redirect()->route('user.invest')->withErrors(['error' => $e->getMessage()])->withInput();
     }
     }
 
