@@ -92,7 +92,8 @@
                                                         <th style="width: 70px;">No.</th>
                                                         <th>Item</th>
                                                         <th>Quantity</th>
-                                                        {{-- <th class="text-end">Price</th> --}}
+                                                         <th class="text-end">Price</th>
+                                                             
                                                    
                                                     </tr>
                                                 </thead>
@@ -112,7 +113,7 @@
                                                         <td>{{ $loop->iteration }}</td>
                                                         <td>{{ $data->productName }} - {{ $data->ProductDiscription }}</td>
                                                         <td>{{ $value->quantity }}</td>
-                                                        {{-- <td class="text-end">&#8377; {{ $value->productPrice }}</td> --}}
+                                                         <td class="text-end">&#8377; {{ $value->productPrice }}</td> 
                                                     </tr>
                                                 @endforeach
                                                 
