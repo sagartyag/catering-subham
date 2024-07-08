@@ -13,6 +13,7 @@ use App\Models\Vendor_product;
 use App\Models\Seller_invoice;
 use App\Models\GeneralSetting;
 use App\Models\Product;
+use App\Models\VendorBilling;
 use App\Models\User_product;
 use App\Models\Club_a;
 use Illuminate\Support\Facades\Crypt;
@@ -126,7 +127,8 @@ class Invest extends Controller
         return back()->withErrors(array('Invalid User!'));
     }
 
-     $investment = Seller_invoice::where('id',$id)->first();
+     $investment = VendorBilling::where('id',$id)->first();
+     
      $admin=GeneralSetting::first();
 
     $this->data['investment'] =  $investment;
@@ -314,7 +316,7 @@ class Invest extends Controller
       $limit = $request->limit ? $request->limit : paginationLimit();
         $status = $request->status ? $request->status : null;
         $search = $request->search ? $request->search : null;
-        $notes = Seller_invoice::where('user_id',$user->id);
+        $notes = VendorBilling::where('user_id',$user->id);
       
       if($search <> null && $request->reset!="Reset"){
         $notes = $notes->where(function($q) use($search){

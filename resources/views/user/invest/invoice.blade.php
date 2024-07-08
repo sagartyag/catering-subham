@@ -101,7 +101,7 @@
                                                     <?php $cnt = 0; ?>
 
                                                     @php
-                                                    $products = \App\Models\Seller_product::where('invest_id', $investment->id)->get();
+                                                    $products = \App\Models\User_product::where('invest_id', $investment->id)->get();
                                                 @endphp
                                                 @foreach ($products as $value)
                                                     @php
