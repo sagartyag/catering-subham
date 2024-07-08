@@ -97,6 +97,7 @@ Route::post('/fetch-products', [App\Http\Controllers\UserPanel\AddFund::class, '
 
 // invest
 Route::get('/invest', [App\Http\Controllers\UserPanel\Invest::class, 'index'])->name('user.invest');
+Route::post('/vendor_card', [App\Http\Controllers\UserPanel\Invest::class, 'vendor_card'])->name('user.vendor_card');
 Route::get('/agent_invoice', [App\Http\Controllers\UserPanel\Invest::class, 'agent_invoice'])->name('user.agent_invoice');
 Route::post('/fundActivation', [App\Http\Controllers\UserPanel\Invest::class, 'fundActivation'])->name('user.fund_activation');
 Route::get('/DepositHistory', [App\Http\Controllers\UserPanel\Invest::class, 'invest_list'])->name('user.DepositHistory');

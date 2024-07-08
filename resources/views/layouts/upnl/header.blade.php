@@ -237,7 +237,7 @@ span.badge.badge-success {
                             <li>
                                 <a href="javascript: void(0);" class="has-arrow waves-effect">
                                     <i class="bx bx-store"></i>
-                                    <span key="t-ecommerce">Billing Product</span>
+                                    <span key="t-ecommerce">Vendor Menu</span>
                                 </a>
                                 <ul class="sub-menu" aria-expanded="false">
 

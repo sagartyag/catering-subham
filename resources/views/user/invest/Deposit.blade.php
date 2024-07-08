@@ -1,151 +1,159 @@
+<!-- ============================================================== -->
+<!-- Start right Content here -->
+<!-- ============================================================== -->
+<div class="main-content">
+    <div class="page-content">
+        <div class="container-fluid">
 
+            <!-- start page title -->
+            <div class="row">
+                <div class="col-12">
+                    <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+                        <h4 class="mb-sm-0 font-size-18">Billing Details</h4>
 
-        <!-- ============================================================== -->
-        <!-- Start right Content here -->
-        <!-- ============================================================== -->
-        <div class="main-content">
-
-            <div class="page-content">
-                <div class="container-fluid">
-
-                    <!-- start page title -->
-                    <div class="row">
-                        <div class="col-12">
-                            <div class="page-title-box d-sm-flex align-items-center justify-content-between">
-                                <h4 class="mb-sm-0 font-size-18">Billings</h4>
-
-                                <div class="page-title-right">
-                                    <ol class="breadcrumb m-0">
-                                        <li class="breadcrumb-item"><a href="javascript: void(0);">Buy product</a></li>
-                                        <li class="breadcrumb-item active">Billings</li>
-                                    </ol>
-                                </div>
-
-                            </div>
+                        <div class="page-title-right">
+                            <ol class="breadcrumb m-0">
+                                <li class="breadcrumb-item"><a href="javascript: void(0);">Product</a></li>
+                                <li class="breadcrumb-item active">Add Product</li>
+                            </ol>
                         </div>
                     </div>
-                    <!-- end page title -->
-
-                    <div class="row">
-                        <div class="col-6">
-                            <div class="card">
-                                <div class="card-body">
-
-                                    <h4 class="card-title">Billings Information</h4>
-                                    <p class="card-title-desc">Fill all information below</p>
-
-                                    <form method="POST" action="{{route('user.ecommerce_cart')}}">
-
-                                        {{ csrf_field() }}
-
-                                        <div class="row">
-                                            <div class="col-sm-12">
-                                                <div class="mb-3">
-                                                    <label for="productname">Customer ID</label>
-                                                    <input id="productname" name="user_id" type="text"
-                                                        class="form-control check_sponsor_exist" data-response="username_res"  placeholder="Customer ID">
-                                                    <span id="username_res"></span>
-                                                </div>
-                                             
-                                            </div>
-
-                                            <div class="col-sm-12">
-                                             
-                                                <div class="mb-3">
-                                                    <label class="control-label">Products</label>
-
-                                                    <select class="select2 form-control select2-multiple"
-                                                        multiple="multiple" name="products[]" data-placeholder="Choose ...">
-
-                                                        @foreach ($product as $log)
-                                                        <option value="{{$log->product_id}}">{{$log->product?$log->product->productName:"No Products Found"}}</option>
-                                                          
-                                                         @endforeach
-
-                                                       
-                                                    </select>
-
-                                                </div>
-                                             
-
-                                            </div>
-                                        </div>
-
-                                        <div class="d-flex flex-wrap gap-2">
-                                            <button type="submit" class="btn btn-primary waves-effect waves-light">Submit</button>
-                                            <button type="button"
-                                                class="btn btn-secondary waves-effect waves-light">Cancel</button>
-                                        </div>
-                                    </form>
-
-                                </div>
-                            </div>
-
-                       
-
-                        </div>
-                    </div>
-                    <!-- end row -->
-
-                </div> <!-- container-fluid -->
+                </div>
             </div>
-            <!-- End Page-content -->
+            <!-- end page title -->
 
-  
-            <script src="https://code.jquery.com//jquery-3.3.1.min.js"></script>
-            <script>
-                function amtValue() {
-                    var amt = document.getElementById('PACKAGE_AMT').value;
-                    if (amt % 20 == 0) {
-                        return true;
-                    } else {
-                        alert('Please enter valid amount Multiple of Rs. 20  ');
-                        return false;
-                    }
-                }
+            <div class="row">
+                <div class="col-6">
+                    <div class="card">
+                        <div class="card-body">
+
+                            <h4 class="card-title">Add Product</h4>
+                            <p class="card-title-desc">Fill all information below</p>
+
+                            <form action="{{ route('user.vendor_card') }}" method="POST" enctype="multipart/form-data">
+                                @csrf
+
+                                <div class="row">
+                                    
+                                    <div class="col-sm-12">
+                                        <div class="mb-3">
+                                            <label for="name">Customer Name</label>
+                                            <input id="name" name="name" type="text" class="form-control" placeholder="Name">
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-12">
+                                        <div class="mb-3">
+                                            <label for="seller_id">Phone</label>
+                                            <input id="seller_id"  name="phone" type="number"
+                                                class="form-control"  placeholder="Phone">
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-12">
+                                        <div class="mb-3">
+                                            <label for="payment_mode" class="control-label">Payment Mode</label>
+                                            <select id="payment_mode" class="form-control" name="payment_mode">
+                                                <option value="cash">Cash</option>
+                                                <option value="online">Online</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-12">
+                                        <div class="mb-3">
+                                            <label for="email">Email</label>
+                                            <input id="email" name="email" type="email" class="form-control" placeholder="Email">
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-12">
+                                        <div class="mb-3">
+                                            <label for="address">Address</label>
+                                            <input id="address" name="address" type="text" class="form-control" placeholder="Address">
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-12">
+                                             
+                                             <div class="mb-3">
+                                                 <label class="control-label">Products</label>
+
+                                                 <select class="select2 form-control select2-multiple"
+                                                     multiple="multiple" name="products[]" data-placeholder="Choose ...">
+
+                                                     @foreach ($product as $log)
+                                                     <option value="{{$log->product_id}}">{{$log->product?$log->product->productName:"No Products Found"}}</option>
+                                                       
+                                                      @endforeach
+
+                                                    
+                                                 </select>
+
+                                             </div>
+                                          
+
+                                         </div>
+                                  
+                                    
+                                    <!-- <div class="col-sm-12">
+                                        <div class="mb-3">
+                                            <label for="product_id" class="control-label">Product</label>
+                                            <select id="product_id" class="select2 form-control select2-multiple" name="products[]"
+                                                multiple="multiple" data-placeholder="Choose ...">
+                                            </select>
+                                        </div>
+                                    </div> -->
+                                    
+                                </div>
+
+                                <div class="d-flex flex-wrap gap-2">
+                                    <button type="submit" class="btn btn-primary waves-effect waves-light">Submit</button>
+                                    <button type="button" class="btn btn-secondary waves-effect waves-light">Cancel</button>
+                                </div>
+                            </form>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- end row -->
+
+        </div> <!-- container-fluid -->
+    </div>
+    <!-- End Page-content -->
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function() {
+        // Initially hide the product select box
+        $('#product_id').parent().hide();
+    });
+
+    function fetchProducts() {
+        var selectedCategories = $('#category_id').val();
         
-        
-        
-                $('.check_sponsor_exist').keyup(function(e) {
-                    var ths = $(this);
-                    var res_area = $(ths).attr('data-response');
-                    var sponsor = $(this).val();
-                    // alert(sponsor); 
-                    $.ajax({
-                        type: "POST"
-                        , url: "{{ route('getUserName') }}"
-                        , data: {
-                            "user_id": sponsor
-                            , "_token": "{{ csrf_token() }}"
-                        , }
-                        , success: function(response) {
-                            // alert(response);      
-                            if (response != 1) {
-                                // alert("hh");
-                                $(".submit-btn").prop("disabled", false);
-                                $('#' + res_area).html(response).css('color', '#000').css('font-weight', '800')
-                                    .css('margin-buttom', '10px');
-                            } else {
-                                // alert("hi");
-                                $(".submit-btn").prop("disabled", true);
-                                $('#' + res_area).html("User Not exists!").css('color', 'red').css(
-                                    'margin-buttom', '10px');
-                            }
-                        }
+        if (selectedCategories.length > 0) {
+            // Show the product select box
+            $('#product_id').parent().show();
+
+            $.ajax({
+                url: '{{ route("fetch.products") }}', // Update with your route
+                type: 'POST',
+                data: {
+                    _token: '{{ csrf_token() }}',
+                    categories: selectedCategories
+                },
+                success: function(response) {
+                    $('#product_id').empty(); // Clear previous options
+                    $.each(response.products, function(index, product) {
+                        $('#product_id').append('<option value="' + product.id + '">' + product.name + '</option>');
                     });
-                });
-        
-                function copyFunctionwallet(inputID) {
-        
-                    var copyText = document.getElementById("wallet-address");
-        
-                    copyText.select();
-        
-                    document.execCommand("copy");
-                    $(".copyToClipboard").html("Copied");
-        
-                    }
-        
-        
-            </script>
-        
+                },
+                error: function(xhr) {
+                    console.log('Error:', xhr);
+                }
+            });
+        } else {
+            // Hide the product select box if no categories are selected
+            $('#product_id').parent().hide();
+            $('#product_id').empty(); // Clear previous options
+        }
+    }
+</script>
