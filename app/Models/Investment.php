@@ -9,6 +9,9 @@ class Investment extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'amount'
+    ];
 
     public function user()
     {
