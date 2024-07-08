@@ -11,7 +11,7 @@ class Vendor_product extends Model
 
 
     protected $fillable = [
-        'user_id', 'product_id','activeStatus','invest_id','quantity','productPrice','grandTotal','discount','coupon','netAmount'
+        'user_id', 'product_id','activeStatus','invest_id','quantity','productPrice','grandTotal','discount','coupon','netAmount','remaining_quantity'
     ];
 
     public function user()

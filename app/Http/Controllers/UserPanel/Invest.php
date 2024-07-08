@@ -8,6 +8,8 @@ use App\Models\User;
 use App\Models\Investment;
 use App\Models\Income;
 use App\Models\Seller_product;
+use App\Models\Vproduct;
+use App\Models\Vendor_product;
 use App\Models\Seller_invoice;
 use App\Models\GeneralSetting;
 use App\Models\Product;
@@ -30,20 +32,24 @@ class Invest extends Controller
   
 
  
-    public function index()
-    {
-        $user=Auth::user();
-        $invest_check=Investment::where('user_id',$user->id)->where('status','!=','Decline')->orderBy('id','desc')->limit(1)->first();
-          \DB::statement("SET SQL_MODE=''");
-        $product = Seller_product::where('user_id',$user->id)->where('activeStatus',1)->groupBy('product_id')->orderBy('id','DESC')->get();
-        $this->data['product'] = $product;
-        $this->data['last_package'] = ($invest_check)?$invest_check->amount:0;
-        $this->data['page'] = 'user.invest.Deposit';
-        return $this->dashboard_layout();
-    }
-
-
-
+  public function index()
+  {
+      $user = Auth::user();
+      
+      $vendorProducts = Vendor_product::where('user_id', $user->id)
+                                       ->where('activeStatus', 1)
+                                       ->get();
+  
+      $ids = $vendorProducts->pluck('product_id')->unique()->toArray();
+  
+      $products = Vproduct::whereIn('id', $ids)->get();
+    
+      $this->data['products'] = $products;
+      $this->data['page'] = 'user.invest.Deposit';
+  
+      return $this->dashboard_layout();
+  }
+  
 
     public function ecommerce_cart(Request $request)
     {
@@ -315,45 +321,42 @@ class Invest extends Controller
          
     public function vendor_card(Request $request)
     {
-        try {
-            // Validate request
-            $validation = Validator::make($request->all(), [
-                'name' => 'required|string|max:255',
-                'phone' => 'required|numeric',
-                'email' => 'required|email|max:255',
-                'address' => 'required|string|max:255',
-                // 'categories' => 'required|array',
-                'products' => 'required',
-                'payment_mode' => 'required|string|in:cash,online',
-            ]);
-    
-            if ($validation->fails()) {
-                return redirect()->route('user.invest')->withErrors($validation->getMessageBag()->first())->withInput();
-            }
-    
-            $user = Auth::user();
-    
-            if (empty($request->products)) {
-                return redirect()->back()->withErrors(['Something went wrong']);
-            }
-    
-            $products = Product::whereIn('id', $request->products)->get();
-    
-            $this->data['products'] = $products;
-            $this->data['name'] = $request->name;
-            $this->data['phone'] = $request->phone;
-            $this->data['email'] = $request->email;
-            $this->data['address'] = $request->address;
-            // $this->data['categories'] = $request->categories;
-            $this->data['user_id'] = $request->user_id;
-            $this->data['payment_mode'] = $request->payment_mode;
-            $this->data['page'] = 'user.invest.ecommerce_cart';
-            return $this->dashboard_layout();
-            
-        } catch (\Exception $e) {
-            Log::error('Error in agent activation: ' . $e->getMessage());
-            return redirect()->route('user.Invest')->withErrors(['error' => $e->getMessage()])->withInput();
+      try {
+        // Validate request
+        $validation = Validator::make($request->all(), [
+            'name' => 'required|string|max:255',
+            'phone' => 'required|numeric',
+            'email' => 'required|email|max:255',
+            'address' => 'required|string|max:255',
+            'products' => 'required|array',
+            'payment_mode' => 'required|string|in:cash,online',
+        ]);
+
+        if ($validation->fails()) {
+            return redirect()->route('user.vendor_card')->withErrors($validation->getMessageBag()->first())->withInput();
         }
+
+        $user = Auth::user();
+
+        if (empty($request->products)) {
+            return redirect()->back()->withErrors(['Something went wrong']);
+        }
+
+        $products = Vproduct::whereIn('id', $request->products)->get();
+
+        $this->data['products'] = $products;
+        $this->data['name'] = $request->name;
+        $this->data['phone'] = $request->phone;
+        $this->data['email'] = $request->email;
+        $this->data['address'] = $request->address;
+        $this->data['payment_mode'] = $request->payment_mode;
+        $this->data['page'] = 'user.invest.vendorcart';
+        return $this->dashboard_layout();
+        
+    } catch (\Exception $e) {
+        Log::error('Error in vendor cart processing: ' . $e->getMessage());
+        return redirect()->route('user.vendor_card')->withErrors(['error' => $e->getMessage()])->withInput();
+    }
     }
 
 

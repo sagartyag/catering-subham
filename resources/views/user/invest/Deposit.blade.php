@@ -77,28 +77,13 @@
                                                  <select class="select2 form-control select2-multiple"
                                                      multiple="multiple" name="products[]" data-placeholder="Choose ...">
 
-                                                     @foreach ($product as $log)
-                                                     <option value="{{$log->product_id}}">{{$log->product?$log->product->productName:"No Products Found"}}</option>
+                                                     @foreach ($products as $log)
+                                                     <option value="{{$log->id}}">{{$log->productName??"No Products Found"}}</option>
                                                        
                                                       @endforeach
-
-                                                    
                                                  </select>
-
                                              </div>
-                                          
-
-                                         </div>
-                                  
-                                    
-                                    <!-- <div class="col-sm-12">
-                                        <div class="mb-3">
-                                            <label for="product_id" class="control-label">Product</label>
-                                            <select id="product_id" class="select2 form-control select2-multiple" name="products[]"
-                                                multiple="multiple" data-placeholder="Choose ...">
-                                            </select>
-                                        </div>
-                                    </div> -->
+                                         </div>  
                                     
                                 </div>
 
@@ -120,7 +105,7 @@
 </div>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script>
+{{-- <script>
     $(document).ready(function() {
         // Initially hide the product select box
         $('#product_id').parent().hide();
@@ -156,4 +141,4 @@
             $('#product_id').empty(); // Clear previous options
         }
     }
-</script>
+</script> --}}

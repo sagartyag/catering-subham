@@ -172,7 +172,6 @@ public function fundActivation(Request $request)
                 'user_id' => $user_detail->id,
                 'product_id' => $productId,
                 'quantity' => $quantity,
-                'remaining_quantity' => $quantity,
                 'productPrice' => $productReport->productPrice,
                 'grandTotal' => $productReport->productPrice * $quantity,
                 'discount' => ($productReport->productPrice * $quantity) - ($productReport->productDiscountPrice * $quantity),
