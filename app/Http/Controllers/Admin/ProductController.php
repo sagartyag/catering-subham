@@ -491,6 +491,7 @@ class ProductController extends Controller
 
                  
 
+      
        public function confirm_product($id)
        {
    
@@ -500,13 +501,17 @@ class ProductController extends Controller
            return back()->withErrors(array('Invalid User!'));
        }
    
-       $product = Seller_product::where('id',$id)->first();
-   
-       $this->data['product'] =  $product;
+       $investment = Investment::where('id',$id)->first();
+       $invest_id=$investment->id;
+       $products=Vendor_product::where('invest_id',$invest_id)->get();
+
+        //  dd($product);
+        $this->data['products'] =  $products;
        $this->data['page'] = 'admin.products.confirm_product';
        return $this->admin_dashboard();
    
       }
+
 
 
 

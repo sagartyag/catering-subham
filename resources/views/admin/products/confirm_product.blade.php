@@ -205,7 +205,7 @@
                    row.append('<td>&#8377; ' + item.coupen + '</td>');
 
                    row.append(
-                       '<td><div class="me-3" style="width: 120px;"><input type="number" min="1" max="" value="' +
+                       '<td><div class="me-3" style="width: 120px;"><input type="number" min="1" max="'+item.balanceQuantity+'" value="' +
                        item.quantity + '" data-product="' + item.product +
                        '" class="form-control" name="quantity"></div></td>');
                    row.append('<td>&#8377;' + totalPrice.toFixed(2) + '</td>');
@@ -241,16 +241,15 @@
            });
         
 
-                    @php
-                     $maxQuanity = \DB::table('admin_products')->where('product_id',$product->product->id)->sum('quantity');
-                     $useQuantity = \DB::table('seller_products')->where('product_id',$product->product->id)->sum('quantity');
-                     $balanceQuan= $maxQuanity-$useQuantity;
-                    @endphp
+                 
           
-               addToCart('{{ $product->product->productName }}', '{{ $product->product->ProductDiscription }}',
-                   {{ $product->product->productPrice }}, {{ $product->product->productDiscountPrice }},
-                   {{ $product->product->ProductCoupon }}, {{ $product->product->id }},{{$balanceQuan}});
-      
+
+                    @foreach($products as $product)
+
+                addToCart('{{ $product->product->productName }}', '{{ $product->product->ProductDiscription }}',
+                    {{ $product->product->productPrice }}, {{ $product->product->productDiscountPrice }},
+                    {{ $product->product->ProductCoupon }}, {{ $product->product->id }},0);
+                @endforeach
 
 
        });
