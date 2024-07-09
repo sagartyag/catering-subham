@@ -256,11 +256,11 @@ span.badge.badge-success {
                             <li>
                                 <a href="javascript: void(0);" class="has-arrow waves-effect">
                                     <i class="bx bx-store"></i>
-                                    <span key="t-ecommerce">Agent Billings</span>
+                                    <span key="t-ecommerce">Generate Menu</span>
                                 </a>
                                 <ul class="sub-menu" aria-expanded="false">
-                                    <li><a href="/user/addagent" key="t-products">Agent Billing</a></li> 
-                                    <li><a href="{{route('user.DepositHistory')}}" key="t-add-product">Billing Reports</a></li>
+                                    <li><a href="/user/addagent" key="t-products">Generate Customer Menu</a></li> 
+                                    <li><a href="{{route('user.DepositHistory')}}" key="t-add-product">Customer Reports</a></li>
                                 </ul>
                             </li>
                             @endif

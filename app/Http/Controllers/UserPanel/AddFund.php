@@ -559,6 +559,8 @@ public function sellerInvoice(Request $request){
     return $this->dashboard_layout();   
     
     }
+
+    
     public function getProductsByCategory(Request $request)
 {
     $categoryIds = $request->input('categoryIds');
