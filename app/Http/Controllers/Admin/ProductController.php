@@ -343,69 +343,102 @@ class ProductController extends Controller
         }
 
 
-
-
-
-
-
-    public function approvedProduct(Request $request)
-    {
-
-    try{
-        $validation =  Validator::make($request->all(), [
-            'product_id' => 'required',
-            'cartTotal' => 'required|numeric',
-            'grandTotal' => 'required',
-            'DiscountTotal' => 'required',
-            'CouponTotal' => 'required',
-            'quantity' => 'required',
-            'productPrice' => 'required',
-            
-
-        ]);
-
-
-        if($validation->fails()) {
-            Log::info($validation->getMessageBag()->first());
-
-            return redirect()->route('admin.product-request')->withErrors($validation->getMessageBag()->first())->withInput();
+        public function approvedProduct(Request $request)
+        {
+            try {
+                // Validate request
+                $validation = Validator::make($request->all(), [
+                    'products' => 'required|array',
+                    'quantity' => 'required|array',
+                    'cartTotal' => 'required|numeric',
+                    'grandTotal' => 'required|numeric',
+                    'DiscountTotal' => 'required|numeric',
+                    'CouponTotal' => 'required|numeric',
+                ]);
+        
+                if ($validation->fails()) {
+                    return response()->json(['error' => $validation->getMessageBag()->first()], 400);
+                }
+        
+                $user_detail = Auth::user();
+                $products = $request->products;
+                $quantities = $request->input('quantity', []);
+                $cartTotal = $request->input('cartTotal');
+                $grandTotal = $request->input('grandTotal');
+                $DiscountTotal = $request->input('DiscountTotal');
+                $CouponTotal = $request->input('CouponTotal');
+        
+                if (empty($products)) {
+                    return response()->json(['error' => 'Cart is empty'], 400);
+                }
+        
+                // Update investment data
+                $investmentData = [
+                    'amount' => $cartTotal,
+                    'grandTotal' => $grandTotal,
+                    'status' => "Active",
+                    'discount' => $DiscountTotal,
+                    'coupon' => $CouponTotal,
+                    'updated_at' => now(),
+                ];
+        
+                $investment = Investment::where('user_id', $user_detail->id)->orderBy('created_at', 'desc')->first();
+                
+                if ($investment) {
+                    Log::info('Updating investment: ', ['investment' => $investment->toArray(), 'data' => $investmentData]);
+                    $investment->update($investmentData);
+        
+                    // Check if update was successful
+                    if ($investment->wasChanged()) {
+                        Log::info('Investment updated successfully');
+                    } else {
+                        Log::warning('Investment update did not change any data');
+                    }
+                } else {
+                    return response()->json(['error' => 'No investment found for the user'], 400);
+                }
+        
+                // Update product data
+                foreach ($products as $key => $id) {
+                    $vendorProducts = Vendor_product::where('id', $id)->first();
+                    $vid = $vendorProducts->product_id;
+        
+                    $productReport = Vproduct::where('id', $vid)->first();
+                    $quantity = $quantities[$key] ?? 1;
+        
+                    $updateProduct = [
+                        'quantity' => $quantity,
+                        'productPrice' => $productReport->productPrice,
+                        'activeStatus' => 1,
+                        'grandTotal' => $productReport->productPrice * $quantity,
+                        'discount' => ($productReport->productPrice * $quantity) - ($productReport->productDiscountPrice * $quantity),
+                        'netAmount' => $productReport->productDiscountPrice * $quantity,
+                        'updated_at' => now(),
+                    ];
+        
+                    $vendorProduct = Vendor_product::where('id', $id)->where('user_id', $user_detail->id)->first();
+                    if ($vendorProduct) {
+                        $vendorProduct->update($updateProduct);
+                    } else {
+                        // Handle case where product is not found, maybe create it
+                        $insertProduct = array_merge($updateProduct, [
+                            'user_id' => $user_detail->id,
+                            'product_id' => $vid,
+                            'activeStatus' => 0,
+                            'invest_id' => $investment->id,
+                            'created_at' => now(),
+                        ]);
+                        Vendor_product::create($insertProduct);
+                    }
+                }
+        
+                return response()->json(['success' => 'Cart updated successfully']);
+            } catch (\Exception $e) {
+                Log::error('Cart update error: ' . $e->getMessage());
+                return response()->json(['error' => $e->getMessage()], 500);
+            }
         }
-    
-        $product=Vproduct::where('id',$request->product_id)->first();
-            if ($product)          
-            {
-
-           $data = [
-                'quantity' =>$request->quantity,
-                'netAmount' =>$request->cartTotal,
-                'grandTotal' => $request->grandTotal,
-                'discount' => $request->DiscountTotal,
-                'coupon' => $request->CouponTotal,
-                'productPrice' => $request->productPrice,
-                'activeStatus' =>1,
-            ];
-            $payment = Seller_product::where('id',$request->product_id)->update($data);
-            $notify[] = ['success', ' Product Added successfully'];
-            return redirect()->route('admin.product-request')->withNotify($notify);
-               # code...
-           }
-          else
-          {
-            return redirect()->route('admin.product-request')->withErrors(array('Products not found! '));
-          }
-
-        }
-       catch(\Exception $e){
-        Log::info('error here');
-        Log::info($e->getMessage());
-        print_r($e->getMessage());
-        die("hi");
-        return  redirect()->route('admin.product-request')->withErrors('error', $e->getMessage())->withInput();
-        }
-
-
-
- }
+        
 
 
 
