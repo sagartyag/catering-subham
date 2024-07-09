@@ -567,15 +567,31 @@ class ProductController extends Controller
 
       public function rejectProduct(Request $request)
       {
-  
-         $id= $request->id ; // or any params
-
-    
-         $product = Seller_product::where('id',$id)->delete();
-         $notify[] = ['success', 'Product Delete successfully'];
-       return redirect()->back()->withNotify($notify);   
-  
-     }
+          // Retrieve the ID from the request
+          $id = $request->id;
+      
+          // Find the product by ID
+          $product = Investment::where('id', $id)->first();
+      
+          // Check if the product exists
+          if ($product) {
+              // Update the status to "Reject"
+              $product->status = 'Reject';
+      
+              // Save the changes
+              $product->save();
+      
+              // Prepare the success notification
+              $notify[] = ['success', 'Product rejected successfully'];
+          } else {
+              // Prepare the failure notification if the product is not found
+              $notify[] = ['error', 'Product not found'];
+          }
+      
+          // Redirect back with the notification
+          return redirect()->back()->withNotify($notify);
+      }
+      
      
 
      
