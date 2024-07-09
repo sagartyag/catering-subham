@@ -111,11 +111,9 @@
         var selectedCategories = $('#category_id').val();
         
         if (selectedCategories.length > 0) {
-            // Show the product select box
             $('#product_id').parent().show();
-
             $.ajax({
-                url: '{{ route("fetch.products") }}', // Update with your route
+                url: '{{route("fetch.products")}}', // Update with your route
                 type: 'POST',
                 data: {
                     _token: '{{ csrf_token() }}',
