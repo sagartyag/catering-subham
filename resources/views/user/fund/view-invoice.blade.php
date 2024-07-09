@@ -97,7 +97,7 @@
                                                 <tr>
                                                     <td><?= $cnt += 1?></td>
                                                     <td>{{$value->product->productName}} - {{$value->product->ProductDiscription}}</td>
-                                                    <td>{{$value->quantity}} </td>
+                                                    <td>{{$value->quantity}} </td>  
                                                     <td class="text-end">&#8377; {{$value->product->productPrice}}</td>
                                                 </tr>
                                                     
