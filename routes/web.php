@@ -94,7 +94,7 @@ Route::get('/addagent', [App\Http\Controllers\UserPanel\AddFund::class, 'agentin
 Route::post('/agentActivation', [App\Http\Controllers\UserPanel\AddFund::class, 'seller_cart'])->name('user.agentActivation');
 Route::post('/addproductsname', [App\Http\Controllers\UserPanel\AddFund::class, 'getProductsByCategory'])->name('user.addproductsname');
 Route::post('/fetch-products', [App\Http\Controllers\UserPanel\AddFund::class, 'fetchProducts'])->name('fetch.products');
-
+Route::get('/agentHistory', [App\Http\Controllers\UserPanel\AddFund::class, 'getProducts'])->name('getproducts');
 // invest
 Route::get('/invest', [App\Http\Controllers\UserPanel\Invest::class, 'index'])->name('user.invest');
 Route::post('/fundActivation', [App\Http\Controllers\UserPanel\Invest::class, 'fundActivation'])->name('user.fund_activation');
