@@ -57,7 +57,7 @@
                                                         <!-- <td>  {{$value->transaction_id}}</td> -->
                                                         <td>  {{$value->created_at}}</td>
                                                       
-                                                        <td><a href="{{ route('admin.view-invoice', ['id'=> Crypt::encrypt($value->id)]) }}" class="btn btn-primary btn-sm btn-rounded" >
+                                                        <td><a href="{{ route('admin.view_invoices', ['id'=> Crypt::encrypt($value->id)]) }}" class="btn btn-primary btn-sm btn-rounded" >
                                                                 View Details
                                                             </a></td>
                                                     

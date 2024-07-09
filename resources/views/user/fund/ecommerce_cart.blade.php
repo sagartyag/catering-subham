@@ -26,7 +26,6 @@
                         <div class="card-body">
 
                             <form action="{{route('user.fundActivation')}}" method="POST">
-
                                 {{ csrf_field() }}
 
                                 <div class="table-responsive" id="cart">
@@ -90,6 +89,7 @@
                                     <input type="hidden" name="grandTotal" class="grandTotal">
                                     <input type="hidden" name="DiscountTotal" class="DiscountTotal">
                                     <input type="hidden" name="CouponTotal" class="CouponTotal">
+                                    <input type="hidden" name="payment_mode" value="Cash"> <!-- Add this hidden input -->
                                 </div>
                                 <div class="col-sm-4">
                                     <div class="text-sm-end mt-2 mt-sm-0">
@@ -243,4 +243,3 @@
         @endforeach
     });
 </script>
-

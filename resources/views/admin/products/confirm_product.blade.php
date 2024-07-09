@@ -39,13 +39,6 @@
                                        </thead>
                                        <tbody>
 
-
-
-
-
-
-
-
                                        </tbody>
                                    </table>
                                </div>
@@ -102,6 +95,8 @@
                                    <input type="hidden" name="grandTotal" class="grandTotal">
                                    <input type="hidden" name="DiscountTotal" class="DiscountTotal">
                                    <input type="hidden" name="CouponTotal" class="CouponTotal">
+                                   <input type="hidden" name="investId" value="{{ $investment->id }}">
+
                                </div>
                                <div class="col-sm-4">
                                    <div class="text-sm-end mt-2 mt-sm-0">
@@ -130,135 +125,135 @@
    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
    <script type="text/javascript">
-       $(document).ready(function() {
-           // Cart array to store items
-           var cart = [];
+    $(document).ready(function() {
+        // Cart array to store items
+        var cart = [];
 
-           // Add item to cart
-           function addToCart(product, productDiscription, price, DiscountPrice, coupen, product_id,balanceQuantity) {
-               var item = {
-                   product: product,
-                   productDiscription: productDiscription,
-                   price: price,
-                   DiscountPrice: DiscountPrice,
-                   coupen: coupen,
-                   product_id: product_id,
-                   balanceQuantity: balanceQuantity,
-                   quantity: 1
-               };
+        // Add item to cart
+        function addToCart(product, productDescription, price, DiscountPrice, coupon, product_id, balanceQuantity, quantity) {
+            var item = {
+                product: product,
+                productDescription: productDescription,
+                price: price,
+                DiscountPrice: DiscountPrice,
+                coupon: coupon,
+                product_id: product_id,
+                balanceQuantity: balanceQuantity,
+                quantity: quantity
+            };
 
-               // Check if item already exists in cart
-               var existingItem = cart.find(function(element) {
-                   return element.product === product;
-               });
+            // Check if item already exists in cart
+            var existingItem = cart.find(function(element) {
+                return element.product_id === product_id;
+            });
 
-               if (existingItem) {
-                   existingItem.quantity++;
-               } else {
-                   cart.push(item);
-               }
+            if (existingItem) {
+                existingItem.quantity++;
+            } else {
+                cart.push(item);
+            }
 
-               updateCart();
-           }
+            updateCart();
+        }
 
-           // Remove item from cart
-           function removeFromCart(product) {
-               cart = cart.filter(function(element) {
-                   return element.product !== product;
-               });
+        // Remove item from cart
+        function removeFromCart(product_id) {
+            cart = cart.filter(function(element) {
+                return element.product_id !== product_id;
+            });
 
-               updateCart();
-           }
+            updateCart();
+        }
 
-           // Update item quantity
-           function updateQuantity(product, quantity) {
-               var item = cart.find(function(element) {
-                   return element.product === product;
-               });
+        // Update item quantity
+        function updateQuantity(product_id, quantity) {
+            var item = cart.find(function(element) {
+                return element.product_id === product_id;
+            });
 
-               if (item) {
-                   item.quantity = quantity;
-               }
+            if (item) {
+                item.quantity = quantity;
+            }
 
-               updateCart();
-           }
+            updateCart();
+        }
 
-           // Update the cart display
-           function updateCart() {
-               var cartTable = $('#cart tbody');
-               cartTable.empty();
+        // Update the cart display
+        function updateCart() {
+            var cartTable = $('#cart tbody');
+            cartTable.empty();
 
-               var total = 0;
-               var grandTotal = 0;
-               var DiscountTotal = 0;
-               var coupen = 0;
+            var total = 0;
+            var grandTotal = 0;
+            var DiscountTotal = 0;
+            var coupon = 0;
 
-               cart.forEach(function(item) {
-                   var totalPrice = (item.DiscountPrice * item.quantity) - item.coupen;
-                   var grandPrice = item.price * item.quantity;
-                   var coupen2 = item.coupen;
-                   var discount = grandPrice - totalPrice;
-                   total += totalPrice;
-                   grandTotal += grandPrice;
-                   DiscountTotal += discount;
-                   coupen += coupen2;
+            cart.forEach(function(item) {
+                var totalPrice = (item.DiscountPrice * item.quantity) - item.coupon;
+                var grandPrice = item.price * item.quantity;
+                var couponValue = item.coupon;
+                var discount = grandPrice - totalPrice;
+                total += totalPrice;
+                grandTotal += grandPrice;
+                DiscountTotal += discount;
+                coupon += couponValue;
 
-                   var row = $('<tr>');
-                   row.append('<td><input type="hidden" name="productPrice" value="' + item.price +
-                       '"> ' + item.product + '</td>');
-                   row.append('<td>' + item.productDiscription + '</td>');
-                   row.append('<td>&#8377; ' + item.price + '</td>');
-                   row.append('<td>&#8377; ' + item.DiscountPrice + '</td>');
-                   row.append('<td>&#8377; ' + item.coupen + '</td>');
+                var row = $('<tr>');
+                row.append('<td><input type="hidden" name="products[]" value="' + item.product_id +
+                    '"> ' + item.product + '</td>');
+                row.append('<td>' + item.productDescription + '</td>');
+                row.append('<td>&#8377; ' + item.price + '</td>');
+                row.append('<td>&#8377; ' + item.DiscountPrice + '</td>');
+                row.append('<td>&#8377; ' + item.coupon + '</td>');
+                row.append(
+                    '<td><div class="me-3" style="width: 120px;"><input type="number" min="1" value="' +
+                    item.quantity + '" data-product_id="' + item.product_id +
+                    '" class="form-control" name="quantity[]"></div></td>');
+                row.append('<td>&#8377;' + totalPrice.toFixed(2) + '</td>');
+                row.append(
+                    '<td><a href="javascript:void(0);" class="action-icon text-danger remove" data-product_id="' +
+                    item.product_id + '"> <i class="mdi mdi-trash-can font-size-18"></i></a> </td>');
 
-                   row.append(
-                       '<td><div class="me-3" style="width: 120px;"><input type="number" min="1" max="'+item.balanceQuantity+'" value="' +
-                       item.quantity + '" data-product="' + item.product +
-                       '" class="form-control" name="quantity"></div></td>');
-                   row.append('<td>&#8377;' + totalPrice.toFixed(2) + '</td>');
-                   row.append(
-                       '<td><a href="javascript:void(0);" class="action-icon text-danger remove" data-product="' +
-                       item.product + '"> <i class="mdi mdi-trash-can font-size-18"></i></a> </td>');
+                cartTable.append(row);
+            });
+            $('#cartTotal').text('₹' + total.toFixed(2));
+            $('#grandTotal').text('₹' + grandTotal.toFixed(2));
+            $('#DiscountTotal').text('₹' + DiscountTotal.toFixed(2));
+            $('#CouponTotal').text('₹' + coupon.toFixed(2));
+            $('.cartTotal').val(total.toFixed(2));
+            $('.grandTotal').val(grandTotal.toFixed(2));
+            $('.DiscountTotal').val(DiscountTotal.toFixed(2));
+            $('.CouponTotal').val(coupon.toFixed(2));
+        }
 
-                   cartTable.append(row);
-               });
-               $('#cartTotal').text('₹' + total.toFixed(2));
-               $('#grandTotal').text('₹' + grandTotal.toFixed(2));
-               $('#DiscountTotal').text('₹' + DiscountTotal.toFixed(2));
-               $('#CouponTotal').text('₹' + coupen.toFixed(2));
-               $('.cartTotal').val(total.toFixed(2));
-               $('.grandTotal').val(+grandTotal.toFixed(2));
-               $('.DiscountTotal').val(DiscountTotal.toFixed(2));
-               $('.CouponTotal').val(coupen.toFixed(2));
+        // Event handlers
+        $('#cart').on('change', 'input[type="number"]', function() {
+            var product_id = $(this).data('product_id');
+            var quantity = parseInt($(this).val());
 
-           }
+            updateQuantity(product_id, quantity);
+        });
 
-           // Event handlers
-           $('#cart').on('change', 'input[type="number"]', function() {
-               var product = $(this).data('product');
-               var quantity = parseInt($(this).val());
+        $('#cart').on('click', '.remove', function() {
+            var product_id = $(this).data('product_id');
 
-               updateQuantity(product, quantity);
-           });
+            removeFromCart(product_id);
+        });
 
-           $('#cart').on('click', '.remove', function() {
-               var product = $(this).data('product');
-
-               removeFromCart(product);
-           });
-        
-
-                    @php
-                     $maxQuanity = \DB::table('admin_products')->where('product_id',$product->product->id)->sum('quantity');
-                     $useQuantity = \DB::table('seller_products')->where('product_id',$product->product->id)->sum('quantity');
-                     $balanceQuan= $maxQuanity-$useQuantity;
-                    @endphp
-          
-               addToCart('{{ $product->product->productName }}', '{{ $product->product->ProductDiscription }}',
-                   {{ $product->product->productPrice }}, {{ $product->product->productDiscountPrice }},
-                   {{ $product->product->ProductCoupon }}, {{ $product->product->id }},{{$balanceQuan}});
-      
+        @foreach($products as $product)
+        addToCart(
+            '{{ $product->product->productName }}',
+            '{{ $product->product->ProductDescription }}',
+            {{ $product->product->productPrice }},
+            {{ $product->product->productDiscountPrice }},
+            {{ $product->product->ProductCoupon }},
+            {{ $product->id }},  // Changed here
+            0,
+            {{ $product->quantity }}
+        );
+        @endforeach
+    });
+</script>
 
 
-       });
-   </script>
+

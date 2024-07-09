@@ -20,7 +20,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js"></script>
 
     <!--=== custom css ===-->
-    <title>Restaurant and Catering HTML Template</title>
+    <title>{{sitename()}}</title>
   </head>
   <body>
     <div class="rac_main_wrapper">

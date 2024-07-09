@@ -130,7 +130,7 @@
 									</div>
 								</div>
 							</div>
-							<div class="col-xl-4 col-sm-4">
+							<!-- <div class="col-xl-4 col-sm-4">
 								<div class="card">
 									<div class="card-body d-flex align-items-center justify-content-between">
 										<div class="menu">
@@ -144,7 +144,7 @@
 										</div>
 									</div>
 								</div>
-							</div>
+							</div> -->
 							<div class="col-xl-4 col-sm-4">
 								<div class="card">
 									<div class="card-body d-flex align-items-center justify-content-between">
@@ -160,7 +160,7 @@
 									</div>
 								</div>
 							</div>
-
+<!-- 
 
                             <div class="col-xl-4 col-sm-4">
 								<div class="card">
@@ -176,11 +176,11 @@
 										</div>
 									</div>
 								</div>
-							</div>
+							</div> -->
 
 
 
-                            <div class="col-xl-4 col-sm-4">
+                            <!-- <div class="col-xl-4 col-sm-4">
 								<div class="card">
 									<div class="card-body d-flex align-items-center justify-content-between">
 										<div class="menu">
@@ -194,9 +194,9 @@
 										</div>
 									</div>
 								</div>
-							</div>
+							</div> -->
 
-                            <div class="col-xl-4 col-sm-4">
+                            <!-- <div class="col-xl-4 col-sm-4">
 								<div class="card">
 									<div class="card-body d-flex align-items-center justify-content-between">
 										<div class="menu">
@@ -210,7 +210,7 @@
 										</div>
 									</div>
 								</div>
-							</div>
+							</div> -->
 
 						</div>
 					</div>

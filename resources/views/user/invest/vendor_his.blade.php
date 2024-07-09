@@ -61,7 +61,7 @@
                                                         <td>{{ $value->sdate }}</td>
                                                         
 
-                                                            <td><a href="{{ route('user.view-invoice', ['id'=> Crypt::encrypt($value->id)]) }}" class="btn btn-primary btn-sm btn-rounded" >
+                                                            <td><a href="{{ route('user.vendor_invoice', ['id'=> Crypt::encrypt($value->id)]) }}" class="btn btn-primary btn-sm btn-rounded" >
                                                                 View Details
                                                             </a></td>
     

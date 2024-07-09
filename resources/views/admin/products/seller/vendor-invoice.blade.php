@@ -66,11 +66,11 @@
 
                                             <?php $cnt = 0; ?>
                                             @php
-                                            $products = \App\Models\Seller_product::where('invest_id', $investment->id)->get();
+                                            $products = \App\Models\Vendor_product::where('invest_id', $investment->id)->get();
                                         @endphp
                                               @foreach ($products as $value)
                                               @php
-                                                  $data = \App\Models\Product::find($value->product_id);
+                                                  $data = \App\Models\Vroduct::find($value->product_id);
                                               @endphp
 
                                             <tr>

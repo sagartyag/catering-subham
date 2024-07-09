@@ -31,16 +31,16 @@
                                                 <th>
                                                     Sr No
                                                 </th>
-                                                <th>Seller ID</th>
+                                                
         
-                                                <th>Name</th>
-                                                <th>Price</th>
+                                                <th>UserName</th>
+                                                <th>Amount</th>
                                                 <th>Discount Price</th>
-                                                <th>Coupon</th>
-                                                <th>Discription</th>
-                                                <th>Quantity</th>
-                                                <th>Request Date</th>
                                                 <th>Status</th>
+                                                <th>Payment Mode</th>
+                                
+                                                <th>Request Date</th>
+                                               
                                                 
         
                                             </tr>
@@ -56,25 +56,26 @@
                                                     
                                                     <td><?= $cnt += 1?></td>
         
-                                                    <td> {{ $value->user->username }}</td>
+                                                    <td> {{ $value->user_id_fk }}</td>
         
         
-                                                    <td> {{ $value->product ? $value->product->productName : '' }}</td>
+                                                    <td> {{ $value->amount }}</td>
+                                                    <td> 
+                                                        {{ $value->discount}}</td>
+                                                    <td> 
+                                                        {{ $value->status}}</td>
                                                     <td> {{ currency() }}
-                                                        {{ $value->product ? $value->product->productPrice : '' }}</td>
-                                                    <td> {{ currency() }}
-                                                        {{ $value->product ? $value->product->productDiscountPrice : '' }}</td>
-                                                    <td> {{ currency() }}
-                                                        {{ $value->product ? $value->product->ProductCoupon : '' }}</td>
-                                                    <td> {{ $value->product ? $value->product->ProductDiscription : '' }}</td>
-                                                    <td> {{ $value->quantity }}</td>
+                                                        {{ $value->payment_mode}}</td>
+                                                  
         
         
                                                     <td>{{ date('D, d M Y h:i:s a', strtotime($value->created_at)) }} </td>
         
-                                                    <td ><span class="badge bg-{{ $value->activeStatus == 1 ? 'success' : 'danger' }}">{{($value->activeStatus)?'Approved':'Pending'}}</span></td>
-        
                                                   
+        
+                                                    <td><a href="{{ route('admin.vendor_invoice_b', ['id'=> Crypt::encrypt($value->id)]) }}" class="btn btn-primary btn-sm btn-rounded" >
+                                                                View Details
+                                                            </a></td>
         
                                                 </tr>
                                             @endforeach

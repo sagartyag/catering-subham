@@ -237,7 +237,7 @@ span.badge.badge-success {
                             <li>
                                 <a href="javascript: void(0);" class="has-arrow waves-effect">
                                     <i class="bx bx-store"></i>
-                                    <span key="t-ecommerce">Billing Product</span>
+                                    <span key="t-ecommerce">Vendor Menu</span>
                                 </a>
                                 <ul class="sub-menu" aria-expanded="false">
 
@@ -246,7 +246,7 @@ span.badge.badge-success {
 
 
                                    
-                                    <li><a href="{{route('user.DepositHistory')}}" key="t-add-product">Billing Reports</a></li>
+                                    <li><a href="{{route('user.vender_history')}}" key="t-add-product">Billing Reports</a></li>
                                 </ul>
                             </li>
 
@@ -256,7 +256,7 @@ span.badge.badge-success {
                             <li>
                                 <a href="javascript: void(0);" class="has-arrow waves-effect">
                                     <i class="bx bx-store"></i>
-                                    <span key="t-ecommerce">Add Agent Product</span>
+                                    <span key="t-ecommerce">Agent Billings</span>
                                 </a>
                                 <ul class="sub-menu" aria-expanded="false">
                                     <li><a href="/user/addagent" key="t-products">Agent Billing</a></li> 
@@ -265,7 +265,7 @@ span.badge.badge-success {
                             </li>
                             @endif
 
-                            <li>
+                            <!-- <li>
                                 <a href="javascript: void(0);" class="has-arrow waves-effect">
                                     <i class="bx bx-receipt"></i>
                                     <span key="t-invoices">My Team</span>
@@ -286,11 +286,11 @@ span.badge.badge-success {
                                     <li><a href="{{route('user.roi-bonus')}}" key="t-invoice-list">Pool Profit</a></li>
                                     <li><a href="{{route('user.level-income')}}" key="t-invoice-detail">Royal Bonus</a></li>
                                 </ul>
-                            </li>
+                            </li> -->
 
 
 
-                            <li>
+                            <!-- <li>
                                 <a href="javascript: void(0);" class="has-arrow waves-effect">
                                     <i class="bx bx-detail"></i>
                                     <span key="t-crypto">Withdrawal </span>
@@ -300,7 +300,7 @@ span.badge.badge-success {
                                     <li><a href="{{route('user.Withdraw-History')}}" key="t-buy">Withdrawal Reports</a></li>
                                 
                                 </ul>
-                            </li>
+                            </li> -->
 
                             <li>
                                 <a href="javascript: void(0);" class="has-arrow waves-effect">

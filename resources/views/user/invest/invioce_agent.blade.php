@@ -40,21 +40,28 @@
                                         <div class="row">
                                             <div class="col-sm-6">
                                                 <address>
+                                                    <strong>Customer's:</strong><br>
+                                                    {{$investment->email}}<br>
+                                                    {{$investment->phone}}<br>
+                                               
                                                     <strong>Billed To:</strong><br>
-                                                    John Smith<br>
-                                                    1234 Main<br>
-                                                    Apt. 4B<br>
-                                                    Springfield, ST 54321
+                                                   
+                                                    {{$investment->name}}<br>
+                                                    {{$investment->address}}<br>
+                                                    {{$investment->email}}<br>
+                                                    {{$investment->phone}}<br>
                                                 </address>
                                             </div>
                                             <div class="col-sm-6 text-sm-end">
                                                 <address class="mt-2 mt-sm-0">
-                                                    <strong>Shipped To:</strong><br>
-                                                    {{$investment->user->name}}<br>
-                                                    {{$investment->user->address}}<br>
-                                                    {{$investment->user->email}}<br>
-                                                    {{$investment->user->phone}}<br>
-                                                  
+                                                    <strong>Shipped To:</strong>
+
+                                                    <br>
+                                                   
+                                                    {{$admin->name}}<br>
+                                                    {{$admin->phone}}<br>
+                                                    {{$admin->address}}
+                                                 
                                                 </address>
                                             </div>
                                         </div>
@@ -63,7 +70,7 @@
                                                 <address>
                                                     <strong>Payment Method:</strong><br>
                                                     Cash<br>
-                                                    {{$investment->user->email}}
+                                                    {{$investment->email}}
                                                 </address>
                                             </div>
                                             <div class="col-sm-6 mt-3 text-sm-end">
@@ -86,48 +93,57 @@
                                                         <th>Item</th>
                                                         <th>Quantity</th>
                                                         <th class="text-end">Price</th>
-                                                   
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-
-                                                    <?php $cnt = 0; ?>
-                                                @foreach ($investment->userProduct as $value)
-
-                                                <tr>
-                                                    <td><?= $cnt += 1?></td>
-                                                    <td>{{$value->product->productName}} - {{$value->product->ProductDiscription}}</td>
-                                                    <td>{{$value->quantity}} </td>  
-                                                    <td class="text-end">&#8377; {{$value->product->productPrice}}</td>
-                                                </tr>
-                                                    
-                                                @endforeach
-
-                                                   
-                                                  
+                                                    @php
+                                                        $cnt = 0;
+                                                        $subTotal = 0;
+                                                        $discountTotal = 0;
+                                                        $products = \App\Models\User_product::where('invest_id', $investment->id)->get();
+                                                    @endphp
+                                        
+                                                    @foreach ($products as $value)
+                                                        @php
+                                                            $data = \App\Models\Vproduct::find($value->product_id);
+                                                            $productTotal = $data->productPrice * $value->quantity;
+                                                            $productDiscount = ($data->productPrice - $data->productDiscountPrice) * $value->quantity;
+                                                            $subTotal += $productTotal;
+                                                            $discountTotal += $productDiscount;
+                                                        @endphp
+                                                        
+                                                        <tr>
+                                                            <td>{{ $loop->iteration }}</td>
+                                                            <td>{{ $data->productName }} - {{ $data->ProductDiscription }}</td>
+                                                            <td>{{ $value->quantity }}</td>
+                                                            <td class="text-end">&#8377; {{ $productTotal }}</td> 
+                                                        </tr>
+                                                    @endforeach
+                                        
+                                                    @php
+                                                        $total = $subTotal - $discountTotal;
+                                                    @endphp
+                                        
                                                     <tr>
                                                         <td colspan="3" class="text-end">Sub Total</td>
-                                                        <td class="text-end">&#8377; {{$investment->grandTotal}}</td>
+                                                        <td class="text-end">&#8377; {{ $subTotal }}</td>
                                                     </tr>
                                                     <tr>
-                                                        <td colspan="3" class="border-0 text-end">
-                                                            <strong>Discount</strong></td>
-                                                        <td class="border-0 text-end">&#8377; {{$investment->discount}}</td>
+                                                        <td colspan="3" class="border-0 text-end"><strong>Discount</strong></td>
+                                                        <td class="border-0 text-end">&#8377; {{ $discountTotal }}</td>
                                                     </tr>
-
-                                                 
                                                     <tr>
-                                                        <td colspan="3" class="border-0 text-end">
-                                                            <strong>Total</strong></td>
-                                                        <td class="border-0 text-end"><h4 class="m-0">&#8377; {{$investment->amount}}</h4></td>
+                                                        <td colspan="3" class="border-0 text-end"><strong>Total</strong></td>
+                                                        <td class="border-0 text-end"><h4 class="m-0">&#8377; {{ $total }}</h4></td>
                                                     </tr>
                                                 </tbody>
                                             </table>
                                         </div>
+                                        
                                         <div class="d-print-none">
                                             <div class="float-end">
                                                 <a href="javascript:window.print()" class="btn btn-success waves-effect waves-light me-1"><i class="fa fa-print"></i></a>
-                                                <a href="{{route('user.sellerInvoice')}}" class="btn btn-primary w-md waves-effect waves-light"><i class="fa fa-arrow-left"></i>Back</a>
+                                                <a href="{{route('user.DepositHistory')}}" class="btn btn-primary w-md waves-effect waves-light"><i class="fa fa-arrow-left"></i>Back</a>
                                             </div>
                                         </div>
                                     </div>

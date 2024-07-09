@@ -9,6 +9,11 @@ use App\Models\User;
 use App\Models\Vproduct;
 use App\Models\Seller_product;
 use App\Models\Admin_product;
+use App\Models\Seller_invoice;
+use App\Models\VendorBilling;
+use App\Models\Investment;
+use App\Models\GeneralSetting;
+use App\Models\Vendor_product;
 use App\Models\Categorie;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Validator;
@@ -104,16 +109,17 @@ class ProductController extends Controller
         $limit = $request->limit ? $request->limit : 100000000000;
         $status = $request->status ? $request->status : null;
         $search = $request->search ? $request->search : null;
-        $notes = Seller_product::where('activeStatus',0)->orderBy('id', 'DESC');
+        $notes = Investment::where('status','Pending')->orderBy('id', 'DESC');
 
         if($search <> null && $request->reset!="Reset")
         {
         $notes = $notes->where(function($q) use($search){
-            $q->Where('productName', 'LIKE', '%' . $search . '%')          
-            ->orWhere('productPrice', 'LIKE', '%' . $search . '%')
-            ->orWhere('productDiscountPrice', 'LIKE', '%' . $search . '%')
-            ->orWhere('ProductCoupon', 'LIKE', '%' . $search . '%')         
-            ->orWhere('ProducDiscription', 'LIKE', '%' . $search . '%');
+            $q->Where('user_id_fk', 'LIKE', '%' . $search . '%')          
+            ->orWhere('amount', 'LIKE', '%' . $search . '%')
+            ->orWhere('discount', 'LIKE', '%' . $search . '%')
+            ->orWhere('status', 'LIKE', '%' . $search . '%')    
+            ->orWhere('	payment_mode', 'LIKE', '%' . $search . '%')              
+            ->orWhere('transaction_id', 'LIKE', '%' . $search . '%');
           });
           }
         $notes = $notes->paginate($limit)
@@ -136,7 +142,7 @@ class ProductController extends Controller
         $limit = $request->limit ? $request->limit : 100000000000;
         $status = $request->status ? $request->status : null;
         $search = $request->search ? $request->search : null;
-        $notes = Seller_product::where('activeStatus',1)->orderBy('id', 'DESC');
+        $notes = Investment::where('status','Active')->orderBy('id', 'DESC');
 
         if($search <> null && $request->reset!="Reset")
         {
@@ -337,72 +343,106 @@ class ProductController extends Controller
             }
         }
 
-
-
-
-
-
-
-    public function approvedProduct(Request $request)
-    {
-
-    try{
-        $validation =  Validator::make($request->all(), [
-            'product_id' => 'required',
-            'cartTotal' => 'required|numeric',
-            'grandTotal' => 'required',
-            'DiscountTotal' => 'required',
-            'CouponTotal' => 'required',
-            'quantity' => 'required',
-            'productPrice' => 'required',
-            
-
-        ]);
-
-
-        if($validation->fails()) {
-            Log::info($validation->getMessageBag()->first());
-
-            return redirect()->route('admin.product-request')->withErrors($validation->getMessageBag()->first())->withInput();
+        public function approvedProduct(Request $request)
+        {
+            try {
+                // Enable query logging
+                DB::enableQueryLog();
+        
+                // Validate request
+                $validation = Validator::make($request->all(), [
+                    'products' => 'required|array',
+                    'quantity' => 'required|array',
+                    'cartTotal' => 'required|numeric',
+                    'grandTotal' => 'required|numeric',
+                    'DiscountTotal' => 'required|numeric',
+                    'CouponTotal' => 'required|numeric',
+                    'investId' => 'required|exists:investments,id,user_id,' . Auth::id(),
+                ]);
+        
+                if ($validation->fails()) {
+                    return redirect()->route('admin.product-request')
+                        ->withErrors($validation)
+                        ->withInput();
+                }
+        
+                $user_detail = Auth::user();
+                $products = $request->products;
+                $quantities = $request->input('quantity', []);
+                $cartTotal = $request->input('cartTotal');
+                $grandTotal = $request->input('grandTotal');
+                $DiscountTotal = $request->input('DiscountTotal');
+                $CouponTotal = $request->input('CouponTotal');
+                $investId = $request->input('investId');
+        
+                // Find investment by investId
+                $investment = Investment::findOrFail($investId);
+        
+                Log::info('Updating investment: ', ['investment' => $investment->toArray()]);
+        
+                // Update each attribute individually
+                $investment->amount = $cartTotal;
+                $investment->grandTotal = $grandTotal;
+                $investment->status = "Active";
+                $investment->discount = $DiscountTotal;
+                $investment->coupon = $CouponTotal;
+                $investment->updated_at = now();
+        
+                // Save the investment
+                $investment->save();
+        
+                Log::info('Investment after save: ', ['investment' => $investment->toArray()]);
+        
+                // Update product data
+                foreach ($products as $key => $id) {
+                    $vendorProducts = Vendor_product::where('id', $id)->first();
+                    $vid = $vendorProducts->product_id;
+        
+                    $productReport = Vproduct::where('id', $vid)->first();
+                    $quantity = $quantities[$key] ?? 1;
+        
+                    $updateProduct = [
+                        'quantity' => $quantity,
+                        'productPrice' => $productReport->productPrice,
+                        'activeStatus' => 1,
+                        'grandTotal' => $productReport->productPrice * $quantity,
+                        'discount' => ($productReport->productPrice * $quantity) - ($productReport->productDiscountPrice * $quantity),
+                        'netAmount' => $productReport->productDiscountPrice * $quantity,
+                        'updated_at' => now(),
+                    ];
+        
+                    $vendorProduct = Vendor_product::where('id', $id)->where('user_id', $user_detail->id)->first();
+                    if ($vendorProduct) {
+                        $vendorProduct->update($updateProduct);
+                    } else {
+                        // Handle case where product is not found, maybe create it
+                        $insertProduct = array_merge($updateProduct, [
+                            'user_id' => $user_detail->id,
+                            'product_id' => $vid,
+                            'activeStatus' => 0,
+                            'invest_id' => $investment->id,
+                            'created_at' => now(),
+                        ]);
+                        Vendor_product::create($insertProduct);
+                    }
+                }
+        
+                // Get the executed queries from the query log
+                $queries = DB::getQueryLog();
+                Log::debug('Executed SQL Queries: ', $queries);
+        
+                $notify[] = ['success', 'Product Approved successfully'];
+                return redirect()->route('admin.product-request')->withNotify($notify);
+            } catch (\Exception $e) {
+                Log::error('Cart update error: ' . $e->getMessage());
+                return redirect()->route('admin.product-request')
+                    ->withErrors($e->getMessage())
+                    ->withInput();
+            }
         }
-    
-        $product=Seller_product::where('id',$request->product_id)->first();
-            if ($product)          
-            {
+        
 
-           $data = [
-                'quantity' =>$request->quantity,
-                'netAmount' =>$request->cartTotal,
-                'grandTotal' => $request->grandTotal,
-                'discount' => $request->DiscountTotal,
-                'coupon' => $request->CouponTotal,
-                'productPrice' => $request->productPrice,
-                'activeStatus' =>1,
-            ];
-            $payment = Seller_product::where('id',$request->product_id)->update($data);
-            $notify[] = ['success', ' Product Added successfully'];
-            return redirect()->route('admin.product-request')->withNotify($notify);
-               # code...
-           }
-          else
-          {
-            return redirect()->route('admin.product-request')->withErrors(array('Products not found! '));
-          }
-
-        }
-       catch(\Exception $e){
-        Log::info('error here');
-        Log::info($e->getMessage());
-        print_r($e->getMessage());
-        die("hi");
-        return  redirect()->route('admin.product-request')->withErrors('error', $e->getMessage())->withInput();
-        }
-
-
-
- }
-
-
+        
 
  public function editProduct(Request $request)
  {
@@ -486,22 +526,34 @@ class ProductController extends Controller
 
                  
 
+      
        public function confirm_product($id)
        {
-   
-       try {
-           $id = Crypt::decrypt($id);
+           try {
+               $id = Crypt::decrypt($id);
            } catch (\Illuminate\Contracts\Encryption\DecryptException $e) {
-           return back()->withErrors(array('Invalid User!'));
+               return back()->withErrors(['Invalid User!']);
+           }
+       
+           // Retrieve the investment and associated products
+           $investment = Investment::where('id', $id)->first();
+           if (!$investment) {
+               return back()->withErrors(['Investment not found!']);
+           }
+       
+           $invest_id = $investment->id;
+           $products = Vendor_product::where('invest_id', $invest_id)->get();
+       
+           // Pass data to view
+           $this->data['investment'] = $investment;
+           $this->data['products'] = $products;
+           $this->data['page'] = 'admin.products.confirm_product';
+       
+           // Render admin dashboard view
+           return $this->admin_dashboard();
        }
-   
-       $product = Seller_product::where('id',$id)->first();
-   
-       $this->data['product'] =  $product;
-       $this->data['page'] = 'admin.products.confirm_product';
-       return $this->admin_dashboard();
-   
-      }
+       
+
 
 
 
@@ -524,15 +576,31 @@ class ProductController extends Controller
 
       public function rejectProduct(Request $request)
       {
-  
-         $id= $request->id ; // or any params
-
-    
-         $product = Seller_product::where('id',$id)->delete();
-         $notify[] = ['success', 'Product Delete successfully'];
-       return redirect()->back()->withNotify($notify);   
-  
-     }
+          // Retrieve the ID from the request
+          $id = $request->id;
+      
+          // Find the product by ID
+          $product = Investment::where('id', $id)->first();
+      
+          // Check if the product exists
+          if ($product) {
+              // Update the status to "Reject"
+              $product->status = 'Reject';
+      
+              // Save the changes
+              $product->save();
+      
+              // Prepare the success notification
+              $notify[] = ['success', 'Product rejected successfully'];
+          } else {
+              // Prepare the failure notification if the product is not found
+              $notify[] = ['error', 'Product not found'];
+          }
+      
+          // Redirect back with the notification
+          return redirect()->back()->withNotify($notify);
+      }
+      
      
 
      
@@ -661,7 +729,9 @@ class ProductController extends Controller
             ];
             $payment = Seller_product::create($data);
             $notify[] = ['success', ' Product Added successfully'];
-            return redirect()->route('admin.billing-product')->withNotify($notify);
+            return redirect()->route('admin.billing-product
+            
+            ')->withNotify($notify);
                # code...
            }
           else
@@ -1013,6 +1083,79 @@ class ProductController extends Controller
        
            $notify[] = ['success', 'Category status updated successfully'];
            return redirect()->back()->withNotify($notify);       }
+
+
+
+
+           public function agent_report(Request $request)
+           {
+       
+               $limit = $request->limit ? $request->limit : 100000000000;
+               $status = $request->status ? $request->status : null;
+               $search = $request->search ? $request->search : null;
+               $notes = Seller_invoice::orderBy('id', 'DESC');
+       
+               if($search <> null && $request->reset!="Reset")
+               {
+               $notes = $notes->where(function($q) use($search){
+                   $q->Where('user_id_fk', 'LIKE', '%' . $search . '%')          
+                   ->orWhere('transaction_id', 'LIKE', '%' . $search . '%')
+                   ->orWhere('created_at ', 'LIKE', '%' . $search . '%')
+                   ->orWhere('name', 'LIKE', '%' . $search . '%')         
+                   ->orWhere('email', 'LIKE', '%' . $search . '%');
+                 });
+                 }
+               $notes = $notes->paginate($limit)
+                   ->appends([
+                       'limit' => $limit
+                   ]);
+       
+               $this->data['product_list'] =  $notes;
+               $this->data['search'] = $search;
+              $this->data['page'] = 'admin.products.agent_report';
+               return $this->admin_dashboard(); 
+           }
+
+
+
+           public function view_invoices($id)
+           {
+       
+           try {
+               $id = Crypt::decrypt($id);
+               } catch (\Illuminate\Contracts\Encryption\DecryptException $e) {
+               return back()->withErrors(array('Invalid User!'));
+           }
+       
+            $investment = Seller_invoice::where('id',$id)->first();
+            $admin=GeneralSetting::first();
+       
+           $this->data['investment'] =  $investment;
+           $this->data['admin'] =  $admin;
+       
+           $this->data['page'] = 'admin.products.Invoices';
+           return $this->dashboard_layout();
+       
+          }
+       
+          public function vendor_invoice_b($id)
+          {
+       
+          try {
+              $id = Crypt::decrypt($id);
+              } catch (\Illuminate\Contracts\Encryption\DecryptException $e) {
+              return back()->withErrors(array('Invalid User!'));
+          }
+       
+          $investment =Investment::where('id',$id)->first();
+    
+    $admin=GeneralSetting::first();
+       
+          $this->data['investment'] =  $investment;
+          $this->data['page'] = 'admin.products.seller.vendor-invoice';
+          return $this->admin_dashboard();
+       
+         }
 
     }
       

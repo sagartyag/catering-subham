@@ -8,7 +8,12 @@ use App\Models\User;
 use App\Models\Investment;
 use App\Models\Income;
 use App\Models\Seller_product;
+use App\Models\Vproduct;
+use App\Models\Vendor_product;
+use App\Models\Seller_invoice;
+use App\Models\GeneralSetting;
 use App\Models\Product;
+use App\Models\VendorBilling;
 use App\Models\User_product;
 use App\Models\Club_a;
 use Illuminate\Support\Facades\Crypt;
@@ -28,19 +33,44 @@ class Invest extends Controller
   
 
  
-    public function index()
-    {
-        $user=Auth::user();
-        $invest_check=Investment::where('user_id',$user->id)->where('status','!=','Decline')->orderBy('id','desc')->limit(1)->first();
-          \DB::statement("SET SQL_MODE=''");
-        $product = Seller_product::where('user_id',$user->id)->where('activeStatus',1)->groupBy('product_id')->orderBy('id','DESC')->get();
-        $this->data['product'] = $product;
-        $this->data['last_package'] = ($invest_check)?$invest_check->amount:0;
-        $this->data['page'] = 'user.invest.Deposit';
-        return $this->dashboard_layout();
-    }
+  public function index()
+{
+    $user = Auth::user();
 
+    // Fetch vendor products for the user
+    $vendorProducts = Vendor_product::where('user_id', $user->id)
+                                    ->where('activeStatus', 1)
+                                    ->get();
 
+    // Extract unique product IDs
+    $ids = $vendorProducts->pluck('product_id')->unique()->toArray();
+
+    // Fetch products based on the IDs
+    $products = Vproduct::whereIn('id', $ids)->get();
+
+    // Filter products based on balance quantity
+    $filteredProducts = $products->filter(function ($product) use ($user) {
+        $maxQuantity = \DB::table('vendor_products')
+                          ->where('user_id', $user->id)
+                          ->where('product_id', $product->id)
+                          ->where('activeStatus', 1)
+                          ->sum('quantity');
+
+        $usedQuantity = \DB::table('user_products')
+                           ->where('user_id', $user->id)
+                           ->where('product_id', $product->id)
+                           ->sum('quantity');
+
+        $balanceQuantity = $maxQuantity - $usedQuantity;
+
+        return $balanceQuantity > 0;  // Only include products with balance quantity greater than 0
+    });
+
+    $this->data['products'] = $filteredProducts;
+    $this->data['page'] = 'user.invest.Deposit';
+
+    return $this->dashboard_layout();
+}
 
 
     public function ecommerce_cart(Request $request)
@@ -88,6 +118,7 @@ class Invest extends Controller
     }
 
     
+    
     public function view_invoice($id)
     {
 
@@ -97,15 +128,41 @@ class Invest extends Controller
         return back()->withErrors(array('Invalid User!'));
     }
 
-     $investment = Investment::where('id',$id)->first();
+     $investment = Seller_invoice::where('id',$id)->first();
+     $admin=GeneralSetting::first();
 
     $this->data['investment'] =  $investment;
+    $this->data['admin'] =  $admin;
+
     $this->data['page'] = 'user.invest.invoice';
     return $this->dashboard_layout();
 
    }
 
+   public function vendor_invoice($id)
+   {
+
+   try {
+       $id = Crypt::decrypt($id);
+       } catch (\Illuminate\Contracts\Encryption\DecryptException $e) {
+       return back()->withErrors(array('Invalid User!'));
+   }
+
+    $investment = VendorBilling::where('id',$id)->first();
     
+    $admin=GeneralSetting::first();
+
+   $this->data['investment'] =  $investment;
+   $this->data['admin'] =  $admin;
+
+   $this->data['page'] = 'user.invest.invioce_agent';
+   return $this->dashboard_layout();
+
+  }
+
+
+
+
 
     public function fundActivation(Request $request)
     {
@@ -277,38 +334,107 @@ class Invest extends Controller
     
    
 
-    public function invest_list(Request $request){
+        public function invest_list(Request $request){
 
-    $user=Auth::user();
-      $limit = $request->limit ? $request->limit : paginationLimit();
-        $status = $request->status ? $request->status : null;
-        $search = $request->search ? $request->search : null;
-        $notes = Investment::where('user_id',$user->id);
-        if (Auth::user()->rank==1) 
-        {
-          $notes = Investment::where('user_id',$user->id)->orWhere('active_from',Auth::user()->username);
-        }
+          $user=Auth::user();
+            $limit = $request->limit ? $request->limit : paginationLimit();
+              $status = $request->status ? $request->status : null;
+              $search = $request->search ? $request->search : null;
+              $notes = Seller_invoice::where('user_id',$user->id);
+            
+            if($search <> null && $request->reset!="Reset"){
+              $notes = $notes->where(function($q) use($search){
+                $q->Where('user_id_fk', 'LIKE', '%' . $search . '%')
+                ->orWhere('transaction_id', 'LIKE', '%' . $search . '%')
+                ->orWhere('status', 'LIKE', '%' . $search . '%')
+                ->orWhere('sdate', 'LIKE', '%' . $search . '%')
+                ->orWhere('email', 'LIKE', '%' . $search . '%');
+              });
       
-      if($search <> null && $request->reset!="Reset"){
-        $notes = $notes->where(function($q) use($search){
-          $q->Where('user_id_fk', 'LIKE', '%' . $search . '%')
-          ->orWhere('txn_no', 'LIKE', '%' . $search . '%')
-          ->orWhere('status', 'LIKE', '%' . $search . '%')
-          ->orWhere('type', 'LIKE', '%' . $search . '%')
-          ->orWhere('amount', 'LIKE', '%' . $search . '%');
-        });
+            }
+      
+              $notes = $notes->paginate($limit)->appends(['limit' => $limit ]);
+      
+            $this->data['search'] =$search;
+            $this->data['deposit_list'] =$notes;
+            $this->data['page'] = 'user.invest.DepositHistory';
+            return $this->dashboard_layout();
+
+          }
+
+
+         
+    public function vender_history(Request $request){
+
+      $user=Auth::user();
+        $limit = $request->limit ? $request->limit : paginationLimit();
+          $status = $request->status ? $request->status : null;
+          $search = $request->search ? $request->search : null;
+          $notes = VendorBilling::where('user_id',$user->id);
+        
+        if($search <> null && $request->reset!="Reset"){
+          $notes = $notes->where(function($q) use($search){
+            $q->Where('user_id_fk', 'LIKE', '%' . $search . '%')
+            ->orWhere('transaction_id', 'LIKE', '%' . $search . '%')
+            ->orWhere('status', 'LIKE', '%' . $search . '%')
+            ->orWhere('sdate', 'LIKE', '%' . $search . '%')
+            ->orWhere('email', 'LIKE', '%' . $search . '%');
+          });
+  
+        }
+  
+          $notes = $notes->paginate($limit)->appends(['limit' => $limit ]);
+  
+        $this->data['search'] =$search;
+        $this->data['deposit_list'] =$notes;
+        $this->data['page'] = 'user.invest.vendor_his';
+        return $this->dashboard_layout();
+
+
 
       }
 
-        $notes = $notes->paginate($limit)->appends(['limit' => $limit ]);
+    public function vendor_card(Request $request)
+    {
+      try {
+        // Validate request
+        $validation = Validator::make($request->all(), [
+            'name' => 'required|string|max:255',
+            'phone' => 'required|numeric',
+            'email' => 'required|email|max:255',
+            'address' => 'required|string|max:255',
+            'products' => 'required|array',
+            'payment_mode' => 'required|string|in:cash,online',
+        ]);
 
-      $this->data['search'] =$search;
-      $this->data['deposit_list'] =$notes;
-      $this->data['page'] = 'user.invest.DepositHistory';
-      return $this->dashboard_layout();
-
-
+        if ($validation->fails()) {
+            return redirect()->route('user.invest')->withErrors($validation->getMessageBag()->first())->withInput();
         }
+
+        $user = Auth::user();
+
+        if (empty($request->products)) {
+            return redirect()->back()->withErrors(['Something went wrong']);
+        }
+
+        $products = Vproduct::whereIn('id', $request->products)->get();
+
+        $this->data['products'] = $products;
+        $this->data['name'] = $request->name;
+        $this->data['phone'] = $request->phone;
+        $this->data['email'] = $request->email;
+        $this->data['address'] = $request->address;
+        $this->data['payment_mode'] = $request->payment_mode;
+        $this->data['page'] = 'user.invest.vendorcart';
+        return $this->dashboard_layout();
+        
+    } catch (\Exception $e) {
+        Log::error('Error in vendor cart processing: ' . $e->getMessage());
+        return redirect()->route('user.invest')->withErrors(['error' => $e->getMessage()])->withInput();
+    }
+    }
+
+
 
 
 }

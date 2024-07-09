@@ -86,6 +86,7 @@ Route::get('ViewSellerInvoice/{id}', [App\Http\Controllers\UserPanel\AddFund::cl
 Route::any('/ecommerceCart', [App\Http\Controllers\UserPanel\AddFund::class, 'ecommerce_cart'])->name('user.ecommerceCart');
 Route::post('/fund_activation', [App\Http\Controllers\UserPanel\AddFund::class, 'fundActivation'])->name('user.fundActivation');
 Route::post('/seller_billing', [App\Http\Controllers\UserPanel\AddFund::class, 'sellerBilling'])->name('user.sellerBilling');
+Route::post('/vendor_billing', [App\Http\Controllers\UserPanel\AddFund::class, 'vendorBilling'])->name('user.vendorBilling');
 
 // end add fund
 
@@ -97,10 +98,14 @@ Route::post('/fetch-products', [App\Http\Controllers\UserPanel\AddFund::class, '
 Route::get('/agentHistory', [App\Http\Controllers\UserPanel\AddFund::class, 'getProducts'])->name('getproducts');
 // invest
 Route::get('/invest', [App\Http\Controllers\UserPanel\Invest::class, 'index'])->name('user.invest');
+Route::get('/vender_history', [App\Http\Controllers\UserPanel\Invest::class, 'vender_history'])->name('user.vender_history');
+Route::post('/vendor_card', [App\Http\Controllers\UserPanel\Invest::class, 'vendor_card'])->name('user.vendor_card');
+Route::get('/agent_invoice', [App\Http\Controllers\UserPanel\Invest::class, 'agent_invoice'])->name('user.agent_invoice');
 Route::post('/fundActivation', [App\Http\Controllers\UserPanel\Invest::class, 'fundActivation'])->name('user.fund_activation');
 Route::get('/DepositHistory', [App\Http\Controllers\UserPanel\Invest::class, 'invest_list'])->name('user.DepositHistory');
 Route::any('/ecommerce_cart', [App\Http\Controllers\UserPanel\Invest::class, 'ecommerce_cart'])->name('user.ecommerce_cart');
 Route::get('view-invoice/{id}', [App\Http\Controllers\UserPanel\Invest::class, 'view_invoice'])->name('user.view-invoice');
+Route::get('/vendor_invoice/{id}', [App\Http\Controllers\UserPanel\Invest::class, 'vendor_invoice'])->name('user.vendor_invoice');
 // end invest
 
 // withdraw
@@ -210,6 +215,10 @@ Route::group(['middleware' => ['admin']], function ()
 
 //productController
 Route::post('a_product', [App\Http\Controllers\Admin\ProductController::class, 'a_product'])->name('admin.a_product');
+Route::get('view_invoices/{id}', [App\Http\Controllers\Admin\ProductController::class, 'view_invoices'])->name('admin.view_invoices');
+Route::get('vendor_invoice_b/{id}', [App\Http\Controllers\Admin\ProductController::class, 'vendor_invoice_b'])->name('admin.vendor_invoice_b');
+
+Route::get('agent_report', [App\Http\Controllers\Admin\ProductController::class, 'agent_report'])->name('admin.agent_report');
 Route::get('agent_product', [App\Http\Controllers\Admin\ProductController::class, 'agent_product'])->name('admin.agent_product');
 Route::get('v_product', [App\Http\Controllers\Admin\ProductController::class, 'v_product'])->name('admin.v_product');
 Route::post('vendor_product', [App\Http\Controllers\Admin\ProductController::class, 'vendor_product'])->name('admin.vendor_product');

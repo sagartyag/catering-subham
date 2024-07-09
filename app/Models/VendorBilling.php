@@ -5,10 +5,9 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Seller_invoice extends Model
+class VendorBilling extends Model
 {
     use HasFactory;
-
 
     public function user()
     {
@@ -18,7 +17,7 @@ class Seller_invoice extends Model
 
    public function userProduct()
     {
-        return $this->hasMany('App\Models\Seller_product','invest_id');
+        return $this->hasMany('App\Models\User_product','invest_id');
     }
 
     protected $fillable = [
@@ -30,8 +29,4 @@ class Seller_invoice extends Model
         'address',
         'product_id','mode'	
     ];
-
-    use HasFactory;
-
 }
-

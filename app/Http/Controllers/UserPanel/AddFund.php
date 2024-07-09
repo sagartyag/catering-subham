@@ -16,7 +16,9 @@ use App\Models\Vendor_product;
 use App\Models\Investment;
 use App\Models\Admin_product;
 use App\Models\Seller_invoice;
+use App\Models\VendorBilling;
 use App\Models\User_product;
+use App\Models\GeneralSetting;
 use Log;
 use Redirect;
 class AddFund extends Controller
@@ -123,6 +125,7 @@ public function fundActivation(Request $request)
             'grandTotal' => 'required|numeric',
             'DiscountTotal' => 'required|numeric',
             'CouponTotal' => 'required|numeric',
+            'payment_mode' => 'required|string', // Add validation for payment_mode
         ]);
 
         if ($validation->fails()) {
@@ -137,6 +140,7 @@ public function fundActivation(Request $request)
         $grandTotal = $request->input('grandTotal');
         $DiscountTotal = $request->input('DiscountTotal');
         $CouponTotal = $request->input('CouponTotal');
+        $payment_mode = $request->input('payment_mode'); // Retrieve payment_mode from request
 
         if (empty($products)) {
             return redirect()->route('user.AddFund')->withErrors(['cart is empty']);
@@ -150,7 +154,7 @@ public function fundActivation(Request $request)
             'user_id' => $user_detail->id,
             'user_id_fk' => $user_detail->username,
             'amount' => $cartTotal,
-            'payment_mode' => 'INR',
+            'payment_mode' => $payment_mode, // Include payment_mode here
             'status' => 'Pending',
             'sdate' => date("Y-m-d"),
             'active_from' => $user_detail->username,
@@ -192,6 +196,7 @@ public function fundActivation(Request $request)
 }
 
 
+
 public function sellerBilling(Request $request)
 {
     try {
@@ -203,6 +208,7 @@ public function sellerBilling(Request $request)
             'email' => 'required|string',
             'phone' => 'required|string',
             'address' => 'required|string',
+            'payment_mode' => 'required|string', // Added validation for payment_mode
         ]);
 
         if ($validation->fails()) {
@@ -217,6 +223,7 @@ public function sellerBilling(Request $request)
         $email = $request->input('email');
         $phone = $request->input('phone');
         $address = $request->input('address');
+        $payment_mode = $request->input('payment_mode'); // Retrieve payment_mode from request
 
         if (empty($products)) {
             return redirect()->route('user.Addagent')->withErrors(['cart is empty']);
@@ -240,6 +247,7 @@ public function sellerBilling(Request $request)
             'status' => 'Pending',
             'created_at' => now(),
             'updated_at' => now(),
+            'mode' => $payment_mode, // Add payment_mode to invoice data
         ];
         $invoiceId = Seller_invoice::insertGetId($invoiceData);
 
@@ -258,6 +266,86 @@ public function sellerBilling(Request $request)
             ];
 
             Seller_product::create($insertProduct);
+        }
+
+        $notify[] = ['success', 'Product Request Submitted successfully'];
+        return redirect()->route('user.Addagent')->withNotify($notify);
+    } catch (\Exception $e) {
+        Log::info('error here');
+        Log::info($e->getMessage());
+        return redirect()->route('user.Addagent')->withErrors(['error' => $e->getMessage()])->withInput();
+    }
+}
+
+public function vendorBilling(Request $request)
+{
+    try {
+        // Validate request
+        $validation = Validator::make($request->all(), [
+            'products' => 'required|array',
+            'quantity' => 'required|array',
+            'name' => 'required|string',
+            'email' => 'required|string',
+            'phone' => 'required|string',
+            'address' => 'required|string',
+            'payment_mode' => 'required|string', // Added validation for payment_mode
+        ]);
+
+        if ($validation->fails()) {
+            Log::info($validation->getMessageBag()->first());
+            return redirect()->route('user.Addagent')->withErrors($validation->getMessageBag()->first())->withInput();
+        }
+
+        $user_detail = Auth::user();
+        $products = $request->products;
+        $quantities = $request->input('quantity', []);
+        $name = $request->input('name');
+        $email = $request->input('email');
+        $phone = $request->input('phone');
+        $address = $request->input('address');
+        $payment_mode = $request->input('payment_mode'); // Retrieve payment_mode from request
+
+        if (empty($products)) {
+            return redirect()->route('user.Addagent')->withErrors(['cart is empty']);
+        }
+
+        // Calculate total quantity
+        $totalQuantity = array_sum($quantities);
+
+        // Insert invoice data
+        $invoiceNumber = substr(str_shuffle("0123456789"), 0, 7);
+        $invoiceData = [
+            'plan' => $invoiceNumber,
+            'transaction_id' => md5(uniqid(rand(), true)),
+            'user_id' => $user_detail->id,
+            'user_id_fk' => $user_detail->username,
+            'name' => $name,
+            'email' => $email,
+            'phone' => $phone,
+            'address' => $address,
+            'grandTotal' => $totalQuantity,
+            'status' => 'Pending',
+            'created_at' => now(),
+            'updated_at' => now(),
+            'mode' => $payment_mode, // Add payment_mode to invoice data
+        ];
+        $invoiceId = VendorBilling::insertGetId($invoiceData);
+
+        // Insert product data
+        foreach ($products as $key => $productId) {
+            $quantity = $quantities[$key] ?? 1;
+
+            $insertProduct = [
+                'user_id' => $user_detail->id,
+                'product_id' => $productId,
+                'quantity' => $quantity,
+                'active_status' => 0,
+                'invest_id' => $invoiceId,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+
+            User_product::create($insertProduct);
         }
 
         $notify[] = ['success', 'Product Request Submitted successfully'];
@@ -320,96 +408,90 @@ public function SubmitBuyFund(Request $request)
 
 }
 
-
 public function ecommerce_cart(Request $request)
-    {
-    
-      try{
-            $validation =  Validator::make($request->all(), [
-                'products' => 'required',
-                'user_id' => 'required|exists:users,username',
-                
-            ]);
-    
-            if($validation->fails()) {
-                Log::info($validation->getMessageBag()->first());
-    
-                return redirect()->route('user.AddFund')->withErrors($validation->getMessageBag()->first())->withInput();
-            }
-    
-            $user=Auth::user();
+{
+    try {
+        $validation = Validator::make($request->all(), [
+            'products' => 'required|array',
+            'products.*' => 'exists:vproducts,id',
+            'user_id' => 'required|exists:users,username',
+            'payment_mode' => 'required|string'
+        ]);
 
-            if (empty($request->products))
-                {
-                  return Redirect::back()->withErrors(array('Something went wrong'));
-                }
-            
+        if ($validation->fails()) {
+            Log::info($validation->getMessageBag()->first());
 
-            $product = Vproduct::whereIn('id',$request->products)->get();
-       
-            $this->data['product'] = $product;
-            $this->data['user_id'] = $request->user_id;
-            $this->data['page'] = 'user.fund.ecommerce_cart';
-            return $this->dashboard_layout();
-
-
-        
-          }
-           catch(\Exception $e){
-            Log::info('error here');
-            Log::info($e->getMessage());
-            print_r($e->getMessage());
-            die("hi");
-            return  redirect()->route('user.AddFund')->withErrors('error', $e->getMessage())->withInput();
+            return redirect()->route('user.AddFund')->withErrors($validation->getMessageBag()->first())->withInput();
         }
-    
+
+        $user = Auth::user();
+
+        if (empty($request->products)) {
+            return Redirect::back()->withErrors(array('Something went wrong'));
+        }
+
+        $product = Vproduct::whereIn('id', $request->products)->get();
+
+        $this->data['product'] = $product;
+        $this->data['user_id'] = $request->user_id;
+        $this->data['payment_mode'] = $request->payment_mode;
+        $this->data['page'] = 'user.fund.ecommerce_cart';
+        return $this->dashboard_layout();
+
+    } catch (\Exception $e) {
+        Log::info('error here');
+        Log::info($e->getMessage());
+        print_r($e->getMessage());
+        die("hi");
+        return redirect()->route('user.AddFund')->withErrors('error', $e->getMessage())->withInput();
     }
+}
 
 
 
     public function seller_cart(Request $request)
-    {
-    
-        try {
-            // Validate request
-            $validation = Validator::make($request->all(), [
-                'name' => 'required|string|max:255',
-                'phone' => 'required|numeric',
-                'email' => 'required|email|max:255',
-                'address' => 'required|string|max:255',
-                'categories' => 'required|array',
-                'products' => 'required|array',
-            ]);
-    
-            if ($validation->fails()) {
-                return redirect()->route('user.Addagent')->withErrors($validation->getMessageBag()->first())->withInput();
-            }
-    
-            $user = Auth::user();
-    
-            if (empty($request->products)) {
-                return redirect()->back()->withErrors(['Something went wrong']);
-            }
-    
-            $products = Product::whereIn('id', $request->products)->get();
-    
-            $this->data['products'] = $products;
-            $this->data['name'] = $request->name;
-            $this->data['phone'] = $request->phone;
-            $this->data['email'] = $request->email;
-            $this->data['address'] = $request->address;
-            $this->data['categories'] = $request->categories;
-            $this->data['user_id'] = $request->user_id;
-            $this->data['page'] = 'user.fund.sellercart';
-            return $this->dashboard_layout();
-            
-        } catch (\Exception $e) {
-            Log::error('Error in agent activation: ' . $e->getMessage());
-            return redirect()->route('user.Addagent')->withErrors(['error' => $e->getMessage()])->withInput();
+{
+    try {
+        // Validate request
+        $validation = Validator::make($request->all(), [
+            'name' => 'required|string|max:255',
+            'phone' => 'required|numeric',
+            'email' => 'required|email|max:255',
+            'address' => 'required|string|max:255',
+            'categories' => 'required|array',
+            'products' => 'required|array',
+            'payment_mode' => 'required|string|in:cash,online',
+        ]);
+
+        if ($validation->fails()) {
+            return redirect()->route('user.Addagent')->withErrors($validation->getMessageBag()->first())->withInput();
         }
-    
-    
+
+        $user = Auth::user();
+
+        if (empty($request->products)) {
+            return redirect()->back()->withErrors(['Something went wrong']);
+        }
+
+        $products = Product::whereIn('id', $request->products)->get();
+
+        $this->data['products'] = $products;
+        $this->data['name'] = $request->name;
+        $this->data['phone'] = $request->phone;
+        $this->data['email'] = $request->email;
+        $this->data['address'] = $request->address;
+        $this->data['categories'] = $request->categories;
+        $this->data['user_id'] = $request->user_id;
+        $this->data['payment_mode'] = $request->payment_mode;
+        $this->data['page'] = 'user.fund.sellercart';
+        return $this->dashboard_layout();
+        
+    } catch (\Exception $e) {
+        Log::error('Error in agent activation: ' . $e->getMessage());
+        return redirect()->route('user.Addagent')->withErrors(['error' => $e->getMessage()])->withInput();
     }
+}
+
 
 
     public function ViewSellerInvoice($id)
@@ -535,8 +617,10 @@ try {
 
     $products=Vendor_product::where('invest_id',$invest_id)->get();
 
+    $admin=GeneralSetting::first();
 
-$this->data['investment'] =  $investment;
+    $this->data['investment'] =  $investment;
+    $this->data['admin'] =  $admin;
 $this->data['products'] =  $products;
 // $this->data['vproduct'] =  $vproduct;
 
