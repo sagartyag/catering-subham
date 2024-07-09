@@ -10,6 +10,7 @@ use App\Models\Vproduct;
 use App\Models\Seller_product;
 use App\Models\Admin_product;
 use App\Models\Seller_invoice;
+use App\Models\VendorBilling;
 use App\Models\Investment;
 use App\Models\GeneralSetting;
 use App\Models\Vendor_product;
@@ -141,7 +142,7 @@ class ProductController extends Controller
         $limit = $request->limit ? $request->limit : 100000000000;
         $status = $request->status ? $request->status : null;
         $search = $request->search ? $request->search : null;
-        $notes = Seller_product::where('activeStatus',1)->orderBy('id', 'DESC');
+        $notes = Investment::where('status','Active')->orderBy('id', 'DESC');
 
         if($search <> null && $request->reset!="Reset")
         {
@@ -1137,7 +1138,24 @@ class ProductController extends Controller
        
           }
        
-
+          public function vendor_invoice_b($id)
+          {
+       
+          try {
+              $id = Crypt::decrypt($id);
+              } catch (\Illuminate\Contracts\Encryption\DecryptException $e) {
+              return back()->withErrors(array('Invalid User!'));
+          }
+       
+          $investment =Investment::where('id',$id)->first();
+    
+    $admin=GeneralSetting::first();
+       
+          $this->data['investment'] =  $investment;
+          $this->data['page'] = 'admin.products.seller.vendor-invoice';
+          return $this->admin_dashboard();
+       
+         }
 
     }
       
