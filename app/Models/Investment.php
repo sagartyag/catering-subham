@@ -10,7 +10,18 @@ class Investment extends Model
     use HasFactory;
 
     protected $fillable = [
-        'amount'
+        'plan',
+        'user_id_fk',
+        'user_id',
+        'amount',
+        'grandTotal',
+        'discount',
+        'coupon',
+        'sdate',
+        'status',
+        'transaction_id',
+        'payment_mode',
+        'active_from'
     ];
 
     public function user()
