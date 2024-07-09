@@ -95,6 +95,8 @@
                                    <input type="hidden" name="grandTotal" class="grandTotal">
                                    <input type="hidden" name="DiscountTotal" class="DiscountTotal">
                                    <input type="hidden" name="CouponTotal" class="CouponTotal">
+                                   <input type="hidden" name="investId" value="{{ $investment->id }}">
+
                                </div>
                                <div class="col-sm-4">
                                    <div class="text-sm-end mt-2 mt-sm-0">

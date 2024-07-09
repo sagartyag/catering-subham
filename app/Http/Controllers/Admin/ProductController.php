@@ -342,10 +342,12 @@ class ProductController extends Controller
             }
         }
 
-
         public function approvedProduct(Request $request)
         {
             try {
+                // Enable query logging
+                DB::enableQueryLog();
+        
                 // Validate request
                 $validation = Validator::make($request->all(), [
                     'products' => 'required|array',
@@ -354,10 +356,13 @@ class ProductController extends Controller
                     'grandTotal' => 'required|numeric',
                     'DiscountTotal' => 'required|numeric',
                     'CouponTotal' => 'required|numeric',
+                    'investId' => 'required|exists:investments,id,user_id,' . Auth::id(),
                 ]);
         
                 if ($validation->fails()) {
-                    return response()->json(['error' => $validation->getMessageBag()->first()], 400);
+                    return redirect()->route('admin.product-request')
+                        ->withErrors($validation)
+                        ->withInput();
                 }
         
                 $user_detail = Auth::user();
@@ -367,36 +372,25 @@ class ProductController extends Controller
                 $grandTotal = $request->input('grandTotal');
                 $DiscountTotal = $request->input('DiscountTotal');
                 $CouponTotal = $request->input('CouponTotal');
+                $investId = $request->input('investId');
         
-                if (empty($products)) {
-                    return response()->json(['error' => 'Cart is empty'], 400);
-                }
+                // Find investment by investId
+                $investment = Investment::findOrFail($investId);
         
-                // Update investment data
-                $investmentData = [
-                    'amount' => $cartTotal,
-                    'grandTotal' => $grandTotal,
-                    'status' => "Active",
-                    'discount' => $DiscountTotal,
-                    'coupon' => $CouponTotal,
-                    'updated_at' => now(),
-                ];
+                Log::info('Updating investment: ', ['investment' => $investment->toArray()]);
         
-                $investment = Investment::where('user_id', $user_detail->id)->orderBy('created_at', 'desc')->first();
-                
-                if ($investment) {
-                    Log::info('Updating investment: ', ['investment' => $investment->toArray(), 'data' => $investmentData]);
-                    $investment->update($investmentData);
+                // Update each attribute individually
+                $investment->amount = $cartTotal;
+                $investment->grandTotal = $grandTotal;
+                $investment->status = "Active";
+                $investment->discount = $DiscountTotal;
+                $investment->coupon = $CouponTotal;
+                $investment->updated_at = now();
         
-                    // Check if update was successful
-                    if ($investment->wasChanged()) {
-                        Log::info('Investment updated successfully');
-                    } else {
-                        Log::warning('Investment update did not change any data');
-                    }
-                } else {
-                    return response()->json(['error' => 'No investment found for the user'], 400);
-                }
+                // Save the investment
+                $investment->save();
+        
+                Log::info('Investment after save: ', ['investment' => $investment->toArray()]);
         
                 // Update product data
                 foreach ($products as $key => $id) {
@@ -432,15 +426,22 @@ class ProductController extends Controller
                     }
                 }
         
-                return response()->json(['success' => 'Cart updated successfully']);
+                // Get the executed queries from the query log
+                $queries = DB::getQueryLog();
+                Log::debug('Executed SQL Queries: ', $queries);
+        
+                $notify[] = ['success', 'Product Approved successfully'];
+                return redirect()->route('admin.product-request')->withNotify($notify);
             } catch (\Exception $e) {
                 Log::error('Cart update error: ' . $e->getMessage());
-                return response()->json(['error' => $e->getMessage()], 500);
+                return redirect()->route('admin.product-request')
+                    ->withErrors($e->getMessage())
+                    ->withInput();
             }
         }
         
 
-
+        
 
  public function editProduct(Request $request)
  {
@@ -527,23 +528,30 @@ class ProductController extends Controller
       
        public function confirm_product($id)
        {
-   
-       try {
-           $id = Crypt::decrypt($id);
+           try {
+               $id = Crypt::decrypt($id);
            } catch (\Illuminate\Contracts\Encryption\DecryptException $e) {
-           return back()->withErrors(array('Invalid User!'));
+               return back()->withErrors(['Invalid User!']);
+           }
+       
+           // Retrieve the investment and associated products
+           $investment = Investment::where('id', $id)->first();
+           if (!$investment) {
+               return back()->withErrors(['Investment not found!']);
+           }
+       
+           $invest_id = $investment->id;
+           $products = Vendor_product::where('invest_id', $invest_id)->get();
+       
+           // Pass data to view
+           $this->data['investment'] = $investment;
+           $this->data['products'] = $products;
+           $this->data['page'] = 'admin.products.confirm_product';
+       
+           // Render admin dashboard view
+           return $this->admin_dashboard();
        }
-   
-       $investment = Investment::where('id',$id)->first();
-       $invest_id=$investment->id;
-       $products=Vendor_product::where('invest_id',$invest_id)->get();
-
-        //  dd($product);
-        $this->data['products'] =  $products;
-       $this->data['page'] = 'admin.products.confirm_product';
-       return $this->admin_dashboard();
-   
-      }
+       
 
 
 

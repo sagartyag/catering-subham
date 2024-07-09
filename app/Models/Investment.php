@@ -23,6 +23,7 @@ class Investment extends Model
         'payment_mode',
         'active_from'
     ];
+    
 
     public function user()
     {

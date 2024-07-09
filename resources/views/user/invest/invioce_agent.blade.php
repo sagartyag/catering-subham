@@ -92,51 +92,54 @@
                                                         <th style="width: 70px;">No.</th>
                                                         <th>Item</th>
                                                         <th>Quantity</th>
-                                                         <th class="text-end">Price</th>
-                                                             
-                                                   
+                                                        <th class="text-end">Price</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-
-                                                    <?php $cnt = 0; ?>
-
                                                     @php
-                                                    $products = \App\Models\User_product::where('invest_id', $investment->id)->get();
-                                                @endphp
-                                                @foreach ($products as $value)
-                                                    @php
-                                                        $data = \App\Models\Vproduct::find($value->product_id);
+                                                        $cnt = 0;
+                                                        $subTotal = 0;
+                                                        $discountTotal = 0;
+                                                        $products = \App\Models\User_product::where('invest_id', $investment->id)->get();
                                                     @endphp
-                                                
+                                        
+                                                    @foreach ($products as $value)
+                                                        @php
+                                                            $data = \App\Models\Vproduct::find($value->product_id);
+                                                            $productTotal = $data->productPrice * $value->quantity;
+                                                            $productDiscount = ($data->productPrice - $data->productDiscountPrice) * $value->quantity;
+                                                            $subTotal += $productTotal;
+                                                            $discountTotal += $productDiscount;
+                                                        @endphp
+                                                        
+                                                        <tr>
+                                                            <td>{{ $loop->iteration }}</td>
+                                                            <td>{{ $data->productName }} - {{ $data->ProductDiscription }}</td>
+                                                            <td>{{ $value->quantity }}</td>
+                                                            <td class="text-end">&#8377; {{ $productTotal }}</td> 
+                                                        </tr>
+                                                    @endforeach
+                                        
+                                                    @php
+                                                        $total = $subTotal - $discountTotal;
+                                                    @endphp
+                                        
                                                     <tr>
-                                                        <td>{{ $loop->iteration }}</td>
-                                                        <td>{{ $data->productName }} - {{ $data->ProductDiscription }}</td>
-                                                        <td>{{ $value->quantity }}</td>
-                                                         <td class="text-end">&#8377; {{ $data->productPrice }}</td> 
-                                                    </tr>
-                                                @endforeach
-                                                
-                                                  
-                                                     <tr>
                                                         <td colspan="3" class="text-end">Sub Total</td>
-                                                        <td class="text-end">&#8377; {{$data->grandTotal}}</td>
-                                                    </tr> 
+                                                        <td class="text-end">&#8377; {{ $subTotal }}</td>
+                                                    </tr>
                                                     <tr>
-                                                        <td colspan="3" class="border-0 text-end">
-                                                            <strong>Discount</strong></td>
-                                                        <td class="border-0 text-end">&#8377; {{$data->productDiscountPrice}}</td>
-                                                    </tr> 
-
-                                                 
+                                                        <td colspan="3" class="border-0 text-end"><strong>Discount</strong></td>
+                                                        <td class="border-0 text-end">&#8377; {{ $discountTotal }}</td>
+                                                    </tr>
                                                     <tr>
-                                                        <td colspan="3" class="border-0 text-end">
-                                                            <strong>Total Quantity</strong></td>
-                                                        <td class="border-0 text-end"><h4 class="m-0"> {{$data->grandTotal}}</h4></td>
+                                                        <td colspan="3" class="border-0 text-end"><strong>Total</strong></td>
+                                                        <td class="border-0 text-end"><h4 class="m-0">&#8377; {{ $total }}</h4></td>
                                                     </tr>
                                                 </tbody>
                                             </table>
                                         </div>
+                                        
                                         <div class="d-print-none">
                                             <div class="float-end">
                                                 <a href="javascript:window.print()" class="btn btn-success waves-effect waves-light me-1"><i class="fa fa-print"></i></a>
