@@ -118,6 +118,7 @@ class Invest extends Controller
     }
 
     
+    
     public function view_invoice($id)
     {
 
@@ -127,8 +128,7 @@ class Invest extends Controller
         return back()->withErrors(array('Invalid User!'));
     }
 
-     $investment = VendorBilling::where('id',$id)->first();
-     
+     $investment = Seller_invoice::where('id',$id)->first();
      $admin=GeneralSetting::first();
 
     $this->data['investment'] =  $investment;
@@ -138,6 +138,30 @@ class Invest extends Controller
     return $this->dashboard_layout();
 
    }
+
+   public function vendor_invoice($id)
+   {
+
+   try {
+       $id = Crypt::decrypt($id);
+       } catch (\Illuminate\Contracts\Encryption\DecryptException $e) {
+       return back()->withErrors(array('Invalid User!'));
+   }
+
+    $investment = VendorBilling::where('id',$id)->first();
+    
+    $admin=GeneralSetting::first();
+
+   $this->data['investment'] =  $investment;
+   $this->data['admin'] =  $admin;
+
+   $this->data['page'] = 'user.invest.invioce_agent';
+   return $this->dashboard_layout();
+
+  }
+
+
+
 
 
     public function fundActivation(Request $request)
@@ -310,38 +334,66 @@ class Invest extends Controller
     
    
 
-    public function invest_list(Request $request){
+        public function invest_list(Request $request){
 
-    $user=Auth::user();
-      $limit = $request->limit ? $request->limit : paginationLimit();
-        $status = $request->status ? $request->status : null;
-        $search = $request->search ? $request->search : null;
-        $notes = VendorBilling::where('user_id',$user->id);
+          $user=Auth::user();
+            $limit = $request->limit ? $request->limit : paginationLimit();
+              $status = $request->status ? $request->status : null;
+              $search = $request->search ? $request->search : null;
+              $notes = Seller_invoice::where('user_id',$user->id);
+            
+            if($search <> null && $request->reset!="Reset"){
+              $notes = $notes->where(function($q) use($search){
+                $q->Where('user_id_fk', 'LIKE', '%' . $search . '%')
+                ->orWhere('transaction_id', 'LIKE', '%' . $search . '%')
+                ->orWhere('status', 'LIKE', '%' . $search . '%')
+                ->orWhere('sdate', 'LIKE', '%' . $search . '%')
+                ->orWhere('email', 'LIKE', '%' . $search . '%');
+              });
       
-      if($search <> null && $request->reset!="Reset"){
-        $notes = $notes->where(function($q) use($search){
-          $q->Where('user_id_fk', 'LIKE', '%' . $search . '%')
-          ->orWhere('transaction_id', 'LIKE', '%' . $search . '%')
-          ->orWhere('status', 'LIKE', '%' . $search . '%')
-          ->orWhere('sdate', 'LIKE', '%' . $search . '%')
-          ->orWhere('email', 'LIKE', '%' . $search . '%');
-        });
+            }
+      
+              $notes = $notes->paginate($limit)->appends(['limit' => $limit ]);
+      
+            $this->data['search'] =$search;
+            $this->data['deposit_list'] =$notes;
+            $this->data['page'] = 'user.invest.DepositHistory';
+            return $this->dashboard_layout();
+
+          }
+
+
+         
+    public function vender_history(Request $request){
+
+      $user=Auth::user();
+        $limit = $request->limit ? $request->limit : paginationLimit();
+          $status = $request->status ? $request->status : null;
+          $search = $request->search ? $request->search : null;
+          $notes = VendorBilling::where('user_id',$user->id);
+        
+        if($search <> null && $request->reset!="Reset"){
+          $notes = $notes->where(function($q) use($search){
+            $q->Where('user_id_fk', 'LIKE', '%' . $search . '%')
+            ->orWhere('transaction_id', 'LIKE', '%' . $search . '%')
+            ->orWhere('status', 'LIKE', '%' . $search . '%')
+            ->orWhere('sdate', 'LIKE', '%' . $search . '%')
+            ->orWhere('email', 'LIKE', '%' . $search . '%');
+          });
+  
+        }
+  
+          $notes = $notes->paginate($limit)->appends(['limit' => $limit ]);
+  
+        $this->data['search'] =$search;
+        $this->data['deposit_list'] =$notes;
+        $this->data['page'] = 'user.invest.vendor_his';
+        return $this->dashboard_layout();
+
+
 
       }
 
-        $notes = $notes->paginate($limit)->appends(['limit' => $limit ]);
-
-      $this->data['search'] =$search;
-      $this->data['deposit_list'] =$notes;
-      $this->data['page'] = 'user.invest.DepositHistory';
-      return $this->dashboard_layout();
-
-
-
-
-        }
-
-         
     public function vendor_card(Request $request)
     {
       try {

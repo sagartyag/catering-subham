@@ -92,7 +92,8 @@
                                                         <th style="width: 70px;">No.</th>
                                                         <th>Item</th>
                                                         <th>Quantity</th>
-                                                        {{-- <th class="text-end">Price</th> --}}
+                                                         <th class="text-end">Price</th>
+                                                             
                                                    
                                                     </tr>
                                                 </thead>
@@ -101,37 +102,37 @@
                                                     <?php $cnt = 0; ?>
 
                                                     @php
-                                                    $products = \App\Models\Seller_product::where('invest_id', $investment->id)->get();
+                                                    $products = \App\Models\User_product::where('invest_id', $investment->id)->get();
                                                 @endphp
                                                 @foreach ($products as $value)
                                                     @php
-                                                        $data = \App\Models\Product::find($value->product_id);
+                                                        $data = \App\Models\Vproduct::find($value->product_id);
                                                     @endphp
                                                 
                                                     <tr>
                                                         <td>{{ $loop->iteration }}</td>
                                                         <td>{{ $data->productName }} - {{ $data->ProductDiscription }}</td>
                                                         <td>{{ $value->quantity }}</td>
-                                                        {{-- <td class="text-end">&#8377; {{ $value->productPrice }}</td> --}}
+                                                         <td class="text-end">&#8377; {{ $data->productPrice }}</td> 
                                                     </tr>
                                                 @endforeach
                                                 
                                                   
-                                                    {{-- <tr>
+                                                     <tr>
                                                         <td colspan="3" class="text-end">Sub Total</td>
-                                                        <td class="text-end">&#8377; {{$investment->grandTotal}}</td>
-                                                    </tr> --}}
-                                                    {{-- <tr>
+                                                        <td class="text-end">&#8377; {{$data->grandTotal}}</td>
+                                                    </tr> 
+                                                    <tr>
                                                         <td colspan="3" class="border-0 text-end">
                                                             <strong>Discount</strong></td>
-                                                        <td class="border-0 text-end">&#8377; {{$investment->discount}}</td>
-                                                    </tr> --}}
+                                                        <td class="border-0 text-end">&#8377; {{$data->productDiscountPrice}}</td>
+                                                    </tr> 
 
                                                  
                                                     <tr>
                                                         <td colspan="3" class="border-0 text-end">
                                                             <strong>Total Quantity</strong></td>
-                                                        <td class="border-0 text-end"><h4 class="m-0"> {{$investment->grandTotal}}</h4></td>
+                                                        <td class="border-0 text-end"><h4 class="m-0"> {{$data->grandTotal}}</h4></td>
                                                     </tr>
                                                 </tbody>
                                             </table>

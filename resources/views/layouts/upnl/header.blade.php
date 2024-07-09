@@ -246,7 +246,7 @@ span.badge.badge-success {
 
 
                                    
-                                    <li><a href="{{route('user.DepositHistory')}}" key="t-add-product">Billing Reports</a></li>
+                                    <li><a href="{{route('user.vender_history')}}" key="t-add-product">Billing Reports</a></li>
                                 </ul>
                             </li>
 

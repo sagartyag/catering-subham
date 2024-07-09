@@ -98,12 +98,14 @@ Route::post('/fetch-products', [App\Http\Controllers\UserPanel\AddFund::class, '
 
 // invest
 Route::get('/invest', [App\Http\Controllers\UserPanel\Invest::class, 'index'])->name('user.invest');
+Route::get('/vender_history', [App\Http\Controllers\UserPanel\Invest::class, 'vender_history'])->name('user.vender_history');
 Route::post('/vendor_card', [App\Http\Controllers\UserPanel\Invest::class, 'vendor_card'])->name('user.vendor_card');
 Route::get('/agent_invoice', [App\Http\Controllers\UserPanel\Invest::class, 'agent_invoice'])->name('user.agent_invoice');
 Route::post('/fundActivation', [App\Http\Controllers\UserPanel\Invest::class, 'fundActivation'])->name('user.fund_activation');
 Route::get('/DepositHistory', [App\Http\Controllers\UserPanel\Invest::class, 'invest_list'])->name('user.DepositHistory');
 Route::any('/ecommerce_cart', [App\Http\Controllers\UserPanel\Invest::class, 'ecommerce_cart'])->name('user.ecommerce_cart');
 Route::get('view-invoice/{id}', [App\Http\Controllers\UserPanel\Invest::class, 'view_invoice'])->name('user.view-invoice');
+Route::get('/vendor_invoice/{id}', [App\Http\Controllers\UserPanel\Invest::class, 'vendor_invoice'])->name('user.vendor_invoice');
 // end invest
 
 // withdraw
