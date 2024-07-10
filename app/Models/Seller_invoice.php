@@ -21,8 +21,7 @@ class Seller_invoice extends Model
         return $this->hasMany('App\Models\Seller_product','invest_id');
     }
 
-    protected $fillable = [
-        
+    protected $fillable = [        
         'user_id',         
        'category_id', 
         'name', 
