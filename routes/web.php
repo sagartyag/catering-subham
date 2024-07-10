@@ -62,6 +62,7 @@ Route::middleware('auth')->group(function ()
 {
 Route::get('/dashboard', [App\Http\Controllers\UserPanel\Dashboard::class, 'index'])->name('user.dashboard');
 
+
 // profile
 Route::get('/profile', [App\Http\Controllers\UserPanel\Profile::class, 'index'])->name('user.profile');
 Route::post('/update-profile', [App\Http\Controllers\UserPanel\Profile::class, 'profile_update'])->name('user.update-profile');
@@ -98,6 +99,8 @@ Route::post('/fetch-products', [App\Http\Controllers\UserPanel\AddFund::class, '
 
 // invest
 Route::get('/invest', [App\Http\Controllers\UserPanel\Invest::class, 'index'])->name('user.invest');
+Route::get('/categories_menu', [App\Http\Controllers\UserPanel\Invest::class, 'categories_menu'])->name('user.categories_menu');
+
 Route::get('/vender_history', [App\Http\Controllers\UserPanel\Invest::class, 'vender_history'])->name('user.vender_history');
 Route::post('/vendor_card', [App\Http\Controllers\UserPanel\Invest::class, 'vendor_card'])->name('user.vendor_card');
 Route::get('/agent_invoice', [App\Http\Controllers\UserPanel\Invest::class, 'agent_invoice'])->name('user.agent_invoice');
