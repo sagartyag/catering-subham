@@ -242,7 +242,7 @@
         @foreach($products as $product)
         @php
             $maxQuanity = \DB::table('seller_products')->where('user_id', Auth::user()->id)->where('product_id', $product->id)->sum('quantity');
-            $useQuantity = \DB::table('user_products')->where('active_from', Auth::user()->username)->where('product_id', $product->id)->sum('quantity');
+            $useQuantity = \DB::table('user_products')->where('user_id', Auth::user()->id)->where('product_id', $product->id)->sum('quantity');
             $balanceQuan = $maxQuanity - $useQuantity;
         @endphp
         addToCart('{{ $product->productName }}', '{{ $product->ProductDiscription }}', {{ $product->id }}, {{ $balanceQuan }});  
