@@ -8,6 +8,7 @@ use App\Models\User;
 use App\Models\Investment;
 use App\Models\Income;
 use App\Models\Seller_product;
+use App\Models\Category;
 use App\Models\Vproduct;
 use App\Models\Vendor_product;
 use App\Models\Seller_invoice;
@@ -340,7 +341,7 @@ class Invest extends Controller
             $limit = $request->limit ? $request->limit : paginationLimit();
               $status = $request->status ? $request->status : null;
               $search = $request->search ? $request->search : null;
-              $notes = Seller_invoice::where('user_id',$user->id);
+              $notes = Seller_invoice::where('user_id',$user->id)->first();
             
             if($search <> null && $request->reset!="Reset"){
               $notes = $notes->where(function($q) use($search){
@@ -370,7 +371,7 @@ class Invest extends Controller
         $limit = $request->limit ? $request->limit : paginationLimit();
           $status = $request->status ? $request->status : null;
           $search = $request->search ? $request->search : null;
-          $notes = VendorBilling::where('user_id',$user->id);
+          $notes = VendorBilling::where('user_id',$user->id)->where('status', 'Active')->orderBy('id', 'DESC');
         
         if($search <> null && $request->reset!="Reset"){
           $notes = $notes->where(function($q) use($search){
@@ -433,6 +434,17 @@ class Invest extends Controller
         return redirect()->route('user.invest')->withErrors(['error' => $e->getMessage()])->withInput();
     }
     }
+
+
+    public function categories_menu()
+    {
+      $categoryname = Category::orderBy('id','DESC')->get();
+      $this->data['categories'] = $categoryname;
+
+    $this->data['page'] = 'user.invest.categories_menu';
+    return $this->dashboard_layout();
+
+   }     
 
 
 
