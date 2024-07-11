@@ -100,6 +100,7 @@ Route::get('/agentHistory', [App\Http\Controllers\UserPanel\AddFund::class, 'get
 // invest
 Route::get('/invest', [App\Http\Controllers\UserPanel\Invest::class, 'index'])->name('user.invest');
 Route::get('/categories_menu', [App\Http\Controllers\UserPanel\Invest::class, 'categories_menu'])->name('user.categories_menu');
+Route::post('/addfatch', [App\Http\Controllers\UserPanel\Invest::class, 'addfatch'])->name('add.fatch');
 
 Route::get('/vender_history', [App\Http\Controllers\UserPanel\Invest::class, 'vender_history'])->name('user.vender_history');
 Route::post('/vendor_card', [App\Http\Controllers\UserPanel\Invest::class, 'vendor_card'])->name('user.vendor_card');

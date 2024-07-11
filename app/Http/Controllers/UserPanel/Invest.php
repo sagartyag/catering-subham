@@ -444,7 +444,20 @@ class Invest extends Controller
     $this->data['page'] = 'user.invest.categories_menu';
     return $this->dashboard_layout();
 
-   }     
+   }   
+   
+public function addfatch(Request $request)
+{
+  $categories = $request->input('categories');
+    
+  // Fetch products based on selected categories
+  $products = Product::whereIn('category_id', $categories)->get(['id', 'productName', 'image']); // assuming you have an 'image_url' field
+
+  return response()->json(['products' => $products]);
+}
+
+   
+   
 
 
 
