@@ -31,11 +31,11 @@
                                     </div>
                                     <div class="mt-4 col-xl-3 col-lg-3 col-md-6 col-sm-12">
                                         <h6>To:</h6>
-                                        <div> <strong> {{$investment->name}}</strong> </div>
-                                        <div> {{$investment->address}}</div>
+                                        <div> <strong> {{$investment->user->name}}</strong> </div>
+                                        <div> {{$investment->user->address}}</div>
                                       
-                                        <div>Email:  {{$investment->email}}</div>
-                                        <div>Phone:  {{$investment->phone}}</div>
+                                        <div>Email:  {{$investment->user->email}}</div>
+                                        <div>Phone:  {{$investment->user->phone}}</div>
                                     </div>
                                     <div
                                         class="mt-4 col-xl-6 col-lg-6 col-md-12 col-sm-12 d-flex justify-content-lg-end justify-content-md-center justify-content-xs-start">

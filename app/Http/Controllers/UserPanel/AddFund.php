@@ -45,7 +45,7 @@ public function fundHistory(Request $request)
     $limit = $request->limit ? $request->limit : paginationLimit();
     $status = $request->status ? $request->status : null;
     $search = $request->search ? $request->search : null;
-    $notes = Investment::where('user_id',$user->id);
+    $notes = Investment::where('user_id', $user->id)->where('status', 'Active')->orderBy('id', 'DESC');
     if($search <> null && $request->reset!="Reset"){
     $notes = $notes->where(function($q) use($search){
         $q->Where('product_id', 'LIKE', '%' . $search . '%')
