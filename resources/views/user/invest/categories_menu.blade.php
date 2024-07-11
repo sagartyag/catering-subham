@@ -1,8 +1,3 @@
-
-
-            <!-- ============================================================== -->
-            <!-- Start right Content here -->
-            <!-- ============================================================== -->
             <div class="main-content">
 
                 <div class="page-content">
@@ -35,11 +30,9 @@
                                         <div>
                                             <h5 class="font-size-14 mb-3">Category</h5>
                                             <ul class="list-unstyled product-list">
-                                                <li><a href="javascript: void(0);"><i class="mdi mdi-chevron-right me-1"></i> <span class="tablist-name">All</span></a></li>
-                                                <li><a href="javascript: void(0);"><i class="mdi mdi-chevron-right me-1"></i> <span class="tablist-name">T-shirts</span></a></li>
-                                                <li><a href="javascript: void(0);"><i class="mdi mdi-chevron-right me-1"></i> <span class="tablist-name">Shirts</span></a></li>
-                                                <li><a href="javascript: void(0);"><i class="mdi mdi-chevron-right me-1"></i> <span class="tablist-name">Jeans</span></a></li>
-                                                <li><a href="javascript: void(0);"><i class="mdi mdi-chevron-right me-1"></i> <span class="tablist-name">Jackets</span></a></li>
+                                                @foreach($categories as $category)
+                                                <li><a href="javascript: void(0);"><i class="mdi mdi-chevron-right me-1"></i> <span class="tablist-name">{{ $category->categoryname }}</span></a></li>
+                                                @endforeach
                                             </ul>
                                         </div>
                                       
@@ -86,13 +79,7 @@
                                                 <div class="mt-4 text-center">
                                                     <h5 class="mb-3 text-truncate"><a href="javascript: void(0);" class="text-dark">Half sleeve T-shirt </a></h5>
                                                     
-                                                    <p class="text-muted">
-                                                        <i class="bx bxs-star text-warning"></i>
-                                                        <i class="bx bxs-star text-warning"></i>
-                                                        <i class="bx bxs-star text-warning"></i>
-                                                        <i class="bx bxs-star text-warning"></i>
-                                                        <i class="bx bxs-star text-warning"></i>
-                                                    </p>
+                                                    
                                                     <div class="text-center">
                                                                 <button type="button" class="btn btn-primary waves-effect waves-light mt-2 me-1">
                                                                     <i class="bx bx-cart me-2"></i> Add to cart
@@ -111,13 +98,7 @@
                                                 <div class="mt-4 text-center">
                                                     <h5 class="mb-3 text-truncate"><a href="javascript: void(0);" class="text-dark">Light blue T-shirt</a></h5>
                                                     
-                                                    <p class="text-muted">
-                                                        <i class="bx bxs-star text-warning"></i>
-                                                        <i class="bx bxs-star text-warning"></i>
-                                                        <i class="bx bxs-star text-warning"></i>
-                                                        <i class="bx bxs-star text-warning"></i>
-                                                        <i class="bx bxs-star"></i>
-                                                    </p>
+                                                    
                                                     <div class="text-center">
                                                                 <button type="button" class="btn btn-primary waves-effect waves-light mt-2 me-1">
                                                                     <i class="bx bx-cart me-2"></i> Add to cart
@@ -141,13 +122,7 @@
                                                 <div class="mt-4 text-center">
                                                     <h5 class="mb-3 text-truncate"><a href="javascript: void(0);" class="text-dark">Black Color T-shirt</a></h5>
                                                     
-                                                    <p class="text-muted">
-                                                        <i class="bx bxs-star text-warning"></i>
-                                                        <i class="bx bxs-star text-warning"></i>
-                                                        <i class="bx bxs-star text-warning"></i>
-                                                        <i class="bx bxs-star text-warning"></i>
-                                                        <i class="bx bxs-star"></i>
-                                                    </p>
+                                                    
                                                     <div class="text-center">
                                                                 <button type="button" class="btn btn-primary waves-effect waves-light mt-2 me-1">
                                                                     <i class="bx bx-cart me-2"></i> Add to cart
@@ -166,13 +141,7 @@
                                                 <div class="mt-4 text-center">
                                                     <h5 class="mb-3 text-truncate"><a href="javascript: void(0);" class="text-dark">Hoodie (Blue)</a></h5>
                                                     
-                                                    <p class="text-muted">
-                                                        <i class="bx bxs-star text-warning"></i>
-                                                        <i class="bx bxs-star text-warning"></i>
-                                                        <i class="bx bxs-star text-warning"></i>
-                                                        <i class="bx bxs-star text-warning"></i>
-                                                        <i class="bx bxs-star"></i>
-                                                    </p>
+                                                    
                                                     <div class="text-center">
                                                                 <button type="button" class="btn btn-primary waves-effect waves-light mt-2 me-1">
                                                                     <i class="bx bx-cart me-2"></i> Add to cart
@@ -197,13 +166,7 @@
                                                 <div class="mt-4 text-center">
                                                     <h5 class="mb-3 text-truncate"><a href="javascript: void(0);" class="text-dark">Half sleeve T-Shirt</a></h5>
                                                     
-                                                    <p class="text-muted">
-                                                        <i class="bx bxs-star text-warning"></i>
-                                                        <i class="bx bxs-star text-warning"></i>
-                                                        <i class="bx bxs-star text-warning"></i>
-                                                        <i class="bx bxs-star text-warning"></i>
-                                                        <i class="bx bxs-star"></i>
-                                                    </p>
+                                                   
                                                     <div class="text-center">
                                                                 <button type="button" class="btn btn-primary waves-effect waves-light mt-2 me-1">
                                                                     <i class="bx bx-cart me-2"></i> Add to cart
@@ -226,13 +189,7 @@
                                                 <div class="mt-4 text-center">
                                                     <h5 class="mb-3 text-truncate"><a href="javascript: void(0);" class="text-dark">Green color T-shirt</a></h5>
                                                     
-                                                    <p class="text-muted">
-                                                        <i class="bx bxs-star text-warning"></i>
-                                                        <i class="bx bxs-star text-warning"></i>
-                                                        <i class="bx bxs-star text-warning"></i>
-                                                        <i class="bx bxs-star text-warning"></i>
-                                                        <i class="bx bxs-star"></i>
-                                                    </p>
+                                                    
                                                     <div class="text-center">
                                                                 <button type="button" class="btn btn-primary waves-effect waves-light mt-2 me-1">
                                                                     <i class="bx bx-cart me-2"></i> Add to cart
@@ -245,13 +202,7 @@
                                 </div>
                                 <!-- end row -->
 
-                                <div class="row">
-                                    <div class="col-lg-12">
-                                        <div class="text-center mt-2 mb-5">
-                                            <a href="javascript:void(0);" class="text-success"><i class="bx bx-loader bx-spin font-size-18 align-middle me-2"></i> Load more </a>
-                                        </div>
-                                    </div>
-                                </div>
+                                
                             </div>
                         </div>
                         <!-- end row -->

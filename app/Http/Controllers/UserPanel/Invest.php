@@ -8,6 +8,7 @@ use App\Models\User;
 use App\Models\Investment;
 use App\Models\Income;
 use App\Models\Seller_product;
+use App\Models\Category;
 use App\Models\Vproduct;
 use App\Models\Vendor_product;
 use App\Models\Seller_invoice;
@@ -437,7 +438,8 @@ class Invest extends Controller
 
     public function categories_menu()
     {
-
+      $categoryname = Category::orderBy('id','DESC')->get();
+      $this->data['categories'] = $categoryname;
 
     $this->data['page'] = 'user.invest.categories_menu';
     return $this->dashboard_layout();
