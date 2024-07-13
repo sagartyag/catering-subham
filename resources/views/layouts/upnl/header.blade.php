@@ -198,24 +198,6 @@ span.badge.badge-success {
                           </li>
 
 
-                          <li>
-                                <a href="{{route('user.categories_menu')}}" class="waves-effect">
-                                    <i class="bx bx-envelope"></i>
-                                    <span key="t-email"> Menu</span>
-                                </a>
-                                <!-- <ul class="sub-menu" aria-expanded="false">
-                                    <li><a href="{{route('user.GenerateTicket')}}" key="t-inbox">Support Ticket</a></li>
-                                    <li><a href="{{route('user.SupportMessage')}}" key="t-read-email">Inbox</a></li>
-                                    
-                                </ul> -->
-                            </li>
-                            <li>
-                                <a href="{{route('user.DepositHistory')}}" class="waves-effect">
-                                    <i class="bx bx-envelope"></i>
-                                    <span key="t-email">Customer Reports</span>
-                                </a>
-                             
-                            </li>
                            
                             <li class="menu-title" key="t-apps">Apps</li>
 
@@ -269,8 +251,8 @@ span.badge.badge-success {
 
                             @endif
 
-                            <!-- @if(Auth::user()->role=="Agent")
-                            <li>
+                            @if(Auth::user()->role=="Agent")
+                            <!-- <li>
                                 <a href="javascript: void(0);" class="has-arrow waves-effect">
                                     <i class="bx bx-store"></i>
                                     <span key="t-ecommerce">Generate Menu</span>
@@ -279,8 +261,29 @@ span.badge.badge-success {
                                     <li><a href="/user/addagent" key="t-products">Generate Customer Menu</a></li> 
                                     <li><a href="{{route('user.DepositHistory')}}" key="t-add-product">Customer Reports</a></li>
                                 </ul>
+                            </li> -->
+
+                            
+                          <li>
+                                <a href="{{route('user.categories_menu')}}" class="waves-effect">
+                                    <i class="bx bx-envelope"></i>
+                                    <span key="t-email"> Menu</span>
+                                </a>
+                                <!-- <ul class="sub-menu" aria-expanded="false">
+                                    <li><a href="{{route('user.GenerateTicket')}}" key="t-inbox">Support Ticket</a></li>
+                                    <li><a href="{{route('user.SupportMessage')}}" key="t-read-email">Inbox</a></li>
+                                    
+                                </ul> -->
                             </li>
-                            @endif -->
+                            <li>
+                                <a href="{{route('user.DepositHistory')}}" class="waves-effect">
+                                    <i class="bx bx-envelope"></i>
+                                    <span key="t-email">Customer Reports</span>
+                                </a>
+                             
+                            </li>
+                            @endif
+
 
                             <!-- <li>
                                 <a href="javascript: void(0);" class="has-arrow waves-effect">
