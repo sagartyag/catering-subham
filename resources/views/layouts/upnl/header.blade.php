@@ -199,7 +199,7 @@ span.badge.badge-success {
 
 
                           <li>
-                                <a href="{{route('user.categories_menu')}}" class="has-arrow waves-effect">
+                                <a href="{{route('user.categories_menu')}}" class="waves-effect">
                                     <i class="bx bx-envelope"></i>
                                     <span key="t-email">Category Menu</span>
                                 </a>

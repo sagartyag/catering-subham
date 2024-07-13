@@ -213,7 +213,7 @@ public function sellerBilling(Request $request)
 
         if ($validation->fails()) {
             Log::info($validation->getMessageBag()->first());
-            return redirect()->route('user.Addagent')->withErrors($validation->getMessageBag()->first())->withInput();
+            return redirect()->route('user.categories_menu')->withErrors($validation->getMessageBag()->first())->withInput();
         }
 
         $user_detail = Auth::user();
@@ -226,7 +226,7 @@ public function sellerBilling(Request $request)
         $payment_mode = $request->input('payment_mode'); // Retrieve payment_mode from request
 
         if (empty($products)) {
-            return redirect()->route('user.Addagent')->withErrors(['cart is empty']);
+            return redirect()->route('user.categories_menu')->withErrors(['cart is empty']);
         }
 
         // Calculate total quantity
@@ -269,7 +269,7 @@ public function sellerBilling(Request $request)
         }
 
         $notify[] = ['success', 'Product Request Submitted successfully'];
-        return redirect()->route('user.Addagent')->withNotify($notify);
+        return redirect()->route('user.categories_menu')->withNotify($notify);
     } catch (\Exception $e) {
         Log::info('error here');
         Log::info($e->getMessage());
@@ -493,6 +493,46 @@ public function ecommerce_cart(Request $request)
 }
 
 
+public function seller_cart2(Request $request)
+{
+    try {
+        // Validate request
+        $validation = Validator::make($request->all(), [
+            
+            'products' => 'required|array',
+          
+        ]);
+
+        if ($validation->fails()) {
+            return redirect()->route('user.categories_menu')->withErrors($validation->getMessageBag()->first())->withInput();
+        }
+      
+        
+
+        $user = Auth::user();
+
+        if (empty($request->products)) {
+            return redirect()->back()->withErrors(['Please Select a Product']);
+        }
+
+        $products = Product::whereIn('id', $request->products)->get();
+
+        $this->data['products'] = $products;
+        $this->data['name'] = $request->name;
+        $this->data['phone'] = $request->phone;
+        $this->data['email'] = $request->email;
+        $this->data['address'] = $request->address;
+        $this->data['categories'] = $request->categories;
+        $this->data['user_id'] = $request->user_id;
+        $this->data['payment_mode'] = $request->payment_mode;
+        $this->data['page'] = 'user.fund.sellercart';
+        return $this->dashboard_layout();
+        
+    } catch (\Exception $e) {
+        Log::error('Error in agent activation: ' . $e->getMessage());
+        return redirect()->route('user.Addagent')->withErrors(['error' => $e->getMessage()])->withInput();
+    }
+}
 
     public function ViewSellerInvoice($id)
     {
@@ -559,6 +599,7 @@ public function sellerInvoice(Request $request){
     return $this->dashboard_layout();   
     
     }
+    
 
     
     public function getProductsByCategory(Request $request)
@@ -577,6 +618,10 @@ public function sellerInvoice(Request $request){
         'email' => 'required',
         'address' => 'required',
     ]);
+
+    
+    
+
 
     $user_id = Auth::id();
     $name = $request->input('name');

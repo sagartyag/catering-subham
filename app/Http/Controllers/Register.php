@@ -38,6 +38,7 @@ class Register extends Controller
                 // 'email' => 'required',
                 'name' => 'required',
                 'password' => 'required|min:5',
+                'role' => 'required',
                 'sponsor' => 'required|exists:users,username',
                 'phone' => 'required|numeric|min:10'
               
@@ -67,6 +68,8 @@ class Register extends Controller
             $data['name'] = $post_array['name'];
             $data['phone'] = $post_array['phone'];
             $data['username'] = $username;
+            $data['role'] = $post_array['role'];
+
             // $data['email'] = $post_array['email'];
             $data['password'] =   Hash::make($post_array['password']);
             $data['tpassword'] =   Hash::make($tpassword);

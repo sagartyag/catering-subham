@@ -371,7 +371,7 @@ class Invest extends Controller
         $limit = $request->limit ? $request->limit : paginationLimit();
           $status = $request->status ? $request->status : null;
           $search = $request->search ? $request->search : null;
-          $notes = VendorBilling::where('user_id',$user->id)->where('status', 'Active')->orderBy('id', 'DESC');
+          $notes = VendorBilling::where('user_id',$user->id);
         
         if($search <> null && $request->reset!="Reset"){
           $notes = $notes->where(function($q) use($search){
@@ -441,10 +441,24 @@ class Invest extends Controller
       $categoryname = Category::orderBy('id','DESC')->get();
       $this->data['categories'] = $categoryname;
 
+      $defaultCategoryId = $categoryname->first()->id;
+      $defaultProducts = Product::where('category_id', $defaultCategoryId)->get(['id', 'productName', 'image']);
+      $this->data['defaultProducts'] = $defaultProducts;
+
     $this->data['page'] = 'user.invest.categories_menu';
     return $this->dashboard_layout();
 
    }     
+   public function addfatch(Request $request)
+{
+  $categories = $request->input('categories');
+    
+  // Fetch products based on selected categories
+  $products = Product::whereIn('category_id', $categories)->get(['id', 'productName', 'image']); // assuming you have an 'image_url' field
+
+  return response()->json(['products' => $products]);
+}
+
 
 
 

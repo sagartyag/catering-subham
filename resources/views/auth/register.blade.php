@@ -74,6 +74,16 @@
                                                 Please Enter Name
                                             </div>  
                                         </div>
+                                        <div class="mb-3">
+    <label for="userrole" class="form-label">Role</label>
+    <select class="form-control" name="role" required>
+        <option value="Vendor">Vendor</option>
+        <option value="Agent">Agent</option>
+    </select>
+    <div class="invalid-feedback">
+        Please select a role
+    </div>
+</div>
 
                                         <!--<div class="mb-3">-->
                                         <!--    <label for="email" class="form-label">Your Email</label>-->
